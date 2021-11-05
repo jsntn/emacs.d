@@ -52,6 +52,7 @@
 ;; ===============================================================
 ;; font settings
 ;; ===============================================================
+
 (setq inhibit-compacting-font-caches t) ; don't compact font caches during GC.
 
 (defvar emacs-english-font nil
@@ -155,6 +156,7 @@
   (setq evil-operator-state-cursor '("red" hollow))
   (define-key evil-normal-state-map (kbd "ff") 'evil-scroll-page-down)
   (define-key evil-normal-state-map (kbd "bb") 'evil-scroll-page-up)
+  (define-key evil-normal-state-map (kbd "be") 'ibuffer)
   )
 
 (use-package helm
@@ -189,6 +191,17 @@
   )
 
 (use-package workgroups2)
+
+
+;; ===============================================================
+;; IBuffer mode settings
+;; ===============================================================
+
+(setq ibuffer-default-sorting-mode 'recency)
+
+(defun ibuffer-jump-to-last-buffer ()
+  (ibuffer-jump-to-buffer (buffer-name (cadr (buffer-list)))))
+(add-hook 'ibuffer-hook #'ibuffer-jump-to-last-buffer)
 
 
 ;; ===============================================================
