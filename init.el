@@ -171,6 +171,14 @@
   (load-theme 'monokai t)
   )
 
+(use-package org-bullets
+  :init
+  (setq org-bullets-bullet-list
+	'("⬛" "○" "¶" "►"))
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  )
+
 (use-package swiper
   :bind
   ("C-s" . swiper) ;; quick keys to swiper
