@@ -104,10 +104,7 @@
   (window-numbering-mode)
   )
 
-(use-package workgroups2
-  :config
-  (workgroups-mode 1)
-  )
+(use-package workgroups2)
 
 
 ;; ===============================================================
@@ -117,6 +114,9 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
+
+;; workgroups2 configuration
+(workgroups-mode 1) ; put this one at the bottom of .emacs
 
 (provide 'init)
 
