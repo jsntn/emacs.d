@@ -145,6 +145,9 @@
 (setq use-package-always-ensure t) ;; to install the package if it is not installed
 
 (use-package evil
+  :init
+  (setq evil-want-integration t) ;; this is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
   :config
   (evil-mode 1)
   ;; change the cursor color in terms of evil mode
