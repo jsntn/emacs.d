@@ -159,6 +159,12 @@
   (define-key evil-normal-state-map (kbd "be") 'ibuffer)
   )
 
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init)
+  )
+
 (use-package helm
   :bind
   (("C-x C-b" . helm-buffers-list) ;; use helm to list buffers
