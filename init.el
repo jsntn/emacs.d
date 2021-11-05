@@ -205,6 +205,24 @@
 
 
 ;; ===============================================================
+;; Org-mode settings
+;; ===============================================================
+
+;; enable org-indent mode
+(setq org-startup-indented t)
+
+
+;; ===============================================================
+;; others settings
+;; ===============================================================
+
+(fset 'yes-or-no-p 'y-or-n-p) ;; use 'y/n' instead of 'yes/no'
+
+(setq confirm-kill-emacs
+      (lambda (prompt) (y-or-n-p-with-timeout "Whether to quit Emacs:" 10 "y"))) ;; prevent mis-operation
+
+
+;; ===============================================================
 ;; footer
 ;; ===============================================================
 ;; stop adding "custom" fields to the end
