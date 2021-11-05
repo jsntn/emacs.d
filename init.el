@@ -50,3 +50,6 @@
   ("C-s" . swiper) ;; quick keys to swiper
   ;; having own history variable allows to get more use of M-p, M-n and C-r.
   )
+
+(provide 'init)
+;;; init.el ends here
