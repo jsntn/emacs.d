@@ -85,6 +85,11 @@
    ("M-x" . helm-M-x)) ;; enhanced M-x command
   )
 
+(use-package monokai-theme
+  :config
+  (load-theme 'monokai t)
+  )
+
 (use-package swiper
   :bind
   ("C-s" . swiper) ;; quick keys to swiper
