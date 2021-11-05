@@ -22,6 +22,37 @@
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
+
+;; ===============================================================
+;; display settings
+;; ===============================================================
+
+(setq display-line-numbers-width-start t)
+(global-display-line-numbers-mode 1)
+(setq column-number-mode t) ;; turn on column numbers
+
+;; wrap lines at 80 characters
+(add-hook 'text-mode-hook 'auto-fill-mode)
+(setq-default fill-column 80)
+
+;; disable splash screen and startup message
+(setq inhibit-startup-message t)
+
+;; disable the bars display
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+
+(setq-default buffer-file-coding-system 'utf-8-unix)
+(setq-default default-buffer-file-coding-system 'utf-8-unix)
+(set-default-coding-systems 'utf-8-unix)
+(prefer-coding-system 'utf-8-unix)
+
+
+;; ===============================================================
+;; package management
+;; ===============================================================
+
 ;;; use-package initialization
 ;;; install use-package if not done
 (if (not (package-installed-p 'use-package))
@@ -31,7 +62,7 @@
 ;;; use-package for all others
 (require 'use-package)
 
-(setq use-package-always-ensure t)
+(setq use-package-always-ensure t) ;; to install the package if it is not installed
 
 (use-package evil
   :config
@@ -43,6 +74,15 @@
   (setq evil-insert-state-cursor '("red" bar))
   (setq evil-replace-state-cursor '("red" bar))
   (setq evil-operator-state-cursor '("red" hollow))
+  (define-key evil-normal-state-map (kbd "ff") 'evil-scroll-page-down)
+  (define-key evil-normal-state-map (kbd "bb") 'evil-scroll-page-up)
+  )
+
+(use-package helm
+  :bind
+  (("C-x C-b" . helm-buffers-list) ;; use helm to list buffers
+   ("C-x C-r" . helm-recentf) ;; use helm to list recent files
+   ("M-x" . helm-M-x)) ;; enhanced M-x command
   )
 
 (use-package swiper
@@ -51,6 +91,28 @@
   ;; having own history variable allows to get more use of M-p, M-n and C-r.
   )
 
+(use-package which-key
+  :config
+  ;; allow C-h to trigger which-key before it is done automatically
+  (setq which-key-show-early-on-C-h t)
+  (which-key-mode 1)
+  (which-key-setup-side-window-right)
+  )
+
+(use-package window-numbering
+  :config
+  (window-numbering-mode)
+  )
+
+(use-package workgroups2
+  :config
+  (workgroups-mode 1)
+  )
+
+
+;; ===============================================================
+;; footer
+;; ===============================================================
 ;; stop adding "custom" fields to the end
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
