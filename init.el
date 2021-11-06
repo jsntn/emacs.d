@@ -1,8 +1,8 @@
 ;;; init.el --- A personal Emacs configuration       -*- lexical-binding: t; -*-
 
 ;; ===============================================================
-;;                    hi@jsntn.com
-;;                        2021
+;; hi@jsntn.com
+;; 2020, 2021
 ;; ===============================================================
 
 ;;; Commentary:
@@ -250,6 +250,15 @@
 
 (setq confirm-kill-emacs
       (lambda (prompt) (y-or-n-p-with-timeout "Whether to quit Emacs:" 10 "y"))) ;; prevent mis-operation
+
+;; enabling control-c and control-v to copy and paste in Emacs
+(define-key evil-visual-state-map (kbd "C-c") 'kill-ring-save)
+(define-key evil-insert-state-map (kbd "C-c") 'kill-ring-save)
+(define-key evil-insert-state-map (kbd "C-v") 'yank)
+(define-key evil-visual-state-map (kbd "C-x") 'kill-region)
+(define-key evil-insert-state-map (kbd "C-x") 'kill-region)
+(define-key evil-insert-state-map (kbd "C-z") 'undo-fu-only-undo)
+(define-key evil-insert-state-map (kbd "C-y") 'undo-fu-only-redo)
 
 
 ;; ===============================================================
