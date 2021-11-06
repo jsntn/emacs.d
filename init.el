@@ -15,6 +15,10 @@
 (setq user-emacs-directory (file-name-directory user-init-file))
 ;; refer to https://emacs.stackexchange.com/a/4258/29715
 
+(setq site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
+
+(setq custom-file (locate-user-emacs-file "custom.el"))
+
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;; comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
@@ -188,6 +192,15 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   )
 
+(use-package session
+  :load-path (lambda () (symbol-value 'site-lisp-dir))
+  :config
+  (setq session-save-file (locate-user-emacs-file ".session"))
+  (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|\\.git/[A-Z_]+\\'\\)")
+  (setq session-save-file-coding-system 'utf-8)
+  (add-hook 'after-init-hook 'session-initialize)
+  )
+
 (use-package swiper
   :bind
   ("C-s" . swiper) ;; quick keys to swiper
@@ -243,7 +256,7 @@
 ;; footer
 ;; ===============================================================
 ;; stop adding "custom" fields to the end
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+;; variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
 
