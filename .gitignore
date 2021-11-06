@@ -3,3 +3,6 @@ elpa/
 network-security.data
 *~
 recentf
+.session
+.emacs.desktop
+.emacs.desktop.lock
