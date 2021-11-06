@@ -10,6 +10,11 @@
 
 ;;; Code:
 
+
+;; ===============================================================
+;; variables settings
+;; ===============================================================
+
 ;; alias emacs='emacs -q --load "/path/to/init.el"'
 (setq user-init-file (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
@@ -25,6 +30,102 @@
 ;; and `package-pinned-packages`. Most users will not need or want to do this.
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
+
+
+;; ===============================================================
+;; package management
+;; ===============================================================
+
+;;; use-package initialization
+;;; install use-package if not done
+(if (not (package-installed-p 'use-package))
+    (progn
+      (package-refresh-contents)
+      (package-install 'use-package)))
+;;; use-package for all others
+(require 'use-package)
+
+(setq use-package-always-ensure t) ;; to install the package if it is not installed
+
+(use-package evil
+  :init
+  (setq evil-want-integration t) ;; this is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  :config
+  (evil-mode 1)
+  ;; change the cursor color in terms of evil mode
+  (setq evil-emacs-state-cursor '("red" box))
+  (setq evil-normal-state-cursor '("green" box))
+  (setq evil-visual-state-cursor '("orange" box))
+  (setq evil-insert-state-cursor '("red" bar))
+  (setq evil-replace-state-cursor '("red" bar))
+  (setq evil-operator-state-cursor '("red" hollow))
+  (define-key evil-normal-state-map (kbd "ff") 'evil-scroll-page-down)
+  (define-key evil-normal-state-map (kbd "bb") 'evil-scroll-page-up)
+  (define-key evil-normal-state-map (kbd "be") 'ibuffer)
+  )
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init)
+  )
+
+(use-package expand-region
+  :config
+  (global-set-key (kbd "C-=") 'er/expand-region)
+  (global-set-key (kbd "C--") 'er/contract-region)
+  )
+
+(use-package helm
+  :bind
+  (("C-x C-b" . helm-buffers-list) ;; use helm to list buffers
+   ("C-x C-r" . helm-recentf) ;; use helm to list recent files
+   ("M-x" . helm-M-x)) ;; enhanced M-x command
+  )
+
+(use-package monokai-theme
+  :config
+  (load-theme 'monokai t)
+  )
+
+(use-package org-bullets
+  :init
+  (setq org-bullets-bullet-list
+	'("⬛" "○" "¶" "►"))
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  )
+
+(use-package session
+  :load-path (lambda () (symbol-value 'site-lisp-dir))
+  :config
+  (setq session-save-file (locate-user-emacs-file ".session"))
+  (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|\\.git/[A-Z_]+\\'\\)")
+  (setq session-save-file-coding-system 'utf-8)
+  (add-hook 'after-init-hook 'session-initialize)
+  )
+
+(use-package swiper
+  :bind
+  ("C-s" . swiper) ;; quick keys to swiper
+  ;; having own history variable allows to get more use of M-p, M-n and C-r.
+  )
+
+(use-package which-key
+  :config
+  ;; allow C-h to trigger which-key before it is done automatically
+  (setq which-key-show-early-on-C-h t)
+  (which-key-mode 1)
+  (which-key-setup-side-window-right)
+  )
+
+(use-package window-numbering
+  :config
+  (window-numbering-mode)
+  )
+
+(use-package workgroups2)
 
 
 ;; ===============================================================
@@ -134,102 +235,6 @@
 
 
 ;; ===============================================================
-;; package management
-;; ===============================================================
-
-;;; use-package initialization
-;;; install use-package if not done
-(if (not (package-installed-p 'use-package))
-    (progn
-      (package-refresh-contents)
-      (package-install 'use-package)))
-;;; use-package for all others
-(require 'use-package)
-
-(setq use-package-always-ensure t) ;; to install the package if it is not installed
-
-(use-package evil
-  :init
-  (setq evil-want-integration t) ;; this is optional since it's already set to t by default.
-  (setq evil-want-keybinding nil)
-  :config
-  (evil-mode 1)
-  ;; change the cursor color in terms of evil mode
-  (setq evil-emacs-state-cursor '("red" box))
-  (setq evil-normal-state-cursor '("green" box))
-  (setq evil-visual-state-cursor '("orange" box))
-  (setq evil-insert-state-cursor '("red" bar))
-  (setq evil-replace-state-cursor '("red" bar))
-  (setq evil-operator-state-cursor '("red" hollow))
-  (define-key evil-normal-state-map (kbd "ff") 'evil-scroll-page-down)
-  (define-key evil-normal-state-map (kbd "bb") 'evil-scroll-page-up)
-  (define-key evil-normal-state-map (kbd "be") 'ibuffer)
-  )
-
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init)
-  )
-
-(use-package expand-region
-  :config
-  (global-set-key (kbd "C-=") 'er/expand-region)
-  (global-set-key (kbd "C--") 'er/contract-region)
-  )
-
-(use-package helm
-  :bind
-  (("C-x C-b" . helm-buffers-list) ;; use helm to list buffers
-   ("C-x C-r" . helm-recentf) ;; use helm to list recent files
-   ("M-x" . helm-M-x)) ;; enhanced M-x command
-  )
-
-(use-package monokai-theme
-  :config
-  (load-theme 'monokai t)
-  )
-
-(use-package org-bullets
-  :init
-  (setq org-bullets-bullet-list
-	'("⬛" "○" "¶" "►"))
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-  )
-
-(use-package session
-  :load-path (lambda () (symbol-value 'site-lisp-dir))
-  :config
-  (setq session-save-file (locate-user-emacs-file ".session"))
-  (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|\\.git/[A-Z_]+\\'\\)")
-  (setq session-save-file-coding-system 'utf-8)
-  (add-hook 'after-init-hook 'session-initialize)
-  )
-
-(use-package swiper
-  :bind
-  ("C-s" . swiper) ;; quick keys to swiper
-  ;; having own history variable allows to get more use of M-p, M-n and C-r.
-  )
-
-(use-package which-key
-  :config
-  ;; allow C-h to trigger which-key before it is done automatically
-  (setq which-key-show-early-on-C-h t)
-  (which-key-mode 1)
-  (which-key-setup-side-window-right)
-  )
-
-(use-package window-numbering
-  :config
-  (window-numbering-mode)
-  )
-
-(use-package workgroups2)
-
-
-;; ===============================================================
 ;; IBuffer mode settings
 ;; ===============================================================
 
@@ -307,6 +312,7 @@
 ;; ===============================================================
 ;; footer
 ;; ===============================================================
+
 ;; stop adding "custom" fields to the end
 ;; variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
