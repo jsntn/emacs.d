@@ -97,15 +97,6 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   )
 
-(use-package session
-  :load-path (lambda () (symbol-value 'site-lisp-dir))
-  :config
-  (setq session-save-file (locate-user-emacs-file ".session"))
-  (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|\\.git/[A-Z_]+\\'\\)")
-  (setq session-save-file-coding-system 'utf-8)
-  (add-hook 'after-init-hook 'session-initialize)
-  )
-
 (use-package swiper
   :bind
   ("C-s" . swiper) ;; quick keys to swiper
@@ -124,8 +115,6 @@
   :config
   (window-numbering-mode)
   )
-
-(use-package workgroups2)
 
 
 ;; ===============================================================
@@ -235,6 +224,50 @@
 
 
 ;; ===============================================================
+;; session settings
+;; ===============================================================
+
+;; save and restore editor sessions between restarts
+
+;; save a list of open files in ~/.emacs.d/.emacs.desktop
+(setq desktop-path (list user-emacs-directory)
+      desktop-auto-save-timeout 600
+      desktop-save t
+      )
+(desktop-save-mode 1)
+
+(add-hook 'emacs-startup-hook 'desktop-read)
+
+;; save a bunch of variables to the desktop file
+;; for lists specify the len of the maximal saved data also
+(setq desktop-globals-to-save
+      '((comint-input-ring        . 50)
+        (compile-history          . 30)
+        desktop-missing-file-warning
+        (dired-regexp-history     . 20)
+        (extended-command-history . 30)
+        (face-name-history        . 20)
+        (file-name-history        . 100)
+        (grep-find-history        . 30)
+        (grep-history             . 30)
+        (ivy-history              . 100)
+        (magit-revision-history   . 50)
+        (minibuffer-history       . 50)
+        (org-clock-history        . 50)
+        (org-refile-history       . 50)
+        (org-tags-history         . 50)
+        (query-replace-history    . 60)
+        (read-expression-history  . 60)
+        (regexp-history           . 60)
+        (regexp-search-ring       . 20)
+        register-alist
+        (search-ring              . 20)
+        (shell-command-history    . 50)
+        tags-file-name
+        tags-table-list))
+
+
+;; ===============================================================
 ;; IBuffer mode settings
 ;; ===============================================================
 
@@ -271,43 +304,6 @@
 (define-key evil-insert-state-map (kbd "C-z") 'undo-fu-only-undo)
 (define-key evil-insert-state-map (kbd "C-y") 'undo-fu-only-redo)
 
-;; save a list of open files in ~/.emacs.d/.emacs.desktop
-(setq desktop-path (list user-emacs-directory)
-      desktop-auto-save-timeout 600)
-(desktop-save-mode 1)
-
-;; restore histories and registers after saving
-(setq-default history-length 1000)
-(add-hook 'after-init-hook 'savehist-mode)
-
-;; save a bunch of variables to the desktop file
-;; for lists specify the len of the maximal saved data also
-(setq desktop-globals-to-save
-      '((comint-input-ring        . 50)
-        (compile-history          . 30)
-        desktop-missing-file-warning
-        (dired-regexp-history     . 20)
-        (extended-command-history . 30)
-        (face-name-history        . 20)
-        (file-name-history        . 100)
-        (grep-find-history        . 30)
-        (grep-history             . 30)
-        (ivy-history              . 100)
-        (magit-revision-history   . 50)
-        (minibuffer-history       . 50)
-        (org-clock-history        . 50)
-        (org-refile-history       . 50)
-        (org-tags-history         . 50)
-        (query-replace-history    . 60)
-        (read-expression-history  . 60)
-        (regexp-history           . 60)
-        (regexp-search-ring       . 20)
-        register-alist
-        (search-ring              . 20)
-        (shell-command-history    . 50)
-        tags-file-name
-        tags-table-list))
-
 
 ;; ===============================================================
 ;; footer
@@ -317,9 +313,6 @@
 ;; variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
-
-;; workgroups2 configuration
-(workgroups-mode 1) ; put this one at the bottom of .emacs
 
 (provide 'init)
 
