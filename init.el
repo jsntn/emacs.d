@@ -290,6 +290,8 @@
 ;; others settings
 ;; ===============================================================
 
+(save-place-mode 1)
+
 (fset 'yes-or-no-p 'y-or-n-p) ;; use 'y/n' instead of 'yes/no'
 
 (setq confirm-kill-emacs
