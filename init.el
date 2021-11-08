@@ -52,6 +52,15 @@
   ("C-c f" . ace-jump-char-mode)
   )
 
+(use-package doom-themes
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t) ; if nil, bold is universally disabled
+  (doom-themes-org-config)
+  (add-to-list 'custom-theme-load-path (expand-file-name "themes/" user-emacs-directory)) ;; personal modified version of doom-monokai-classic
+  (load-theme 'doom-monokai-classic t)
+  )
+
 (use-package evil
   :init
   (setq evil-want-integration t) ;; this is optional since it's already set to t by default.
