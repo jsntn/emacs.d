@@ -122,6 +122,16 @@
     )
   )
 
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1)
+  )
+
+(use-package evil-visualstar
+  :config
+  (global-evil-visualstar-mode)
+  )
+
 (use-package expand-region
   :config
   (global-set-key (kbd "C-=") 'er/expand-region)
