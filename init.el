@@ -146,6 +146,12 @@
   (global-undo-tree-mode)
   )
 
+(use-package vline
+  :load-path (lambda () (symbol-value 'site-lisp-dir))
+  :config
+  (set-face-background vline-face "#283639")
+  )
+
 (use-package which-key
   :config
   ;; allow C-h to trigger which-key before it is done automatically
