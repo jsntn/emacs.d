@@ -127,6 +127,9 @@
 ;; display settings
 ;; ===============================================================
 
+(add-hook 'emacs-lisp-mode-hook 'show-paren-mode) ;; highlight matching parenthesis
+(global-hl-line-mode 1) ;; highlight current line
+
 (setq display-line-numbers-width-start t)
 (global-display-line-numbers-mode 1)
 (setq column-number-mode t) ;; turn on column numbers
