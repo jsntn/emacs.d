@@ -28,7 +28,8 @@ determine the exact padding."
   "A dark, vibrant theme inspired by Textmate's Monokai."
 
   ;; name        gui       256       16
-  ;; { -- START --
+   ;; ((bg        '("#272822" nil       nil          ))
+   ;; (bg-alt     '("#1D1E19" nil       nil          ))
    ((bg        '("#1B1D1F" nil       nil          ))
    (bg-alt     '("#283639" nil       nil          ))
    (base0      '("#1B2229" "black"   "black"      ))
