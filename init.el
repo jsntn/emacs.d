@@ -65,6 +65,23 @@
    `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6))))))
   )
 
+(use-package company
+  :hook (after-init . global-company-mode)
+  :config
+  ;; No delay in showing suggestions.
+  (setq company-idle-delay 0)
+  ;; Show suggestions after entering one character.
+  (setq company-minimum-prefix-length 2)
+  ;; When the list of suggestions is shown, and you go through the list of
+  ;; suggestions and reach the end of the list, the end of the list of
+  ;; suggestions does not wrap around to the top of the list again. This is a
+  ;; minor inconvenience that can be solved:
+  (setq company-selection-wrap-around t)
+  ;; Use tab key to cycle through suggestions.
+  ;; ('tng' means 'tab and go')
+  (company-tng-configure-default)
+  )
+
 (use-package evil
   :init
   (setq evil-want-integration t) ;; this is optional since it's already set to t by default.
