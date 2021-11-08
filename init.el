@@ -114,11 +114,6 @@
 	 ("k" . evil-previous-line))
   )
 
-(use-package monokai-theme
-  :config
-  (load-theme 'monokai t)
-  )
-
 (use-package org-bullets
   :init
   (setq org-bullets-bullet-list
