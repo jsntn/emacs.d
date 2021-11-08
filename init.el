@@ -59,6 +59,7 @@
   (doom-themes-org-config)
   (add-to-list 'custom-theme-load-path (expand-file-name "themes/" user-emacs-directory)) ;; personal modified version of doom-monokai-classic
   (load-theme 'doom-monokai-classic t)
+  (set-background-color "black")
   (custom-set-faces
    `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
    `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6))))))
