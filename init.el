@@ -63,6 +63,7 @@
   (define-key evil-normal-state-map (kbd "ff") 'evil-scroll-page-down)
   (define-key evil-normal-state-map (kbd "bb") 'evil-scroll-page-up)
   (define-key evil-normal-state-map (kbd "be") 'ibuffer)
+  (evil-set-undo-system 'undo-tree)
   )
 
 (use-package evil-collection
@@ -101,6 +102,11 @@
   :bind
   ("C-s" . swiper) ;; quick keys to swiper
   ;; having own history variable allows to get more use of M-p, M-n and C-r.
+  )
+
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode)
   )
 
 (use-package which-key
