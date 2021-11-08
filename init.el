@@ -248,6 +248,11 @@ Version 2017-03-12"
 (dolist (hook '(prog-mode-hook text-mode-hook css-mode-hook lisp-mode-hook))
   (add-hook hook 'my-show-trailing-whitespace))
 
+(global-set-key (kbd "C-M-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "C-M-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-M-<down>") 'shrink-window)
+(global-set-key (kbd "C-M-<up>") 'enlarge-window)
+
 
 ;; ===============================================================
 ;; font settings
