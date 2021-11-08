@@ -47,6 +47,11 @@
 
 (setq use-package-always-ensure t) ;; to install the package if it is not installed
 
+(use-package ace-jump-mode
+  :bind
+  ("C-c f" . ace-jump-char-mode)
+  )
+
 (use-package evil
   :init
   (setq evil-want-integration t) ;; this is optional since it's already set to t by default.
@@ -72,6 +77,21 @@
   (evil-collection-init)
   )
 
+(use-package evil-leader
+  :init
+  (global-evil-leader-mode)
+  :config
+  (evil-leader/set-leader ",")
+  (evil-leader/set-key
+    "b" 'bookmark-bmenu-list
+    "d" 'dired
+    "f" 'ace-jump-char-mode
+    "o" 'helm-imenu
+    "r" 'revert-buffer
+    "w" 'windows-split-toggle
+    )
+  )
+
 (use-package expand-region
   :config
   (global-set-key (kbd "C-=") 'er/expand-region)
@@ -83,6 +103,15 @@
   (("C-x C-b" . helm-buffers-list) ;; use helm to list buffers
    ("C-x C-r" . helm-recentf) ;; use helm to list recent files
    ("M-x" . helm-M-x)) ;; enhanced M-x command
+  )
+
+(use-package imenu-list
+  :bind (("C-'" . imenu-list-smart-toggle)
+	 :map imenu-list-major-mode-map
+	 ("g" . evil-goto-first-line)
+	 ("G" . evil-goto-line)
+	 ("j" . evil-next-line)
+	 ("k" . evil-previous-line))
   )
 
 (use-package monokai-theme
@@ -151,6 +180,21 @@
 (setq-default default-buffer-file-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
+
+(defun windows-split-toggle ()
+  "Toggle between horizontal and vertical split with two windows."
+  (interactive)
+  (if (> (length (window-list)) 2)
+      (error "Can't toggle with more than 2 windows!")
+    (let ((func (if (window-full-height-p)
+		    #'split-window-vertically
+		  #'split-window-horizontally)))
+      (delete-other-windows)
+      (funcall func)
+      (save-selected-window
+	(other-window 1)
+	(switch-to-buffer (other-buffer)))))
+  )
 
 
 ;; ===============================================================
