@@ -241,6 +241,13 @@ Version 2017-03-12"
 (add-hook 'html-mode-hook 'xah-syntax-color-hex)
 (add-hook 'prog-mode-hook 'xah-syntax-color-hex)
 
+;; visualize trailing whitespace
+(defun my-show-trailing-whitespace ()
+  (setq show-trailing-whitespace t)
+  )
+(dolist (hook '(prog-mode-hook text-mode-hook css-mode-hook lisp-mode-hook))
+  (add-hook hook 'my-show-trailing-whitespace))
+
 
 ;; ===============================================================
 ;; font settings
