@@ -178,6 +178,10 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   )
 
+(use-package ox-hugo
+  :after ox
+  )
+
 (use-package swiper
   :bind
   ("C-s" . swiper) ;; quick keys to swiper
