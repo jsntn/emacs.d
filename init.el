@@ -443,6 +443,29 @@ Version 2017-03-12"
 ;; enable org-indent mode
 (setq org-startup-indented t)
 
+(defun org-force-open-current-window ()
+  ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
+  (interactive)
+  (let ((org-link-frame-setup (quote
+			       ((vm . vm-visit-folder)
+				(vm-imap . vm-visit-imap-folder)
+				(gnus . gnus)
+				(file . find-file)
+				(wl . wl)))
+			      ))
+    (org-open-at-point)))
+;; Depending on universal argument try opening link
+(defun org-open-maybe (&optional arg)
+  (interactive "P")
+  (if arg
+      (org-open-at-point)
+    (org-force-open-current-window)
+    )
+  )
+
+;; Redefine file opening without clobbering universal argumnet
+(define-key org-mode-map "\C-c\o" 'org-open-maybe)
+
 
 ;; ===============================================================
 ;; others settings
