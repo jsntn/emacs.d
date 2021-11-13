@@ -86,6 +86,14 @@
   :init
   (setq evil-want-integration t) ;; this is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
+  (if (display-graphic-p)
+      (progn
+	;; if graphic
+	(message "This is a Window-system Emacs.")
+	)
+    ;; else
+    (setq evil-want-C-i-jump nil)
+    )
   :config
   (evil-mode 1)
   ;; change the cursor color in terms of evil mode
@@ -99,6 +107,15 @@
   (define-key evil-normal-state-map (kbd "bb") 'evil-scroll-page-up)
   (define-key evil-normal-state-map (kbd "be") 'ibuffer)
   (evil-set-undo-system 'undo-tree)
+  (if (display-graphic-p)
+      (progn
+	;; if graphic
+	(message "This is a Window-system Emacs.")
+	)
+    ;; else
+    (define-key evil-normal-state-map (kbd "M-i") 'evil-jump-forward)
+    (define-key evil-normal-state-map (kbd "M-o") 'evil-jump-backward)
+    )
   )
 
 (use-package evil-collection
