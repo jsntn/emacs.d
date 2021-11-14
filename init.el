@@ -179,8 +179,9 @@
 
 (use-package org-bullets
   :init
-  (setq org-bullets-bullet-list
-	'("⬛" "○" "¶" "►"))
+  (when (display-graphic-p)
+  (setq org-bullets-bullet-list '("⬛" "○" "¶" "►"))
+  )
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   )
