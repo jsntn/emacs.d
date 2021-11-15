@@ -24,17 +24,25 @@
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
+
+;; ===============================================================
+;; local variables settings
+;; ===============================================================
+
+;; allow users to provide an optional "local-var" containing personal variables
+(require 'local-var nil 'noerror)
+
+
+;; ===============================================================
+;; package management
+;; ===============================================================
+
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;; comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
 ;; and `package-pinned-packages`. Most users will not need or want to do this.
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
-
-
-;; ===============================================================
-;; package management
-;; ===============================================================
 
 ;;; use-package initialization
 ;;; install use-package if not done
@@ -615,7 +623,7 @@ current buffer's, reload dir-locals."
 
 
 ;; ===============================================================
-;; require settings
+;; local configuration settings
 ;; ===============================================================
 
 ;; allow users to provide an optional "local-config" containing personal settings
