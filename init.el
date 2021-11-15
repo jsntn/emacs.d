@@ -152,6 +152,12 @@
    ("M-x" . helm-M-x)) ;; enhanced M-x command
   )
 
+(use-package highlight-indent-guides
+  :config
+  (setq highlight-indent-guides-method 'column)
+  :hook (prog-mode-hook . highlight-indent-guides-mode)
+  )
+
 (use-package imenu-list
   :bind (("C-'" . imenu-list-smart-toggle)
 	 :map imenu-list-major-mode-map
