@@ -20,7 +20,11 @@
 (setq user-emacs-directory (file-name-directory user-init-file))
 ;; refer to https://emacs.stackexchange.com/a/4258/29715
 
+;; define site-lisp-dir
 (setq site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
+
+;; add site-lisp-dir to load-path
+(add-to-list 'load-path (symbol-value 'site-lisp-dir))
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
