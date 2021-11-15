@@ -615,6 +615,14 @@ current buffer's, reload dir-locals."
 
 
 ;; ===============================================================
+;; require settings
+;; ===============================================================
+
+;; allow users to provide an optional "local-config" containing personal settings
+(require 'local-config nil 'noerror)
+
+
+;; ===============================================================
 ;; footer
 ;; ===============================================================
 
