@@ -556,6 +556,11 @@ Version 2017-03-12"
 ;; others settings
 ;; ===============================================================
 
+(defun open-init-file()
+  "open init.el."
+  (interactive)
+  (find-file (symbol-value 'user-init-file)))
+
 (save-place-mode 1)
 
 (fset 'yes-or-no-p 'y-or-n-p) ;; use 'y/n' instead of 'yes/no'
