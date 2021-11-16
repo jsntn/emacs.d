@@ -572,6 +572,9 @@ Version 2017-03-12"
 (define-key evil-insert-state-map (kbd "C-z") 'undo-fu-only-undo)
 (define-key evil-insert-state-map (kbd "C-y") 'undo-fu-only-redo)
 
+;; to prevent kill and yank commands from accessing the clipboard
+(setq x-select-enable-clipboard nil)
+
 ;; via https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
 (defun my-reload-dir-locals-for-current-buffer ()
   "reload dir locals for the current buffer"
