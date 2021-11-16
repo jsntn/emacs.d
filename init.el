@@ -382,10 +382,7 @@ Version 2017-03-12"
 ;; (https://github.com/noctuid/general.el)
 ;; ===============================================================
 
-;; * Global Keybindings
-;; `general-define-key' acts like `global-set-key' when :keymaps is not
-;; specified (because ":keymaps 'global" is the default)
-;; kbd is not necessary and arbitrary amount of key def pairs are allowed
+;; global keybindings
 (general-define-key
  "M-x" 'helm-M-x
  "C-s" 'swiper ;; having own history variable allows to get more use of M-p, M-n
@@ -399,12 +396,14 @@ Version 2017-03-12"
  "C-M-<up>" 'enlarge-window
  ;; ...
  )
+
 ;; `general-def' can be used instead for `define-key'-like syntax
 (general-def
  "<f8>" 'neotree-toggle
  ;; ...
  )
 
+;; global keybindings for graphic display Emacs
 (when (display-graphic-p)
   (general-define-key
    ;; setup change size font, base on emacs-font-size-pair-list
@@ -413,10 +412,8 @@ Version 2017-03-12"
    )
   )
 
-;; * Mode Keybindings
-;; `general-define-key' is comparable to `define-key' when :keymaps is specified
+;; mode keybindings for imenu-list-major-mode-map
 (general-define-key
- ;; NOTE: keymaps specified with :keymaps must be quoted
  :keymaps 'imenu-list-major-mode-map
  "g" 'evil-goto-first-line
  "G" 'evil-goto-line
@@ -426,6 +423,7 @@ Version 2017-03-12"
 
 (general-define-key
  ;; enabling control-c and control-v to copy and paste in Emacs
+ ;; keybindings for evil insert and visual mode
  :states '(insert visual)
  "C-c" 'kill-ring-save
  "C-v" 'yank
@@ -434,6 +432,7 @@ Version 2017-03-12"
  )
 
 (general-define-key
+ ;; keybindings for evil normal and visual mode
  :states '(normal visual)
  "ff" 'evil-scroll-page-down
  "bb" 'evil-scroll-page-up
@@ -442,6 +441,7 @@ Version 2017-03-12"
  )
 
 (general-define-key
+ ;; keybindings for evil normal mode with neotree-mode-map
  :states 'normal
  :keymaps 'neotree-mode-map
  "TAB" 'neotree-enter
@@ -456,8 +456,10 @@ Version 2017-03-12"
  ;; ...
  )
 
+;; for terminal Emacs
 (unless (display-graphic-p)
   (general-define-key
+   ;; for evil normal mode
    :states 'normal
    "M-i" 'evil-jump-forward
    "M-o" 'evil-jump-backward
@@ -465,8 +467,7 @@ Version 2017-03-12"
    )
   )
 
-;; * Prefix Keybindings
-;; :prefix can be used to prevent redundant specification of prefix keys
+;; prefix keybindings
 (general-define-key
  :prefix "C-c"
  ;; bind "C-c a" to 'org-agenda
@@ -487,16 +488,19 @@ Version 2017-03-12"
  ;; ...
  )
 
+;; prefix keybindings
 (general-define-key
  :prefix "C-x"
  "C-r" 'helm-recentf
  ;; ...
  )
 
+;; evil leader key
 (general-create-definer my-leader-def
   ;; :prefix my-leader
   :prefix ",")
 
+;; evil leader keybindings in evil normal mode
 (my-leader-def
  :keymaps 'normal
  "b" 'bookmark-bmenu-list
