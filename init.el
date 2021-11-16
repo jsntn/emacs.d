@@ -62,7 +62,8 @@
 (use-package ace-jump-mode)
 
 (use-package company
-  :hook (after-init . global-company-mode)
+  :init
+  (global-company-mode)
   :config
   ;; No delay in showing suggestions.
   (setq company-idle-delay 0)
