@@ -422,17 +422,6 @@ Version 2017-03-12"
  "G" 'evil-goto-line
  "j" 'evil-next-line
  "k" 'evil-previous-line
- :keymaps 'neotree-mode-map
- "TAB" 'neotree-enter
- "SPC" 'neotree-quick-look
- "q" 'neotree-hide
- "RET" 'neotree-enter
- "g" 'neotree-refresh
- "n" 'neotree-next-line
- "p" 'neotree-previous-line
- "A" 'neotree-stretch-toggle
- "H" 'neotree-hidden-file-toggle
- ;; ...
  )
 
 (general-define-key
@@ -449,6 +438,21 @@ Version 2017-03-12"
  "ff" 'evil-scroll-page-down
  "bb" 'evil-scroll-page-up
  "be" 'ibuffer
+ ;; ...
+ )
+
+(general-define-key
+ :states 'normal
+ :keymaps 'neotree-mode-map
+ "TAB" 'neotree-enter
+ "SPC" 'neotree-quick-look
+ "q" 'neotree-hide
+ "RET" 'neotree-enter
+ "g" 'neotree-refresh
+ "n" 'neotree-next-line
+ "p" 'neotree-previous-line
+ "A" 'neotree-stretch-toggle
+ "H" 'neotree-hidden-file-toggle
  ;; ...
  )
 
