@@ -59,10 +59,7 @@
 
 (setq use-package-always-ensure t) ;; to install the package if it is not installed
 
-(use-package ace-jump-mode
-  :bind
-  ("C-c f" . ace-jump-char-mode)
-  )
+(use-package ace-jump-mode)
 
 (use-package company
   :hook (after-init . global-company-mode)
@@ -80,6 +77,8 @@
   ;; ('tng' means 'tab and go')
   (company-tng-configure-default)
   )
+
+(use-package counsel)
 
 (use-package doom-themes
   :config
@@ -110,14 +109,7 @@
   (setq evil-insert-state-cursor '("red" bar))
   (setq evil-replace-state-cursor '("red" bar))
   (setq evil-operator-state-cursor '("red" hollow))
-  (define-key evil-normal-state-map (kbd "ff") 'evil-scroll-page-down)
-  (define-key evil-normal-state-map (kbd "bb") 'evil-scroll-page-up)
-  (define-key evil-normal-state-map (kbd "be") 'ibuffer)
   (evil-set-undo-system 'undo-tree)
-  (unless (display-graphic-p)
-    (define-key evil-normal-state-map (kbd "M-i") 'evil-jump-forward)
-    (define-key evil-normal-state-map (kbd "M-o") 'evil-jump-backward)
-    )
   )
 
 (use-package evil-collection
@@ -129,16 +121,6 @@
 (use-package evil-leader
   :init
   (global-evil-leader-mode)
-  :config
-  (evil-leader/set-leader ",")
-  (evil-leader/set-key
-    "b" 'bookmark-bmenu-list
-    "d" 'dired
-    "f" 'ace-jump-char-mode
-    "o" 'helm-imenu
-    "r" 'revert-buffer
-    "w" 'windows-split-toggle
-    )
   )
 
 (use-package evil-surround
@@ -151,18 +133,11 @@
   (global-evil-visualstar-mode)
   )
 
-(use-package expand-region
-  :config
-  (global-set-key (kbd "C-=") 'er/expand-region)
-  (global-set-key (kbd "C--") 'er/contract-region)
-  )
+(use-package expand-region)
 
-(use-package helm
-  :bind
-  (("C-x C-b" . helm-buffers-list) ;; use helm to list buffers
-   ("C-x C-r" . helm-recentf) ;; use helm to list recent files
-   ("M-x" . helm-M-x)) ;; enhanced M-x command
-  )
+(use-package general)
+
+(use-package helm)
 
 (use-package highlight-indent-guides
   :config
@@ -197,29 +172,12 @@
 	)
   )
 
-(use-package imenu-list
-  :bind (("C-'" . imenu-list-smart-toggle)
-	 :map imenu-list-major-mode-map
-	 ("g" . evil-goto-first-line)
-	 ("G" . evil-goto-line)
-	 ("j" . evil-next-line)
-	 ("k" . evil-previous-line))
-  )
+(use-package imenu-list)
 
 (use-package neotree
   :config
   (setq neo-smart-open t)
   (setq neo-window-fixed-size nil)
-  (global-set-key [f8] 'neotree-toggle)
-  (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-  (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
-  (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-  (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
-  (evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
-  (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
-  (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
-  (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
-  (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
   )
 
 (use-package org-bullets
@@ -235,11 +193,7 @@
   :after ox
   )
 
-(use-package swiper
-  :bind
-  ("C-s" . swiper) ;; quick keys to swiper
-  ;; having own history variable allows to get more use of M-p, M-n and C-r.
-  )
+(use-package swiper)
 
 (use-package undo-tree
   :config
@@ -348,11 +302,6 @@ Version 2017-03-12"
 (dolist (hook '(prog-mode-hook text-mode-hook css-mode-hook lisp-mode-hook))
   (add-hook hook 'my-show-trailing-whitespace))
 
-(global-set-key (kbd "C-M-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "C-M-<right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "C-M-<down>") 'shrink-window)
-(global-set-key (kbd "C-M-<up>") 'enlarge-window)
-
 
 ;; ===============================================================
 ;; font settings
@@ -416,11 +365,7 @@ Version 2017-03-12"
        "ABCDEFTHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz\n"
        "11223344556677889900       壹貳參肆伍陸柒捌玖零"))
 
-(when window-system
-  ;; setup change size font, base on emacs-font-size-pair-list
-  (global-set-key (kbd "C-M-=") 'increase-emacs-font-size)
-  (global-set-key (kbd "C-M--") 'decrease-emacs-font-size)
-
+(when (display-graphic-p)
   ;; setup default english font and cjk font
   (setq emacs-english-font "Source Code Pro Semibold")
   (setq emacs-cjk-font "等距更纱黑体 SC")
@@ -432,6 +377,134 @@ Version 2017-03-12"
 				    (32 . 34) (34 . 36) (36 . 38)))
   ;; Setup font size based on emacs-font-size-pair
   (set-font emacs-english-font emacs-cjk-font emacs-font-size-pair))
+
+
+;; ===============================================================
+;; keys settings
+;; (https://github.com/noctuid/general.el)
+;; ===============================================================
+
+;; * Global Keybindings
+;; `general-define-key' acts like `global-set-key' when :keymaps is not
+;; specified (because ":keymaps 'global" is the default)
+;; kbd is not necessary and arbitrary amount of key def pairs are allowed
+(general-define-key
+ "M-x" 'helm-M-x
+ "C-s" 'swiper ;; having own history variable allows to get more use of M-p, M-n
+	       ;; and C-r.
+ "C-=" 'er/expand-region
+ "C--" 'er/contract-region
+ "C-'" 'imenu-list-smart-toggle
+ "C-M-<left>" 'shrink-window-horizontally
+ "C-M-<right>" 'enlarge-window-horizontally
+ "C-M-<down>" 'shrink-window
+ "C-M-<up>" 'enlarge-window
+ ;; ...
+ )
+;; `general-def' can be used instead for `define-key'-like syntax
+(general-def
+ "<f8>" 'neotree-toggle
+ ;; ...
+ )
+
+(when (display-graphic-p)
+  (general-define-key
+   ;; setup change size font, base on emacs-font-size-pair-list
+   "C-M-=" 'increase-emacs-font-size
+   "C-M--" 'decrease-emacs-font-size
+   )
+  )
+
+;; * Mode Keybindings
+;; `general-define-key' is comparable to `define-key' when :keymaps is specified
+(general-define-key
+ ;; NOTE: keymaps specified with :keymaps must be quoted
+ :keymaps 'imenu-list-major-mode-map
+ "g" 'evil-goto-first-line
+ "G" 'evil-goto-line
+ "j" 'evil-next-line
+ "k" 'evil-previous-line
+ :keymaps 'neotree-mode-map
+ "TAB" 'neotree-enter
+ "SPC" 'neotree-quick-look
+ "q" 'neotree-hide
+ "RET" 'neotree-enter
+ "g" 'neotree-refresh
+ "n" 'neotree-next-line
+ "p" 'neotree-previous-line
+ "A" 'neotree-stretch-toggle
+ "H" 'neotree-hidden-file-toggle
+ ;; ...
+ )
+
+(general-define-key
+ ;; enabling control-c and control-v to copy and paste in Emacs
+ :states '(insert visual)
+ "C-c" 'kill-ring-save
+ "C-v" 'yank
+ "C-z" 'undo-fu-only-undo
+ "C-y" 'undo-fu-only-redo
+ )
+
+(general-define-key
+ :states '(normal visual)
+ "ff" 'evil-scroll-page-down
+ "bb" 'evil-scroll-page-up
+ "be" 'ibuffer
+ ;; ...
+ )
+
+(unless (display-graphic-p)
+  (general-define-key
+   :states 'normal
+   "M-i" 'evil-jump-forward
+   "M-o" 'evil-jump-backward
+   ;; ...
+   )
+  )
+
+;; * Prefix Keybindings
+;; :prefix can be used to prevent redundant specification of prefix keys
+(general-define-key
+ :prefix "C-c"
+ ;; bind "C-c a" to 'org-agenda
+ "a" 'org-agenda
+ "b" 'counsel-bookmark
+ "c" 'org-capture
+ "f" 'ace-jump-char-mode
+ ;; ...
+ )
+
+(general-define-key
+ ;; for org-mode-map
+ :prefix "C-c"
+ :keymaps 'org-mode-map
+ "C-q" 'counsel-org-tag
+ "o" 'org-open-maybe ;; redefine file opening without clobbering universal
+		     ;; argumnet ...
+ ;; ...
+ )
+
+(general-define-key
+ :prefix "C-x"
+ "C-r" 'helm-recentf
+ ;; ...
+ )
+
+(general-create-definer my-leader-def
+  ;; :prefix my-leader
+  :prefix ",")
+
+(my-leader-def
+ :keymaps 'normal
+ "b" 'bookmark-bmenu-list
+ "d" 'dired
+ "f" 'ace-jump-char-mode
+ "o" 'helm-imenu
+ "r" 'revert-buffer
+ "w" 'windows-split-toggle
+ ;; ...
+ )
 
 
 ;; ===============================================================
@@ -516,9 +589,6 @@ Version 2017-03-12"
     )
   )
 
-;; Redefine file opening without clobbering universal argumnet
-(define-key org-mode-map "\C-c\o" 'org-open-maybe)
-
 (setq org-todo-keywords
       ;; '((sequence "☛ TODO(t)" "➼ IN-PROGRESS" "⚑ WAIT(w@/!)" "|" "✔ DONE(d!)" "✘ CANCELED(c@)")
       '((sequence "TODO(t)" "IN-PROGRESS" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")
@@ -567,15 +637,6 @@ Version 2017-03-12"
 
 (setq confirm-kill-emacs
       (lambda (prompt) (y-or-n-p-with-timeout "Whether to quit Emacs:" 10 "y"))) ;; prevent mis-operation
-
-;; enabling control-c and control-v to copy and paste in Emacs
-(define-key evil-visual-state-map (kbd "C-c") 'kill-ring-save)
-(define-key evil-insert-state-map (kbd "C-c") 'kill-ring-save)
-(define-key evil-insert-state-map (kbd "C-v") 'yank)
-(define-key evil-visual-state-map (kbd "C-x") 'kill-region)
-(define-key evil-insert-state-map (kbd "C-x") 'kill-region)
-(define-key evil-insert-state-map (kbd "C-z") 'undo-fu-only-undo)
-(define-key evil-insert-state-map (kbd "C-y") 'undo-fu-only-redo)
 
 ;; to prevent kill and yank commands from accessing the clipboard
 (setq x-select-enable-clipboard nil)
