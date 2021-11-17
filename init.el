@@ -64,6 +64,16 @@
 
 
 ;; ===============================================================
+;; local packages management
+;; ===============================================================
+
+;; allow users to provide an optional "local-packages" containing local packages
+(require 'local-packages nil 'noerror)
+;; above must come before use-package settings, as it involves package.el which
+;; downloads packages from the package-archives
+
+
+;; ===============================================================
 ;; speed-up settings
 ;; ===============================================================
 
