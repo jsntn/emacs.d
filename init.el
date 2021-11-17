@@ -64,6 +64,18 @@
 
 
 ;; ===============================================================
+;; speed-up settings
+;; ===============================================================
+
+;; adjust garbage collection thresholds during startup, and thereafter
+(let ((normal-gc-cons-threshold (* 20 1024 1024))
+      (init-gc-cons-threshold (* 128 1024 1024)))
+  (setq gc-cons-threshold init-gc-cons-threshold)
+  (add-hook 'emacs-startup-hook
+            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+
+
+;; ===============================================================
 ;; package management
 ;; ===============================================================
 
@@ -83,6 +95,11 @@
 (require 'use-package)
 
 (setq use-package-always-ensure t) ;; to install the package if it is not installed
+
+(use-package benchmark-init
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 (use-package ace-jump-mode)
 
@@ -553,6 +570,9 @@ Version 2017-03-12"
 (setq desktop-path (list user-emacs-directory)
       desktop-auto-save-timeout 600
       desktop-save t
+      desktop-restore-eager 10 ;; the maximum number of 10 buffers to restore
+			       ;; immediately, and the remaining buffers are
+			       ;; restored lazily, when Emacs is idle.
       )
 (desktop-save-mode 1)
 
