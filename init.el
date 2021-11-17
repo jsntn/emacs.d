@@ -29,10 +29,30 @@
 ;; define site-lisp-dir
 (setq site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
 
-;; add site-lisp-dir to load-path
-(add-to-list 'load-path (symbol-value 'site-lisp-dir))
-
 (setq custom-file (locate-user-emacs-file "custom.el"))
+
+
+;; ===============================================================
+;; load-path settings
+;; ===============================================================
+
+;; cl - Common Lisp Extension
+(require 'cl-lib) ;; https://emacs.stackexchange.com/questions/48109/require-cl-or-require-cl-lib
+
+(defun sanityinc/add-subdirs-to-load-path (parent-dir)
+  "Add every non-hidden subdir of PARENT-DIR to `load-path'."
+  (let ((default-directory parent-dir))
+    (setq load-path
+          (append
+           (cl-remove-if-not
+            #'file-directory-p
+            (directory-files (expand-file-name parent-dir) t "^[^\\.]"))
+           load-path))))
+
+;; add both site-lisp and its immediate subdirs to `load-path'
+(let ((symbol-value 'site-lisp-dir))
+  (push site-lisp-dir load-path)
+  (sanityinc/add-subdirs-to-load-path site-lisp-dir))
 
 
 ;; ===============================================================
@@ -49,6 +69,8 @@
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; disable automatic loading of installed packages after the init file
+(setq package-enable-at-startup nil)
 (package-initialize)
 
 ;;; use-package initialization
@@ -204,8 +226,10 @@
   (global-undo-tree-mode)
   )
 
+(use-package elpa-mirror)
+
 (use-package vline
-  :load-path (lambda () (symbol-value 'site-lisp-dir))
+  :load-path (lambda () (symbol-value 'load-path))
   :config
   (set-face-background vline-face "#283639")
   )
