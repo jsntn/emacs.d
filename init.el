@@ -121,7 +121,9 @@
   (company-tng-configure-default)
   )
 
-(use-package counsel)
+(use-package counsel
+  :defer 4
+  )
 
 (use-package doom-themes
   :config
@@ -159,6 +161,7 @@
   :after evil
   :config
   (evil-collection-init)
+  :defer 4
   )
 
 (use-package evil-leader
@@ -180,7 +183,9 @@
 
 (use-package general)
 
-(use-package helm)
+(use-package helm
+  :defer 2
+  )
 
 (use-package highlight-indent-guides
   :config
@@ -230,6 +235,7 @@
   )
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  :defer 4
   )
 
 (use-package ox-hugo
