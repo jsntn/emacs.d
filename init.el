@@ -1,9 +1,9 @@
 ;;; init.el --- A personal Emacs configuration       -*- lexical-binding: t; -*-
 
-;; ===============================================================
+;; =============================================================================
 ;; hi@jsntn.com
 ;; 2020, 2021
-;; ===============================================================
+;; =============================================================================
 
 ;;; Commentary:
 ;;
@@ -17,9 +17,9 @@
   )
 
 
-;; ===============================================================
+;; =============================================================================
 ;; variables settings
-;; ===============================================================
+;; =============================================================================
 
 ;; alias emacs='emacs -q --load "/path/to/init.el"'
 (setq user-init-file (or load-file-name (buffer-file-name)))
@@ -32,9 +32,9 @@
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
 
-;; ===============================================================
+;; =============================================================================
 ;; load-path settings
-;; ===============================================================
+;; =============================================================================
 
 ;; cl - Common Lisp Extension
 (require 'cl-lib) ;; https://emacs.stackexchange.com/questions/48109/require-cl-or-require-cl-lib
@@ -55,17 +55,17 @@
   (sanityinc/add-subdirs-to-load-path site-lisp-dir))
 
 
-;; ===============================================================
+;; =============================================================================
 ;; local variables settings
-;; ===============================================================
+;; =============================================================================
 
 ;; allow users to provide an optional "local-var" containing personal variables
 (require 'local-var nil 'noerror)
 
 
-;; ===============================================================
+;; =============================================================================
 ;; local packages management
-;; ===============================================================
+;; =============================================================================
 
 ;; allow users to provide an optional "local-packages" containing local packages
 (require 'local-packages nil 'noerror)
@@ -73,9 +73,9 @@
 ;; downloads packages from the package-archives
 
 
-;; ===============================================================
+;; =============================================================================
 ;; speed-up settings
-;; ===============================================================
+;; =============================================================================
 
 ;; adjust garbage collection thresholds during startup, and thereafter
 (let ((normal-gc-cons-threshold (* 20 1024 1024))
@@ -85,9 +85,9 @@
             (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
 
-;; ===============================================================
+;; =============================================================================
 ;; package management
-;; ===============================================================
+;; =============================================================================
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -104,7 +104,8 @@
 ;;; use-package for all others
 (require 'use-package)
 
-(setq use-package-always-ensure t) ;; to install the package if it is not installed
+(setq use-package-always-ensure t) ;; to install the package if it is not
+				   ;; installed
 
 (use-package benchmark-init
   :config
@@ -140,7 +141,8 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t) ; if nil, bold is universally disabled
   (doom-themes-org-config)
-  (add-to-list 'custom-theme-load-path (expand-file-name "themes/" user-emacs-directory)) ;; personal modified version of doom-monokai-classic
+  ;; personal modified version of doom-monokai-classic
+  (add-to-list 'custom-theme-load-path (expand-file-name "themes/" user-emacs-directory))
   (load-theme 'doom-monokai-classic t)
   (set-background-color "black")
   (custom-set-faces
@@ -150,7 +152,8 @@
 
 (use-package evil
   :init
-  (setq evil-want-integration t) ;; this is optional since it's already set to t by default.
+  (setq evil-want-integration t) ;; this is optional since it's already set to t
+				 ;; by default.
   (setq evil-want-keybinding nil)
   (unless (display-graphic-p)
     (setq evil-want-C-i-jump nil)
@@ -281,11 +284,12 @@
   )
 
 
-;; ===============================================================
+;; =============================================================================
 ;; display settings
-;; ===============================================================
+;; =============================================================================
 
-(add-hook 'emacs-lisp-mode-hook 'show-paren-mode) ;; highlight matching parenthesis
+(add-hook 'emacs-lisp-mode-hook 'show-paren-mode) ;; highlight matching
+						  ;; parenthesis
 (global-hl-line-mode 1) ;; highlight current line
 
 (setq display-line-numbers-width-start t)
@@ -364,9 +368,9 @@ Version 2017-03-12"
   (add-hook hook 'my-show-trailing-whitespace))
 
 
-;; ===============================================================
+;; =============================================================================
 ;; font settings
-;; ===============================================================
+;; =============================================================================
 
 (setq inhibit-compacting-font-caches t) ; don't compact font caches during GC.
 
@@ -440,10 +444,10 @@ Version 2017-03-12"
   (set-font emacs-english-font emacs-cjk-font emacs-font-size-pair))
 
 
-;; ===============================================================
+;; =============================================================================
 ;; keys settings
 ;; (https://github.com/noctuid/general.el)
-;; ===============================================================
+;; =============================================================================
 
 ;; global keybindings
 (general-define-key
@@ -576,9 +580,9 @@ Version 2017-03-12"
  )
 
 
-;; ===============================================================
+;; =============================================================================
 ;; session settings
-;; ===============================================================
+;; =============================================================================
 
 ;; save and restore editor sessions between restarts
 
@@ -623,9 +627,9 @@ Version 2017-03-12"
         tags-table-list))
 
 
-;; ===============================================================
+;; =============================================================================
 ;; IBuffer mode settings
-;; ===============================================================
+;; =============================================================================
 
 (setq ibuffer-default-sorting-mode 'recency)
 
@@ -634,9 +638,9 @@ Version 2017-03-12"
 (add-hook 'ibuffer-hook #'ibuffer-jump-to-last-buffer)
 
 
-;; ===============================================================
+;; =============================================================================
 ;; Org-mode settings
-;; ===============================================================
+;; =============================================================================
 
 ;; enable org-indent mode
 (setq org-startup-indented t)
@@ -694,9 +698,9 @@ Version 2017-03-12"
   (add-hook 'org-add-hook 'my/modify-org-done-face))
 
 
-;; ===============================================================
+;; =============================================================================
 ;; others settings
-;; ===============================================================
+;; =============================================================================
 
 (defun open-init-file()
   "open init.el."
@@ -708,7 +712,8 @@ Version 2017-03-12"
 (fset 'yes-or-no-p 'y-or-n-p) ;; use 'y/n' instead of 'yes/no'
 
 (setq confirm-kill-emacs
-      (lambda (prompt) (y-or-n-p-with-timeout "Whether to quit Emacs:" 10 "y"))) ;; prevent mis-operation
+      ;; prevent mis-operation
+      (lambda (prompt) (y-or-n-p-with-timeout "Whether to quit Emacs:" 10 "y")))
 
 ;; to prevent kill and yank commands from accessing the clipboard
 (setq x-select-enable-clipboard nil)
@@ -745,7 +750,8 @@ current buffer's, reload dir-locals."
   (when (org-export-derived-backend-p backend 'html)
     (let ((regexp "[[:multibyte:]]")
 	  (string text))
-      ;; Org converts line-break with space by default, remove this as this is not necessary for chinese characters
+      ;; Org converts line-break with space by default, remove this as this is
+      ;; not necessary for chinese characters
       (setq string
 	    (replace-regexp-in-string
 	     (format "\\(%s\\) *\n *\\(%s\\)" regexp regexp)
@@ -767,17 +773,18 @@ current buffer's, reload dir-locals."
   )
 
 
-;; ===============================================================
+;; =============================================================================
 ;; local configuration settings
-;; ===============================================================
+;; =============================================================================
 
-;; allow users to provide an optional "local-config" containing personal settings
+;; allow users to provide an optional "local-config" containing personal
+;; settings
 (require 'local-config nil 'noerror)
 
 
-;; ===============================================================
+;; =============================================================================
 ;; footer
-;; ===============================================================
+;; =============================================================================
 
 ;; stop adding "custom" fields to the end
 ;; variables configured via the interactive 'customize' interface
