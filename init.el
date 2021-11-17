@@ -11,6 +11,12 @@
 ;;; Code:
 
 
+(let ((minver "27.1"))
+  (when (version< emacs-version minver)
+    (error "This Emacs configuration is based on v%s" minver))
+  )
+
+
 ;; ===============================================================
 ;; variables settings
 ;; ===============================================================
