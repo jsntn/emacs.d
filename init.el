@@ -299,8 +299,15 @@
 		sh-mode-hook
 		lisp-mode-hook
 		))
-  (add-hook hook 'jsntn/hs-hide-all)
-  )
+  (add-hook hook 'jsntn/hs-hide-all))
+
+(dolist (hook '(
+		prog-mode-hook
+		text-mode-hook
+		css-mode-hook
+		lisp-mode-hook
+		))
+  (add-hook hook 'my/show-trailing-whitespace))
 
 
 ;; =============================================================================
@@ -380,11 +387,9 @@ Version 2017-03-12"
 (add-hook 'prog-mode-hook 'xah-syntax-color-hex)
 
 ;; visualize trailing whitespace
-(defun my-show-trailing-whitespace ()
+(defun my/show-trailing-whitespace ()
   (setq show-trailing-whitespace t)
   )
-(dolist (hook '(prog-mode-hook text-mode-hook css-mode-hook lisp-mode-hook))
-  (add-hook hook 'my-show-trailing-whitespace))
 
 ;; codes folding
 (load-library "hideshow")
