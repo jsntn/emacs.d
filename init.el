@@ -285,6 +285,25 @@
 
 
 ;; =============================================================================
+;; add-hook settings
+;; =============================================================================
+
+(defun jsntn/hs-hide-all ()
+  (hs-minor-mode 1)
+  (hs-hide-all)
+  (set (make-variable-buffer-local 'my-hs-hide-all) t)
+  (set (make-variable-buffer-local 'my-hs-hide-block) t))
+
+(dolist (hook '(
+		prog-mode-hook
+		sh-mode-hook
+		lisp-mode-hook
+		))
+  (add-hook hook 'jsntn/hs-hide-all)
+  )
+
+
+;; =============================================================================
 ;; display settings
 ;; =============================================================================
 
@@ -366,6 +385,24 @@ Version 2017-03-12"
   )
 (dolist (hook '(prog-mode-hook text-mode-hook css-mode-hook lisp-mode-hook))
   (add-hook hook 'my-show-trailing-whitespace))
+
+;; codes folding
+(load-library "hideshow")
+;; refer to https://sachachua.com/blog/2006/10/emacs-hideshow/
+(defun jsntn/toggle-hideshow-all ()
+  "Toggle hideshow all."
+  (interactive)
+  (set (make-variable-buffer-local 'my-hs-hide-all) (not my-hs-hide-all))
+  (if my-hs-hide-all
+      (hs-hide-all)
+    (hs-show-all)))
+(defun jsntn/toggle-hideshow-block ()
+  "Toggle hideshow block."
+  (interactive)
+  (set (make-variable-buffer-local 'my-hs-hide-block) (not my-hs-hide-block))
+  (if my-hs-hide-block
+      (hs-hide-block)
+    (hs-show-block)))
 
 
 ;; =============================================================================
@@ -504,6 +541,7 @@ Version 2017-03-12"
  "ff" 'evil-scroll-page-down
  "bb" 'evil-scroll-page-up
  "be" 'ibuffer
+ "SPC" 'jsntn/toggle-hideshow-block
  ;; ...
  )
 
@@ -552,6 +590,13 @@ Version 2017-03-12"
  "C-q" 'counsel-org-tag
  "o" 'org-open-maybe ;; redefine file opening without clobbering universal
 		     ;; argumnet ...
+ ;; ...
+ )
+
+(general-define-key
+ :prefix "C-c"
+ :states 'normal
+ "SPC" 'jsntn/toggle-hideshow-all
  ;; ...
  )
 
