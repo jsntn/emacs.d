@@ -194,6 +194,8 @@
 
 (use-package expand-region)
 
+(use-package flycheck)
+
 (use-package general)
 
 (use-package helm
@@ -282,6 +284,8 @@
   :config
   (window-numbering-mode)
   )
+
+(use-package yaml-mode)
 
 
 ;; =============================================================================
