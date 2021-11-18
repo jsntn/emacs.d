@@ -309,6 +309,14 @@
 		))
   (add-hook hook 'my/show-trailing-whitespace))
 
+(dolist (hook '(
+		css-mode-hook
+		php-mode-hook
+		html-mode-hook
+		prog-mode-hook
+		))
+  (add-hook hook 'xah-syntax-color-hex))
+
 
 ;; =============================================================================
 ;; display settings
@@ -380,11 +388,6 @@ Version 2017-03-12"
 	  'face (list :background (match-string-no-properties 0)))))))
   (font-lock-flush)
   )
-
-(add-hook 'css-mode-hook 'xah-syntax-color-hex)
-(add-hook 'php-mode-hook 'xah-syntax-color-hex)
-(add-hook 'html-mode-hook 'xah-syntax-color-hex)
-(add-hook 'prog-mode-hook 'xah-syntax-color-hex)
 
 ;; visualize trailing whitespace
 (defun my/show-trailing-whitespace ()
