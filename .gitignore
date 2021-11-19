@@ -7,3 +7,4 @@ recentf
 .emacs.desktop
 .emacs.desktop.lock
 places
+elpy/
