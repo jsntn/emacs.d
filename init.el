@@ -543,8 +543,8 @@ Version 2017-03-12"
  :states '(insert visual)
  "C-c" 'kill-ring-save
  "C-v" 'yank
- "C-z" 'undo-fu-only-undo
- "C-y" 'undo-fu-only-redo
+ "C-z" 'undo-tree-undo
+ "C-y" 'undo-tree-redo
  )
 
 (general-define-key
