@@ -266,6 +266,15 @@
 
 (use-package elpa-mirror)
 
+(use-package elpy
+  :config
+  (elpy-enable)
+  ;; use flycheck instead of flymake
+  (when (load "flycheck" t t)
+    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+    (add-hook 'elpy-mode-hook 'flycheck-mode))
+  )
+
 (use-package vline
   :load-path (lambda () (symbol-value 'load-path))
   :config
