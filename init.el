@@ -846,6 +846,46 @@ current buffer's, reload dir-locals."
   )
 
 
+;; ===============================================================
+;; programming settings: Shell
+;; ===============================================================
+
+(defun my/shell-mode-config ()
+  (setq flycheck-select-checker "sh-shellcheck"))
+
+(add-hook 'sh-mode-hook 'my/shell-mode-config)
+
+
+;; ===============================================================
+;; programming settings: YAML
+;; ===============================================================
+
+(defun my/yaml-mode-config ()
+  (setq flycheck-select-checker "yaml-yamllint")
+  (setq auto-mode-alist
+	(append
+	 '(("\\.yml\\'" . yaml-mode))
+	 '(("\\.yaml\\'" . yaml-mode))
+	 auto-mode-alist)))
+
+(add-hook 'yaml-mode-hook 'my/yaml-mode-config)
+
+
+;; ===============================================================
+;; programming settings: Python
+;; ===============================================================
+
+(defun my/python-mode-config ()
+  (setq python-indent-offset 4
+	python-indent 4
+	indent-tabs-mode nil
+	default-tab-width 4
+	flycheck-select-checker "python-flake8")
+  (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode)))
+
+(add-hook 'python-mode-hook 'my/python-mode-config)
+
+
 ;; =============================================================================
 ;; local configuration settings
 ;; =============================================================================
