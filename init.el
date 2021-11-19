@@ -330,6 +330,13 @@
 		))
   (add-hook hook 'xah-syntax-color-hex))
 
+(dolist (hook '(
+		yaml-mode-hook
+		python-mode-hook
+		sh-mode-hook
+		))
+  (add-hook hook 'flycheck-mode))
+
 
 ;; =============================================================================
 ;; display settings
