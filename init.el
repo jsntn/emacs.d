@@ -138,7 +138,7 @@
 
 (use-package doom-themes
   :config
-  ;; Global settings (defaults)
+  ;; global settings (defaults)
   (setq doom-themes-enable-bold t) ; if nil, bold is universally disabled
   (doom-themes-org-config)
   ;; personal modified version of doom-monokai-classic
@@ -167,7 +167,7 @@
   (setq evil-insert-state-cursor '("red" bar))
   (setq evil-replace-state-cursor '("red" bar))
   (setq evil-operator-state-cursor '("red" hollow))
-  (evil-set-undo-system 'undo-tree)
+  (setq evil-undo-system 'undo-tree)
   )
 
 (use-package evil-collection
