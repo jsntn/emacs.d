@@ -47,6 +47,14 @@
  )
 
 (general-define-key
+ :keymaps 'ibuffer-mode-map
+ "g" 'evil-goto-first-line
+ "G" 'evil-goto-line
+ "j" 'evil-next-line
+ "k" 'evil-previous-line
+ )
+
+(general-define-key
  ;; enabling control-c and control-v to copy and paste in Emacs
  ;; keybindings for evil insert and visual mode
  :states '(insert visual)
