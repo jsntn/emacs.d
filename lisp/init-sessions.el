@@ -7,9 +7,9 @@
 (setq desktop-path (list user-emacs-directory)
       desktop-auto-save-timeout 600
       desktop-save t
-      desktop-restore-eager 10 ;; the maximum number of 10 buffers to restore
-			       ;; immediately, and the remaining buffers are
-			       ;; restored lazily, when Emacs is idle.
+      desktop-restore-eager 10 ; the maximum number of 10 buffers to restore
+			       ; immediately, and the remaining buffers are
+			       ; restored lazily, when Emacs is idle.
       )
 (desktop-save-mode 1)
 

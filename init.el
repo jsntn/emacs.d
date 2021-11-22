@@ -26,8 +26,8 @@
 (setq user-emacs-directory (file-name-directory user-init-file))
 ;; refer to https://emacs.stackexchange.com/a/4258/29715
 
-;; define site-lisp-dir
-(setq site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
+(setq site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)) ; define
+									  ; site-lisp-dir
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
@@ -37,7 +37,7 @@
 ;; =============================================================================
 
 ;; cl - Common Lisp Extension
-(require 'cl-lib) ;; https://emacs.stackexchange.com/questions/48109/require-cl-or-require-cl-lib
+(require 'cl-lib) ; https://emacs.stackexchange.com/questions/48109/require-cl-or-require-cl-lib
 
 (defun sanityinc/add-subdirs-to-load-path (parent-dir)
   "Add every non-hidden subdir of PARENT-DIR to `load-path'."
@@ -61,16 +61,17 @@
 ;; local variables settings
 ;; =============================================================================
 
-;; allow users to provide an optional "local-var" containing personal variables
-(require 'local-var nil 'noerror)
+(require 'local-var nil 'noerror) ; allow users to provide an optional
+				  ; "local-var" containing personal variables
 
 
 ;; =============================================================================
 ;; local packages management
 ;; =============================================================================
 
-;; allow users to provide an optional "local-packages" containing local packages
-(require 'local-packages nil 'noerror)
+(require 'local-packages nil 'noerror) ; allow users to provide an optional
+				       ; "local-packages" containing local
+				       ; packages
 ;; above must come before use-package settings, as it involves package.el which
 ;; downloads packages from the package-archives
 
@@ -93,8 +94,8 @@
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; disable automatic loading of installed packages after the init file
-(setq package-enable-at-startup nil)
+(setq package-enable-at-startup nil) ; disable automatic loading of installed
+				     ; packages after the init file
 (package-initialize)
 
 ;;; use-package initialization
@@ -106,8 +107,8 @@
 ;;; use-package for all others
 (require 'use-package)
 
-(setq use-package-always-ensure t) ;; to install the package if it is not
-				   ;; installed
+(setq use-package-always-ensure t) ; to install the package if it is not
+				   ; installed
 
 (use-package benchmark-init
   :config
@@ -154,8 +155,8 @@
 
 (use-package evil
   :init
-  (setq evil-want-integration t) ;; this is optional since it's already set to t
-				 ;; by default.
+  (setq evil-want-integration t) ; this is optional since it's already set to t
+				 ; by default.
   (setq evil-want-keybinding nil)
   (unless (display-graphic-p)
     (setq evil-want-C-i-jump nil)
@@ -340,10 +341,10 @@
   (add-hook hook 'flycheck-mode))
 
 
-(require 'init-display) ;; display settings
-(require 'init-font) ;; font settings
-(require 'init-keybindings) ;; keybindings with general.el
-(require 'init-sessions) ;; session settings
+(require 'init-display) ; display settings
+(require 'init-font) ; font settings
+(require 'init-keybindings) ; keybindings with general.el
+(require 'init-sessions) ; session settings
 
 
 ;; =============================================================================
@@ -428,7 +429,7 @@
 
 (save-place-mode 1)
 
-(fset 'yes-or-no-p 'y-or-n-p) ;; use 'y/n' instead of 'yes/no'
+(fset 'yes-or-no-p 'y-or-n-p) ; use 'y/n' instead of 'yes/no'
 
 (setq confirm-kill-emacs
       ;; prevent mis-operation
@@ -536,18 +537,18 @@ current buffer's, reload dir-locals."
 ;; local configuration settings
 ;; =============================================================================
 
-;; allow users to provide an optional "local-config" containing personal
-;; settings
-(require 'local-config nil 'noerror)
+(require 'local-config nil 'noerror) ; allow users to provide an optional
+				     ; "local-config" containing personal
+				     ; settings
 
 
 ;; =============================================================================
 ;; footer
 ;; =============================================================================
 
-;; stop adding "custom" fields to the end
-;; variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
+  ;; stop adding "custom" fields to the end
+  ;; variables configured via the interactive 'customize' interface
   (load custom-file))
 
 (provide 'init)

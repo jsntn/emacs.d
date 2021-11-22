@@ -10,8 +10,8 @@
 ;; global keybindings
 (general-define-key
  "M-x" 'helm-M-x
- "C-s" 'swiper ;; having own history variable allows to get more use of M-p, M-n
-	       ;; and C-r.
+ "C-s" 'swiper ; having own history variable allows to get more use of M-p, M-n
+	       ; and C-r.
  "C-=" 'er/expand-region
  "C--" 'er/contract-region
  "C-'" 'imenu-list-smart-toggle
@@ -128,8 +128,8 @@
  :prefix "C-c"
  :keymaps 'org-mode-map
  "C-q" 'counsel-org-tag
- "o" 'org-open-maybe ;; redefine file opening without clobbering universal
-		     ;; argumnet ...
+ "o" 'org-open-maybe ; redefine file opening without clobbering universal
+		     ; argumnet ...
  ;; ...
  )
 
