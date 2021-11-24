@@ -21,8 +21,6 @@
   (push site-lisp-dir load-path)
   (sanityinc/add-subdirs-to-load-path site-lisp-dir))
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
 
 (provide 'init-load-path)
 
