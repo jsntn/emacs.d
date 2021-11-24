@@ -301,51 +301,17 @@
 
 
 ;; =============================================================================
-;; add-hook settings
+;; require settings
 ;; =============================================================================
-
-(defun jsntn/hs-hide-all ()
-  (hs-minor-mode 1)
-  (hs-hide-all)
-  (set (make-variable-buffer-local 'my-hs-hide-all) t)
-  (set (make-variable-buffer-local 'my-hs-hide-block) t))
-
-(dolist (hook '(
-		prog-mode-hook
-		sh-mode-hook
-		lisp-mode-hook
-		))
-  (add-hook hook 'jsntn/hs-hide-all))
-
-(dolist (hook '(
-		prog-mode-hook
-		text-mode-hook
-		css-mode-hook
-		lisp-mode-hook
-		))
-  (add-hook hook 'my/show-trailing-whitespace))
-
-(dolist (hook '(
-		css-mode-hook
-		php-mode-hook
-		html-mode-hook
-		prog-mode-hook
-		))
-  (add-hook hook 'xah-syntax-color-hex))
-
-(dolist (hook '(
-		yaml-mode-hook
-		python-mode-hook
-		sh-mode-hook
-		))
-  (add-hook hook 'flycheck-mode))
-
 
 (require 'init-display) ; display settings
 (require 'init-font) ; font settings
 (require 'init-keybindings) ; keybindings with general.el
 (require 'init-org) ; Org-mode settings
 (require 'init-sessions) ; session settings
+
+(require 'init-hooks) ; hooks settings
+(require 'init-misc) ; miscellaneous settings
 
 
 ;; =============================================================================
@@ -357,81 +323,6 @@
 (defun ibuffer-jump-to-last-buffer ()
   (ibuffer-jump-to-buffer (buffer-name (cadr (buffer-list)))))
 (add-hook 'ibuffer-hook #'ibuffer-jump-to-last-buffer)
-
-
-;; =============================================================================
-;; others settings
-;; =============================================================================
-
-(defun open-init-file()
-  "open init.el."
-  (interactive)
-  (find-file (symbol-value 'user-init-file)))
-
-(save-place-mode 1)
-
-(fset 'yes-or-no-p 'y-or-n-p) ; use 'y/n' instead of 'yes/no'
-
-(setq confirm-kill-emacs
-      ;; prevent mis-operation
-      (lambda (prompt) (y-or-n-p-with-timeout "Whether to quit Emacs:" 10 "y")))
-
-;; to prevent kill and yank commands from accessing the clipboard
-(setq x-select-enable-clipboard nil)
-
-;; via https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
-(defun my-reload-dir-locals-for-current-buffer ()
-  "reload dir locals for the current buffer"
-  (interactive)
-  (let ((enable-local-variables :all))
-    (hack-dir-local-variables-non-file-buffer)))
-
-(defun my-reload-dir-locals-for-all-buffer-in-this-directory ()
-  "For every buffer with the same `default-directory` as the
-current buffer's, reload dir-locals."
-  (interactive)
-  (let ((dir default-directory))
-    (dolist (buffer (buffer-list))
-      (with-current-buffer buffer
-	(when (equal default-directory dir))
-	(my-reload-dir-locals-for-current-buffer)))))
-
-(add-hook 'emacs-lisp-mode-hook
-	  (defun enable-autoreload-for-dir-locals ()
-	    (when (and (buffer-file-name)
-		       (equal dir-locals-file
-			      (file-name-nondirectory (buffer-file-name))))
-	      (add-hook 'after-save-hook
-			'my-reload-dir-locals-for-all-buffer-in-this-directory
-			nil t))))
-
-(defun eh-org-clean-space (text backend info)
-  "Remove the space between chinese characters during exporting to HTML files."
-  ;; https://github.com/hick/emacs-chinese#%E4%B8%AD%E6%96%87%E6%96%AD%E8%A1%8C
-  (when (org-export-derived-backend-p backend 'html)
-    (let ((regexp "[[:multibyte:]]")
-	  (string text))
-      ;; Org converts line-break with space by default, remove this as this is
-      ;; not necessary for chinese characters
-      (setq string
-	    (replace-regexp-in-string
-	     (format "\\(%s\\) *\n *\\(%s\\)" regexp regexp)
-	     "\\1\\2" string))
-;;      ;; remove the space before the bold
-;;      (setq string
-;;	    (replace-regexp-in-string
-;;	     (format "\\(%s\\) +\\(<\\)" regexp)
-;;	     "\\1\\2" string))
-;;      ;; remove the space after the bold
-;;      (setq string
-;;	    (replace-regexp-in-string
-;;	     (format "\\(>\\) +\\(%s\\)" regexp)
-;;	     "\\1\\2" string))
-      string))
-  )
-(with-eval-after-load 'ox
-  (add-to-list 'org-export-filter-paragraph-functions 'eh-org-clean-space)
-  )
 
 
 ;; ===============================================================
