@@ -9,7 +9,10 @@
 	indent-tabs-mode nil
 	default-tab-width 4
 	flycheck-select-checker "python-flake8")
-  (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode)))
+  (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+  (auto-fill-mode 1)
+  (set (make-local-variable 'electric-indent-mode) nil)
+  )
 
 (add-hook 'python-mode-hook 'my/python-mode-config)
 
