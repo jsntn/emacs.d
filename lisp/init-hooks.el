@@ -1,4 +1,4 @@
-;;; init-org.el --- hooks settings -*- lexical-binding: t -*-
+;;; init-hooks.el --- hooks settings -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 

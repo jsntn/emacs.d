@@ -25,49 +25,18 @@
 (setq user-init-file (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
 ;; refer to https://emacs.stackexchange.com/a/4258/29715
-
 (setq site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)) ; define
 									  ; site-lisp-dir
-
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
 
 ;; =============================================================================
-;; load-path settings
+;; require settings
 ;; =============================================================================
 
-;; cl - Common Lisp Extension
-(require 'cl-lib) ; https://emacs.stackexchange.com/questions/48109/require-cl-or-require-cl-lib
-
-(defun sanityinc/add-subdirs-to-load-path (parent-dir)
-  "Add every non-hidden subdir of PARENT-DIR to `load-path'."
-  (let ((default-directory parent-dir))
-    (setq load-path
-          (append
-           (cl-remove-if-not
-            #'file-directory-p
-            (directory-files (expand-file-name parent-dir) t "^[^\\.]"))
-           load-path))))
-
-;; add both site-lisp and its immediate subdirs to `load-path'
-(let ((symbol-value 'site-lisp-dir))
-  (push site-lisp-dir load-path)
-  (sanityinc/add-subdirs-to-load-path site-lisp-dir))
-
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
-
-;; =============================================================================
-;; local variables settings
-;; =============================================================================
-
+(require 'init-load-path) ; load-path settings
 (require 'local-var nil 'noerror) ; allow users to provide an optional
 				  ; "local-var" containing personal variables
-
-
-;; =============================================================================
-;; local packages management
-;; =============================================================================
 
 (require 'local-packages nil 'noerror) ; allow users to provide an optional
 				       ; "local-packages" containing local
@@ -75,17 +44,7 @@
 ;; above must come before use-package settings, as it involves package.el which
 ;; downloads packages from the package-archives
 
-
-;; =============================================================================
-;; speed-up settings
-;; =============================================================================
-
-;; adjust garbage collection thresholds during startup, and thereafter
-(let ((normal-gc-cons-threshold (* 20 1024 1024))
-      (init-gc-cons-threshold (* 128 1024 1024)))
-  (setq gc-cons-threshold init-gc-cons-threshold)
-  (add-hook 'emacs-startup-hook
-            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+(require 'init-speed-up) ; speed-up settings
 
 
 ;; =============================================================================
@@ -306,68 +265,16 @@
 
 (require 'init-display) ; display settings
 (require 'init-font) ; font settings
+(require 'init-ibuffer) ; IBuffer mode settings
 (require 'init-keybindings) ; keybindings with general.el
 (require 'init-org) ; Org-mode settings
+(require 'init-python) ; Python settings
 (require 'init-sessions) ; session settings
+(require 'init-shell) ; Shell settings
+(require 'init-yaml) ; YAML settings
 
 (require 'init-hooks) ; hooks settings
 (require 'init-misc) ; miscellaneous settings
-
-
-;; =============================================================================
-;; IBuffer mode settings
-;; =============================================================================
-
-(setq ibuffer-default-sorting-mode 'recency)
-
-(defun ibuffer-jump-to-last-buffer ()
-  (ibuffer-jump-to-buffer (buffer-name (cadr (buffer-list)))))
-(add-hook 'ibuffer-hook #'ibuffer-jump-to-last-buffer)
-
-
-;; ===============================================================
-;; programming settings: Shell
-;; ===============================================================
-
-(defun my/shell-mode-config ()
-  (setq flycheck-select-checker "sh-shellcheck"))
-
-(add-hook 'sh-mode-hook 'my/shell-mode-config)
-
-
-;; ===============================================================
-;; programming settings: YAML
-;; ===============================================================
-
-(defun my/yaml-mode-config ()
-  (setq flycheck-select-checker "yaml-yamllint")
-  (setq auto-mode-alist
-	(append
-	 '(("\\.yml\\'" . yaml-mode))
-	 '(("\\.yaml\\'" . yaml-mode))
-	 auto-mode-alist)))
-
-(add-hook 'yaml-mode-hook 'my/yaml-mode-config)
-
-
-;; ===============================================================
-;; programming settings: Python
-;; ===============================================================
-
-(defun my/python-mode-config ()
-  (setq python-indent-offset 4
-	python-indent 4
-	indent-tabs-mode nil
-	default-tab-width 4
-	flycheck-select-checker "python-flake8")
-  (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode)))
-
-(add-hook 'python-mode-hook 'my/python-mode-config)
-
-
-;; =============================================================================
-;; local configuration settings
-;; =============================================================================
 
 (require 'local-config nil 'noerror) ; allow users to provide an optional
 				     ; "local-config" containing personal

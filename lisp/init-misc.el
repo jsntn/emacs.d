@@ -1,4 +1,4 @@
-;;; init-font.el --- miscellaneous settings -*- lexical-binding: t -*-
+;;; init-misc.el --- miscellaneous settings -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
