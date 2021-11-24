@@ -1,4 +1,4 @@
-;;; init.el --- A personal Emacs configuration       -*- lexical-binding: t; -*-
+;;; init.el --- A Personal Emacs Configuration -*- lexical-binding: t; -*-
 
 ;; =============================================================================
 ;; hi@jsntn.com
@@ -53,8 +53,6 @@
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(setq package-enable-at-startup nil) ; disable automatic loading of installed
-				     ; packages after the init file
 (package-initialize)
 
 ;;; use-package initialization
@@ -289,6 +287,7 @@
   ;; stop adding "custom" fields to the end
   ;; variables configured via the interactive 'customize' interface
   (load custom-file))
+
 
 (provide 'init)
 
