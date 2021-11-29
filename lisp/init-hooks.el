@@ -39,6 +39,12 @@
 		))
   (add-hook hook 'flycheck-mode))
 
+(dolist (hook '(
+		prog-mode-hook
+		org-mode-hook
+		))
+  (add-hook hook 'hl-todo-mode))
+
 
 (provide 'init-hooks)
 

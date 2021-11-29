@@ -116,10 +116,6 @@
   )
 
 (use-package hl-todo
-  :hook (
-	 (prog-mode . hl-todo-mode)
-	 (org-mode . hl-todo-mode)
-	 )
   :config
   (setq hl-todo-highlight-punctuation ":"
 	hl-todo-keyword-faces
