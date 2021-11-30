@@ -23,8 +23,6 @@ I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
 4. Update the Emacs configuration:
    #+BEGIN_SRC lisp
    (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
-   (setq ispell-program-name "aspell")
-   (setq ispell-personal-dictionary "C:/msys64/mingw64/lib/aspell-0.60/en_GB")
    #+END_SRC
 ** macOS
 Use below command to install =aspell=,
