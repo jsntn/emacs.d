@@ -7,18 +7,18 @@ This is my personal Emacs configuration, continually used and tweaked since 2020
 
 * Install the dependencies
 ** Windows
-I use MSYS2(www.msys2.org) for aspell implementation.
+I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
 
-1. Search `aspell` on MingW64 terminal:
+1. Search =aspell= on MingW64 terminal:
    #+BEGIN_SRC shell
    $ pacman -Ss aspell
    #+END_SRC
-2. Installing aspell and dictionary you need:
+2. Installing =aspell= and dictionary you need:
    #+BEGIN_SRC shell
    $ pacman -S mingw64/mingw-w64-x86_64-aspell
    $ pacman -S mingw64/mingw-w64-x86_64-aspell-en
    #+END_SRC
-3. Find `aspell.exe` location with `which aspell`, e.g. `C:\msys64\mingw64\bin`
+3. Find =aspell.exe= location with =which aspell=, e.g. =C:\msys64\mingw64\bin=
 4. Update the Emacs configuration:
    #+BEGIN_SRC lisp
    (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
