@@ -4,6 +4,7 @@ This is my personal Emacs configuration, continually used and tweaked since 2020
 * Table of Content                                                              :noexport:TOC:
 - [[#install-the-dependencies][Install the dependencies]]
   - [[#windows][Windows]]
+  - [[#macos][macOS]]
 
 * Install the dependencies
 ** Windows
@@ -25,3 +26,15 @@ I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
    (setq ispell-program-name "aspell")
    (setq ispell-personal-dictionary "C:/msys64/mingw64/lib/aspell-0.60/en_GB")
    #+END_SRC
+** macOS
+Use below command to install =aspell=,
+
+#+BEGIN_SRC shell
+brew install aspell
+#+END_SRC
+
+or
+
+#+BEGIN_SRC shell
+brew install --build-from-source aspell
+#+END_SRC
