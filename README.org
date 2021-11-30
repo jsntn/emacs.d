@@ -1,14 +1,28 @@
-# A personal Emacs configuration
+* A Personal Emacs Configuration
 This is my personal Emacs configuration, continually used and tweaked since 2020, and I am always trying to make it same behaviour on my Windows and macOS.
 
 * Table of Content                                                              :noexport:TOC:
-- [[#install-the-dependencies][Install the dependencies]]
+- [[#a-personal-emacs-configuration][A Personal Emacs Configuration]]
+- [[#usage][Usage]]
+- [[#setup][Setup]]
+  - [[#key-bindings][Key Bindings]]
+- [[#install-the-dependencies][Install the Dependencies]]
   - [[#flycheck][Flycheck]]
   - [[#for-windows-platform-specifics][For Windows Platform Specifics]]
   - [[#for-macos-platform-specifics][For macOS Platform Specifics]]
 - [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]]
 
-* Install the dependencies
+* Usage
+TODO
+* Setup
+Basically, follow the [[#install-the-dependencies][Install the Dependencies]] section is enough to set up.
+
+If you're a big fan of [[//haikebang.com/secure-portable.html][Portable Software on Windows Platform]] like me, please
+refer to [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]].
+** Key Bindings
+Key Bindings are managed by [[https://github.com/noctuid/general.el][general.el]], and the bindings configuration can be
+found from [[https://github.com/jsntn/emacs.d/blob/master/lisp/init-keybindings.el][here]].
+* Install the Dependencies
 ** Flycheck
 *** Python
 I use =python-flake8= as Python checker, refer to =requirements.txt=.
