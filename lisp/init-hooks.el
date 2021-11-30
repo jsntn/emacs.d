@@ -45,6 +45,8 @@
 		))
   (add-hook hook 'hl-todo-mode))
 
+(add-hook 'org-mode-hook 'toc-org-mode)
+
 
 (provide 'init-hooks)
 

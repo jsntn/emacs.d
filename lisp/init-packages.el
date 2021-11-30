@@ -162,6 +162,8 @@
 
 (use-package swiper)
 
+(use-package toc-org)
+
 (use-package undo-tree
   :config
   (global-undo-tree-mode)
