@@ -40,6 +40,7 @@ I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
    (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
    #+END_SRC
 ** For macOS Platform Specifics
+*** =Aspell=
 Use below command to install =aspell=,
 
 #+BEGIN_SRC shell
