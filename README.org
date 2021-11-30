@@ -3,11 +3,21 @@ This is my personal Emacs configuration, continually used and tweaked since 2020
 
 * Table of Content                                                              :noexport:TOC:
 - [[#install-the-dependencies][Install the dependencies]]
-  - [[#windows][Windows]]
-  - [[#macos][macOS]]
+  - [[#flycheck][Flycheck]]
+  - [[#for-windows-platform-specifics][For Windows Platform Specifics]]
+  - [[#for-macos-platform-specifics][For macOS Platform Specifics]]
+- [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]]
 
 * Install the dependencies
-** Windows
+** Flycheck
+*** Python
+I use =python-flake8= as Python checker, refer to =requirements.txt=.
+*** Shell
+I use =sh-shellcheck= as Shell checker, refer to this [[https://github.com/koalaman/shellcheck/][link]] for installation.
+*** YAML
+I use =yaml-yamllint= as YAML checker, refer to =requirements.txt=.
+** For Windows Platform Specifics
+*** =Aspell=
 I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
 
 1. Search =aspell= on MingW64 terminal,
@@ -29,7 +39,7 @@ I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
    #+BEGIN_SRC lisp
    (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
    #+END_SRC
-** macOS
+** For macOS Platform Specifics
 Use below command to install =aspell=,
 
 #+BEGIN_SRC shell
@@ -41,3 +51,5 @@ or
 #+BEGIN_SRC shell
 brew install --build-from-source aspell
 #+END_SRC
+* Windows Platform: Portable Software Integration
+TODO
