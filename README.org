@@ -1,0 +1,27 @@
+# A personal Emacs configuration
+This is my personal Emacs configuration, continually used and tweaked since 2020, and I am always trying to make it same behaviour on my Windows and macOS.
+
+* Table of Content                                                              :noexport:TOC:
+- [[#install-the-dependencies][Install the dependencies]]
+  - [[#windows][Windows]]
+
+* Install the dependencies
+** Windows
+I use MSYS2(www.msys2.org) for aspell implementation.
+
+1. Search `aspell` on MingW64 terminal:
+   #+BEGIN_SRC shell
+   $ pacman -Ss aspell
+   #+END_SRC
+2. Installing aspell and dictionary you need:
+   #+BEGIN_SRC shell
+   $ pacman -S mingw64/mingw-w64-x86_64-aspell
+   $ pacman -S mingw64/mingw-w64-x86_64-aspell-en
+   #+END_SRC
+3. Find `aspell.exe` location with `which aspell`, e.g. `C:\msys64\mingw64\bin`
+4. Update the Emacs configuration:
+   #+BEGIN_SRC lisp
+   (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
+   (setq ispell-program-name "aspell")
+   (setq ispell-personal-dictionary "C:/msys64/mingw64/lib/aspell-0.60/en_GB")
+   #+END_SRC
