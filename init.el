@@ -86,6 +86,7 @@
 (require 'init-python) ; Python settings
 (require 'init-sessions) ; session settings
 (require 'init-shell) ; Shell settings
+(require 'init-spelling) ; spelling settings
 (require 'init-yaml) ; YAML settings
 
 (require 'init-hooks) ; hooks settings
