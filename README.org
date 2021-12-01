@@ -45,28 +45,6 @@ I use =sh-shellcheck= as Shell checker, refer to this [[https://github.com/koala
 *** YAML
 I use =yaml-yamllint= as YAML checker, refer to =requirements.txt=.
 ** For Windows Platform Specifics
-*** Use MSYS2 to Manage Aspell
-I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
-
-1. Search =aspell= on MingW64 terminal,
-   #+BEGIN_SRC shell
-   $ pacman -Ss aspell
-   #+END_SRC
-2. Installing =aspell= and dictionary you need,
-   #+BEGIN_SRC shell
-   $ pacman -S mingw64/mingw-w64-x86_64-aspell
-   $ pacman -S mingw64/mingw-w64-x86_64-aspell-en
-   #+END_SRC
-3. Find =aspell.exe= location with =which aspell=, e.g. =C:\msys64\mingw64\bin=
-4. Be sure the =aspell.exe= executable binary file can be found from Emacs,
-   #+BEGIN_SRC lisp
-   (executable-find "aspell")
-   #+END_SRC
-
-   Otherwise, it can be done by updating the Emacs configuration,
-   #+BEGIN_SRC lisp
-   (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
-   #+END_SRC
 *** Use Scoop to Manage Other Apps
 I [[//jason.haikebang.com/posts/scoop/][started using Scoop]] to manage some of my apps, including,
 - Prettier
