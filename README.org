@@ -20,8 +20,6 @@ This is my personal Emacs configuration, continually used and tweaked since
     - [[#portable-python---winpython][Portable Python - WinPython]]
       - [[#python-flake8][python-flake8]]
       - [[#yaml-yamllint][yaml-yamllint]]
-    - [[#portable-binary-file][Portable Binary File]]
-      - [[#shellcheck][ShellCheck]]
   - [[#winpython][WinPython]]
 
 * Usage
@@ -84,14 +82,6 @@ I.e.,
 I.e.,
 #+BEGIN_SRC lisp
 (setq flycheck-yaml-yamllint-executable "V:/WPy32-3810/python-3.8.1/Scripts/yamllint.exe")
-#+END_SRC
-*** Portable Binary File
-**** ShellCheck
-If ShellCheck is installed with pre-compiled binary file, configure the
-executable path, take =V:/bin/shellcheck.exe= as example,
-
-#+BEGIN_SRC lisp
-(setq flycheck-sh-shellcheck-executable "V:/bin/shellcheck.exe")
 #+END_SRC
 ** [[//winpython.github.io][WinPython]]
 WinPython is a portable distribution of the Python programming language for
