@@ -27,7 +27,7 @@ This is my personal Emacs configuration, continually used and tweaked since 2020
 * Usage
 TODO
 * Setup
-Basically, following the [[#install-the-dependencies][Install the Dependencies]] section is enough to set up.
+Basically, following the [[#the-dependencies][The Dependencies]] section is enough to set up.
 
 If you're a big fan of [[//haikebang.com/secure-portable.html][Portable Software on Windows Platform]] like me, please
 refer to [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]].
