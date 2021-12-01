@@ -1,5 +1,6 @@
 * A Personal Emacs Configuration
-This is my personal Emacs configuration, continually used and tweaked since 2020, and I am always trying to make it same behaviour on my Windows and macOS.
+This is my personal Emacs configuration, continually used and tweaked since
+2020, and I am always trying to make it same behaviour on my Windows and macOS.
 
 * Table of Content                                                              :noexport:TOC_4:
 - [[#a-personal-emacs-configuration][A Personal Emacs Configuration]]
@@ -12,9 +13,10 @@ This is my personal Emacs configuration, continually used and tweaked since 2020
     - [[#shell][Shell]]
     - [[#yaml][YAML]]
   - [[#for-windows-platform-specifics][For Windows Platform Specifics]]
-    - [[#aspell][Aspell]]
+    - [[#use-msys2-to-manage-aspell][Use MSYS2 to Manage Aspell]]
+    - [[#use-scoop-to-manage-other-apps][Use Scoop to Manage Other Apps]]
   - [[#for-macos-platform-specifics][For macOS Platform Specifics]]
-    - [[#aspell-1][Aspell]]
+    - [[#aspell][Aspell]]
 - [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]]
   - [[#flycheck-1][Flycheck]]
     - [[#portable-python---winpython][Portable Python - WinPython]]
@@ -43,7 +45,7 @@ I use =sh-shellcheck= as Shell checker, refer to this [[https://github.com/koala
 *** YAML
 I use =yaml-yamllint= as YAML checker, refer to =requirements.txt=.
 ** For Windows Platform Specifics
-*** Aspell
+*** Use MSYS2 to Manage Aspell
 I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
 
 1. Search =aspell= on MingW64 terminal,
@@ -65,6 +67,21 @@ I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
    #+BEGIN_SRC lisp
    (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
    #+END_SRC
+*** Use Scoop to Manage Other Apps
+I [[//jason.haikebang.com/posts/scoop/][started using Scoop]] to manage some of my apps, including,
+- Prettier
+  #+BEGIN_SRC powershell
+  scoop install nodejs
+  npm install -g prettier
+  #+END_SRC
+- shfmt
+  #+BEGIN_SRC powershell
+  scoop install shfmt
+  #+END_SRC
+- Shell Check
+  #+BEGIN_SRC powershell
+  scoop install shellcheck
+  #+END_SRC
 ** For macOS Platform Specifics
 *** Aspell
 Use below command to install =aspell=,
