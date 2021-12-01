@@ -55,13 +55,13 @@ I [[//jason.haikebang.com/posts/scoop/][started using Scoop]] to manage some of 
   scoop install nodejs
   npm install -g prettier
   #+END_SRC
+- ShellCheck
+  #+BEGIN_SRC powershell
+  scoop install shellcheck
+  #+END_SRC
 - shfmt
   #+BEGIN_SRC powershell
   scoop install shfmt
-  #+END_SRC
-- Shell Check
-  #+BEGIN_SRC powershell
-  scoop install shellcheck
   #+END_SRC
 ** For macOS Platform Specifics
 *** Aspell
@@ -69,12 +69,6 @@ Use below command to install =aspell=,
 
 #+BEGIN_SRC shell
 brew install aspell
-#+END_SRC
-
-or
-
-#+BEGIN_SRC shell
-brew install --build-from-source aspell
 #+END_SRC
 * Windows Platform: Portable Software Integration
 ** Flycheck
