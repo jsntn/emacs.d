@@ -1,16 +1,28 @@
 * A Personal Emacs Configuration
 This is my personal Emacs configuration, continually used and tweaked since 2020, and I am always trying to make it same behaviour on my Windows and macOS.
 
-* Table of Content                                                              :noexport:TOC:
+* Table of Content                                                              :noexport:TOC_4:
 - [[#a-personal-emacs-configuration][A Personal Emacs Configuration]]
 - [[#usage][Usage]]
 - [[#setup][Setup]]
   - [[#key-bindings][Key Bindings]]
 - [[#install-the-dependencies][Install the Dependencies]]
   - [[#flycheck][Flycheck]]
+    - [[#python][Python]]
+    - [[#shell][Shell]]
+    - [[#yaml][YAML]]
   - [[#for-windows-platform-specifics][For Windows Platform Specifics]]
+    - [[#aspell][Aspell]]
   - [[#for-macos-platform-specifics][For macOS Platform Specifics]]
+    - [[#aspell-1][=Aspell=]]
 - [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]]
+  - [[#flycheck-1][Flycheck]]
+    - [[#portable-python---winpython][Portable Python - WinPython]]
+      - [[#python-flake8][python-flake8]]
+      - [[#yaml-yamllint][yaml-yamllint]]
+    - [[#portable-binary-file][Portable Binary File]]
+      - [[#shellcheck][ShellCheck]]
+  - [[#winpython][WinPython]]
 
 * Usage
 TODO
@@ -31,7 +43,7 @@ I use =sh-shellcheck= as Shell checker, refer to this [[https://github.com/koala
 *** YAML
 I use =yaml-yamllint= as YAML checker, refer to =requirements.txt=.
 ** For Windows Platform Specifics
-*** =Aspell=
+*** Aspell
 I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
 
 1. Search =aspell= on MingW64 terminal,
@@ -67,4 +79,28 @@ or
 brew install --build-from-source aspell
 #+END_SRC
 * Windows Platform: Portable Software Integration
-TODO
+** Flycheck
+*** Portable Python - WinPython
+For the packages are installed in a portable Python like [[#winpython][WinPython]], executable
+paths should be configured manually.
+**** python-flake8
+I.e.,
+#+BEGIN_SRC lisp
+(setq flycheck-python-flake8-executable "V:/WPy32-3810/python-3.8.1/Scripts/flake8.exe")
+#+END_SRC
+**** yaml-yamllint
+I.e.,
+#+BEGIN_SRC lisp
+(setq flycheck-yaml-yamllint-executable "V:/WPy32-3810/python-3.8.1/Scripts/yamllint.exe")
+#+END_SRC
+*** Portable Binary File
+**** ShellCheck
+If ShellCheck is installed with pre-compiled binary file, configure the
+executable path, take =V:/bin/shellcheck.exe= as example,
+
+#+BEGIN_SRC lisp
+(setq flycheck-sh-shellcheck-executable "V:/bin/shellcheck.exe")
+#+END_SRC
+** [[//winpython.github.io][WinPython]]
+WinPython is a portable distribution of the Python programming language for
+Windows.
