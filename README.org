@@ -6,7 +6,7 @@ This is my personal Emacs configuration, continually used and tweaked since 2020
 - [[#usage][Usage]]
 - [[#setup][Setup]]
   - [[#key-bindings][Key Bindings]]
-- [[#install-the-dependencies][Install the Dependencies]]
+- [[#the-dependencies][The Dependencies]]
   - [[#flycheck][Flycheck]]
     - [[#python][Python]]
     - [[#shell][Shell]]
@@ -14,7 +14,7 @@ This is my personal Emacs configuration, continually used and tweaked since 2020
   - [[#for-windows-platform-specifics][For Windows Platform Specifics]]
     - [[#aspell][Aspell]]
   - [[#for-macos-platform-specifics][For macOS Platform Specifics]]
-    - [[#aspell-1][=Aspell=]]
+    - [[#aspell-1][Aspell]]
 - [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]]
   - [[#flycheck-1][Flycheck]]
     - [[#portable-python---winpython][Portable Python - WinPython]]
@@ -27,14 +27,14 @@ This is my personal Emacs configuration, continually used and tweaked since 2020
 * Usage
 TODO
 * Setup
-Basically, follow the [[#install-the-dependencies][Install the Dependencies]] section is enough to set up.
+Basically, following the [[#install-the-dependencies][Install the Dependencies]] section is enough to set up.
 
 If you're a big fan of [[//haikebang.com/secure-portable.html][Portable Software on Windows Platform]] like me, please
 refer to [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]].
 ** Key Bindings
 Key Bindings are managed by [[https://github.com/noctuid/general.el][general.el]], and the bindings configuration can be
 found from [[https://github.com/jsntn/emacs.d/blob/master/lisp/init-keybindings.el][here]].
-* Install the Dependencies
+* The Dependencies
 ** Flycheck
 *** Python
 I use =python-flake8= as Python checker, refer to =requirements.txt=.
@@ -66,7 +66,7 @@ I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
    (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
    #+END_SRC
 ** For macOS Platform Specifics
-*** =Aspell=
+*** Aspell
 Use below command to install =aspell=,
 
 #+BEGIN_SRC shell
