@@ -134,6 +134,27 @@
  )
 
 (general-define-key
+ ;; for yaml-mode-map
+ :prefix "C-c"
+ :keymaps 'yaml-mode-map
+ "C-f" 'css-yaml-format-buffer
+ )
+
+(general-define-key
+ ;; for css-mode-map
+ :prefix "C-c"
+ :keymaps 'css-mode-map
+ "C-f" 'css-yaml-format-buffer
+ )
+
+(general-define-key
+ ;; for sh-mode-map
+ :prefix "C-c"
+ :keymaps 'sh-mode-map
+ "C-f" 'sh-format-buffer
+ )
+
+(general-define-key
  :prefix "C-c"
  :states 'normal
  "SPC" 'jsntn/toggle-hideshow-all
