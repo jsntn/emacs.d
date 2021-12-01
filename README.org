@@ -13,8 +13,6 @@ This is my personal Emacs configuration, continually used and tweaked since
     - [[#shell][Shell]]
     - [[#yaml][YAML]]
   - [[#for-windows-platform-specifics][For Windows Platform Specifics]]
-    - [[#use-msys2-to-manage-aspell][Use MSYS2 to Manage Aspell]]
-    - [[#use-scoop-to-manage-other-apps][Use Scoop to Manage Other Apps]]
   - [[#for-macos-platform-specifics][For macOS Platform Specifics]]
     - [[#aspell][Aspell]]
 - [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]]
@@ -45,8 +43,13 @@ I use =sh-shellcheck= as Shell checker, refer to this [[https://github.com/koala
 *** YAML
 I use =yaml-yamllint= as YAML checker, refer to =requirements.txt=.
 ** For Windows Platform Specifics
-*** Use Scoop to Manage Other Apps
 I [[//jason.haikebang.com/posts/scoop/][started using Scoop]] to manage some of my apps, including,
+- Aspell
+  #+BEGIN_SRC powershell
+  scoop bucket add iquiw_scoop-bucket https://github.com/iquiw/scoop-bucket
+  scoop install aspell
+  #+END_SRC
+  (Aspell can also be implemented by MSYS2, refer to this [[https://github.com/jsntn/emacs.d/tree/b9b70469d961ee58138bff1a1ce0baf4286fb18e#use-msys2-to-manage-aspell][link]].)
 - Prettier
   #+BEGIN_SRC powershell
   scoop install nodejs
