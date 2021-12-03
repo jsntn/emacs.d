@@ -13,6 +13,8 @@ This is my personal Emacs configuration, continually used and tweaked since
     - [[#shell][Shell]]
     - [[#yaml][YAML]]
   - [[#for-windows-platform-specifics][For Windows Platform Specifics]]
+    - [[#use-msys2-to-manage-aspell][Use MSYS2 to Manage Aspell]]
+    - [[#use-scoop-to-manage-other-apps][Use Scoop to Manage Other Apps]]
   - [[#for-macos-platform-specifics][For macOS Platform Specifics]]
 - [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]]
   - [[#flycheck-1][Flycheck]]
@@ -40,13 +42,30 @@ I use =sh-shellcheck= as Shell checker, refer to this [[https://github.com/koala
 *** YAML
 I use =yaml-yamllint= as YAML checker, refer to =requirements.txt=.
 ** For Windows Platform Specifics
+*** Use MSYS2 to Manage Aspell
+I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
+
+1. Search =aspell= on MingW64 terminal,
+   #+BEGIN_SRC shell
+   $ pacman -Ss aspell
+   #+END_SRC
+2. Installing =aspell= and dictionary you need,
+   #+BEGIN_SRC shell
+   $ pacman -S mingw64/mingw-w64-x86_64-aspell
+   $ pacman -S mingw64/mingw-w64-x86_64-aspell-en
+   #+END_SRC
+3. Find =aspell.exe= location with =which aspell=, e.g. =C:\msys64\mingw64\bin=
+4. Be sure the =aspell.exe= executable binary file can be found from Emacs,
+   #+BEGIN_SRC lisp
+   (executable-find "aspell")
+   #+END_SRC
+
+   Otherwise, it can be done by updating the Emacs configuration,
+   #+BEGIN_SRC lisp
+   (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
+   #+END_SRC
+*** Use Scoop to Manage Other Apps
 I [[//jason.haikebang.com/posts/scoop/][started using Scoop]] to manage some of my apps, including,
-- Aspell
-  #+BEGIN_SRC powershell
-  scoop bucket add iquiw_scoop-bucket https://github.com/iquiw/scoop-bucket
-  scoop install aspell
-  #+END_SRC
-  (Aspell can also be implemented by MSYS2, refer to this [[https://github.com/jsntn/emacs.d/tree/b9b70469d961ee58138bff1a1ce0baf4286fb18e#use-msys2-to-manage-aspell][link]].)
 - Prettier
   #+BEGIN_SRC powershell
   scoop install nodejs
