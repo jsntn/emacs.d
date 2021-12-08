@@ -29,6 +29,11 @@
 (set-default-coding-systems 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
 
+(when (display-graphic-p)
+  ;; configuration for org-bullets package
+  (setq org-bullets-bullet-list '("⬛" "○" "¶" "►"))
+  )
+
 (defun windows-split-toggle ()
   "Toggle between horizontal and vertical split with two windows."
   (interactive)
