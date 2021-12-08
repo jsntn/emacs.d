@@ -12,6 +12,7 @@ This is my personal Emacs configuration, continually used and tweaked since
     - [[#python][Python]]
     - [[#shell][Shell]]
     - [[#yaml][YAML]]
+  - [[#plantuml][PlantUML]]
   - [[#for-windows-platform-specifics][For Windows Platform Specifics]]
     - [[#use-msys2-to-manage-aspell][Use MSYS2 to Manage Aspell]]
     - [[#use-scoop-to-manage-other-apps][Use Scoop to Manage Other Apps]]
@@ -42,6 +43,10 @@ I use =python-flake8= as Python checker, refer to =requirements.txt=.
 I use =sh-shellcheck= as Shell checker, refer to this [[https://github.com/koalaman/shellcheck/][link]] for installation.
 *** YAML
 I use =yaml-yamllint= as YAML checker, refer to =requirements.txt=.
+** PlantUML
+The PlantUML is run as a local JAR file, which is configured in the
+[[https://github.com/jsntn/emacs.d/blob/master/lisp/init-plantuml.el][init-plantuml.el]]. And the plantuml.jar can be downloaded from [[https://plantuml.com/download][official download
+page]].
 ** For Windows Platform Specifics
 *** Use MSYS2 to Manage Aspell
 I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
