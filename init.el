@@ -86,6 +86,7 @@
 (require 'init-ibuffer) ; IBuffer mode settings
 (require 'init-keybindings) ; keybindings with general.el
 (require 'init-org) ; Org-mode settings
+(require 'init-plantuml) ; PlantUML settings
 (require 'init-python) ; Python settings
 (require 'init-sessions) ; session settings
 (require 'init-shell) ; Shell settings
