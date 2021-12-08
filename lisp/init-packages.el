@@ -136,6 +136,8 @@
   :after ox
   )
 
+(use-package plantuml-mode)
+
 (use-package reformatter
   :config
   (reformatter-define css-yaml-format
