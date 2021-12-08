@@ -28,9 +28,7 @@
   (company-tng-configure-default)
   )
 
-(use-package counsel
-  :defer 4
-  )
+(use-package counsel)
 
 (use-package doom-themes
   :config
@@ -81,7 +79,6 @@
   :after evil
   :config
   (evil-collection-init)
-  :defer 4
   )
 
 (use-package evil-leader
@@ -105,9 +102,7 @@
 
 (use-package general)
 
-(use-package helm
-  :defer 2
-  )
+(use-package helm)
 
 (use-package highlight-indent-guides
   :config
@@ -115,28 +110,7 @@
   :hook (prog-mode-hook . highlight-indent-guides-mode)
   )
 
-(use-package hl-todo
-  :config
-  (setq hl-todo-highlight-punctuation ":"
-	hl-todo-keyword-faces
-	`(
-	  ("TODO" :foreground "white" :background "#5F87FF")
-	  ("DONE" :foreground "white" :background "#2E8B57")
-	  ("FIXME" :foreground "white" :background "red")
-	  ("DEBUG" :foreground "#E6DB74" :background "black" :box t)
-	  ("HACK" :foreground "#9C91E4" :background "black" :box t)
-	  ("REVIEW" :foreground "#F02660" :background "black" :box t)
-	  ("NOTE" :foreground "#C0C0C0" :background "#308014" :box t)
-	  ("DEPRECATED" font-lock-doc-face :strike-through t :box t)
-	  ("FOLLOWUP" :foreground "white" :background "#808A87" :box t)
-	  ("ANSWER" :foreground "white" :background "#808A87" :box t)
-	  ("MARK" :foreground "black" :background "#FFFFFF" :box t)
-	  ("IMPROVEMENT" :foreground "white" :background "#FF9900" :box t)
-	  ("ENHANCEMENT" :foreground "white" :background "#9900FF" :box t)
-	  ("FEATURE" :foreground "white" :background "#38761d" :box t)
-	  )
-	)
-  )
+(use-package hl-todo)
 
 (use-package imenu-list)
 
@@ -147,13 +121,8 @@
   )
 
 (use-package org-bullets
-  :init
-  (when (display-graphic-p)
-  (setq org-bullets-bullet-list '("⬛" "○" "¶" "►"))
-  )
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-  :defer 4
   )
 
 (use-package org-drill
