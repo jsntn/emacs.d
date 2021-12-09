@@ -31,7 +31,10 @@ You need to install it manually. Continue?")
 ;; integration with Org-mode by registering it with the PlantUML language
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 
-(setq plantuml-output-type "svg") ; the default output format
+(if (image-type-available-p 'svg)
+    (setq plantuml-output-type "svg") ; the default output format
+  (message "This Emacs is not buit with SVG support.")
+  )
 
 
 (provide 'init-plantuml)
