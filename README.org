@@ -22,6 +22,7 @@ This is my personal Emacs configuration, continually used and tweaked since
     - [[#portable-python---winpython][Portable Python - WinPython]]
       - [[#python-flake8][python-flake8]]
       - [[#yaml-yamllint][yaml-yamllint]]
+  - [[#graphviz][GraphViz]]
   - [[#winpython][WinPython]]
 - [[#known-issue][Known Issue]]
 
@@ -91,6 +92,13 @@ On macOS, I [[//jsntn.com/mac/2017/12/09/homebrew.html][use Homebrew]] to manage
   #+BEGIN_SRC shell
   brew install aspell
   #+END_SRC
+- GraphViz
+  #+BEGIN_SRC shell
+  brew install graphviz
+  #+END_SRC
+  You might prefer using the verified GraphViz as mentioned in [[//plantuml.com/en/faq][Which version of
+  GraphViz should I use]], [[//gist.github.com/jsntn/ef16c658aeef04da45635209e9b5e32b][here]] is a log example of my GraphViz 2.44.0
+  installation.
 - ShellCheck
   #+BEGIN_SRC shell
   brew install shellcheck
@@ -114,6 +122,8 @@ I.e.,
 #+BEGIN_SRC lisp
 (setq flycheck-yaml-yamllint-executable "V:/WPy32-3810/python-3.8.1/Scripts/yamllint.exe")
 #+END_SRC
+** GraphViz
+Refer to the [[//plantuml.com/en/graphviz-dot][GraphViz]] post from PlantUML website.
 ** [[//winpython.github.io][WinPython]]
 WinPython is a portable distribution of the Python programming language for
 Windows.
