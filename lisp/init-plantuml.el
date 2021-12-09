@@ -15,6 +15,10 @@ You might need to set it manually. Continue?")
 	      (yes-or-no-p "Please be informed the org-plantuml-jar-path is not found.
 You might need to set it manually. Continue?")
 	      )
+	    (unless (executable-find "dot")
+	      (yes-or-no-p "Please be informed the Graphviz executable file is not found.
+You need to install it manually. Continue?")
+	      )
 	    ))
 
 ;; https://github.com/skuro/plantuml-mode#execution-modes
