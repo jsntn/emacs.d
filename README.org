@@ -23,6 +23,7 @@ This is my personal Emacs configuration, continually used and tweaked since
       - [[#python-flake8][python-flake8]]
       - [[#yaml-yamllint][yaml-yamllint]]
   - [[#graphviz][GraphViz]]
+  - [[#plantuml-1][PlantUML]]
   - [[#winpython][WinPython]]
 - [[#known-issue][Known Issue]]
 
@@ -124,6 +125,21 @@ I.e.,
 #+END_SRC
 ** GraphViz
 Refer to the [[//plantuml.com/en/graphviz-dot][GraphViz]] post from PlantUML website.
+
+In case of using portable GraphViz, specify the environment variable
+=GRAPHVIZ_DOT= to set the exact location of your GraphViz executable.
+
+I.e.,
+#+BEGIN_SRC lisp
+(setenv "GRAPHVIZ_DOT" "V:/bin/GraphvizPortable/App/graphviz/bin/dot.exe")
+#+END_SRC
+** PlantUML
+For portable plantuml.jar integration, i.e.,
+#+BEGIN_SRC lisp
+(setq plantuml-jar-path "V:/bin/plantuml.jar")
+(setq org-plantuml-jar-path
+      (expand-file-name "V:/bin/plantuml.jar"))
+#+END_SRC
 ** [[//winpython.github.io][WinPython]]
 WinPython is a portable distribution of the Python programming language for
 Windows.
