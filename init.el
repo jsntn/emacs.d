@@ -82,6 +82,7 @@
 ;; =============================================================================
 
 (require 'init-display) ; display settings
+(require 'init-encryption) ; encryption settings
 (require 'init-font) ; font settings
 (require 'init-ibuffer) ; IBuffer mode settings
 (require 'init-keybindings) ; keybindings with general.el
