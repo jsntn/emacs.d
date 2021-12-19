@@ -163,7 +163,7 @@
   )
 
 (use-package vline
-  :load-path (lambda () (symbol-value 'load-path))
+  ;; vline package will be loaded from local site-lisp folder
   :config
   (set-face-background vline-face "#283639")
   )
