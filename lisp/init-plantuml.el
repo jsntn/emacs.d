@@ -18,6 +18,10 @@ You might need to set it manually. Continue?")
     (yes-or-no-p "Please be informed the Graphviz executable file is not found.
 You need to install it manually. Continue?")
     )
+  (unless (image-type-available-p 'svg)
+    (yes-or-no-p "This Emacs is not buit with SVG support.
+Continue?")
+    )
   )
 
 (add-hook 'plantuml-mode-hook 'jsntn/plantuml-checking)
@@ -31,10 +35,7 @@ You need to install it manually. Continue?")
 ;; integration with Org-mode by registering it with the PlantUML language
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 
-(if (image-type-available-p 'svg)
-    (setq plantuml-output-type "svg") ; the default output format
-  (message "This Emacs is not buit with SVG support.")
-  )
+(setq plantuml-output-type "svg") ; the default output format
 
 
 (provide 'init-plantuml)
