@@ -42,6 +42,8 @@
 (require 'local-var nil 'noerror) ; allow users to provide an optional
 				  ; "local-var" containing personal variables
 
+(require 'use-package) ; use-package initialization
+
 (require 'local-packages nil 'noerror) ; allow users to provide an optional
 				       ; "local-packages" containing local
 				       ; packages
@@ -61,15 +63,6 @@
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
-
-;;; use-package initialization
-;;; install use-package if not done
-(if (not (package-installed-p 'use-package))
-    (progn
-      (package-refresh-contents)
-      (package-install 'use-package)))
-;;; use-package for all others
-(require 'use-package)
 
 (setq use-package-always-ensure t) ; to install the package if it is not
 				   ; installed
