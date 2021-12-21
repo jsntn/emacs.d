@@ -5,6 +5,11 @@
 
 (setq org-startup-indented t) ; enable org-indent mode
 
+(setq org-log-done 'time) ; keep track of when a certain TODO item was marked as
+			  ; done
+
+(setq org-log-done 'note) ; record a note along with the timestamp
+
 (defun org-force-open-current-window ()
   ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
   (interactive)
