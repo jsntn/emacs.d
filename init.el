@@ -41,14 +41,12 @@
 (require 'init-load-path) ; load-path settings
 (require 'local-var nil 'noerror) ; allow users to provide an optional
 				  ; "local-var" containing personal variables
-
 (require 'use-package) ; use-package initialization
-
 (require 'local-packages nil 'noerror) ; allow users to provide an optional
 				       ; "local-packages" containing local
 				       ; packages
-;; above must come before use-package settings, as it involves package.el which
-;; downloads packages from the package-archives
+;; above must come before (require 'package) settings, as it involves package.el
+;; which downloads packages from the package-archives
 
 (require 'init-speed-up) ; speed-up settings
 
