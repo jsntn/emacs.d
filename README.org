@@ -8,11 +8,13 @@ This is my personal Emacs configuration, continually used and tweaked since
 - [[#setup][Setup]]
   - [[#key-bindings][Key Bindings]]
 - [[#the-dependencies][The Dependencies]]
+  - [[#aspell][Aspell]]
   - [[#flycheck][Flycheck]]
     - [[#python][Python]]
     - [[#shell][Shell]]
     - [[#yaml][YAML]]
   - [[#plantuml][PlantUML]]
+- [[#the-dependencies-installation][The Dependencies Installation]]
   - [[#for-windows-platform-specifics][For Windows Platform Specifics]]
     - [[#use-msys2-to-manage-aspell][Use MSYS2 to Manage Aspell]]
     - [[#use-scoop-to-manage-other-apps][Use Scoop to Manage Other Apps]]
@@ -30,14 +32,20 @@ This is my personal Emacs configuration, continually used and tweaked since
 * Usage
 TODO
 * Setup
-Basically, following the [[#the-dependencies][The Dependencies]] section is enough to set up.
+Basically, following the [[#the-dependencies][the dependencies]] section is enough to set up.
 
-If you're a big fan of [[//haikebang.com/secure-portable.html][Portable Software on Windows Platform]] like me, please
+If you're a big fan of [[//haikebang.com/secure-portable.html][portable software on Windows platform]] like me, please
 refer to [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]].
 ** Key Bindings
 Key Bindings are managed by [[https://github.com/noctuid/general.el][general.el]], and the bindings configuration can be
 found from [[https://github.com/jsntn/emacs.d/blob/master/lisp/init-keybindings.el][here]].
 * The Dependencies
+** Aspell
+GNU Aspell is a Free and Open Source spell checker designed to eventually
+replace Ispell. It can either be used as a library or as an independent spell
+checker. Its main feature is that it does a superior job of suggesting possible
+replacements for a misspelled word than just about any other spell checker out
+there for the English language. ([[http://aspell.net][via]])
 ** Flycheck
 *** Python
 I use =python-flake8= as Python checker, refer to =requirements.txt=.
@@ -49,6 +57,16 @@ I use =yaml-yamllint= as YAML checker, refer to =requirements.txt=.
 The PlantUML is run as a local JAR file, which is configured in the
 [[https://github.com/jsntn/emacs.d/blob/master/lisp/init-plantuml.el][init-plantuml.el]]. And the plantuml.jar can be downloaded from [[https://plantuml.com/download][official download
 page]].
+* The Dependencies Installation
+The following command will install the Python packages according to the
+configuration file [[//github.com/jsntn/emacs.d/blob/master/requirements.txt][requirements.txt]],
+
+#+BEGIN_SRC shell
+$ pip install -r requirements.txt
+#+END_SRC
+
+Apart from the Python packages, refer to the sections below to proceed with
+other dependencies installation.
 ** For Windows Platform Specifics
 *** Use MSYS2 to Manage Aspell
 I use [[//www.msys2.org][MSYS2]] for =aspell= implementation.
