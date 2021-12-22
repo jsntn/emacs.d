@@ -98,6 +98,13 @@
   (global-evil-visualstar-mode)
   )
 
+(when (memq window-system '(mac ns))
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize)
+    )
+  )
+
 (use-package expand-region)
 
 (use-package flycheck)
