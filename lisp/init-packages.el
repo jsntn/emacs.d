@@ -44,6 +44,8 @@
    `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6))))))
   )
 
+(use-package elgrep)
+
 (use-package elpa-mirror)
 
 (use-package elpy
