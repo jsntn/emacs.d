@@ -64,7 +64,8 @@
 (when (display-graphic-p)
   ;; setup default english font and cjk font
   (setq emacs-english-font "Source Code Pro Semibold")
-  (setq emacs-cjk-font "等距更纱黑体 SC")
+  ;; (setq emacs-cjk-font "等距更纱黑体 SC")
+  (setq emacs-cjk-font "LXGW WenKai Mono") ; https://github.com/lxgw/LxgwWenKai
   (setq emacs-font-size-pair '(20 . 22))
   (setq emacs-font-size-pair-list '(( 10 . 12) (12 . 14)
 				    (14 . 16) (16 . 18) (18 . 20)
