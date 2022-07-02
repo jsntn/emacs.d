@@ -105,6 +105,11 @@ I [[//jason.haikebang.com/posts/scoop/][started using Scoop]] to manage some of 
   #+BEGIN_SRC powershell
   scoop install shfmt
   #+END_SRC
+- js-yaml
+  #+BEGIN_SRC powershell
+  scoop install nodejs
+  npm install -g js-yaml
+  #+END_SRC
 ** For macOS Platform Specifics
 On macOS, I [[//jsntn.com/mac/2017/12/09/homebrew.html][use Homebrew]] to manage apps, including,
 - Aspell
