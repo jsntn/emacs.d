@@ -52,7 +52,10 @@ I use =python-flake8= as Python checker, refer to =requirements.txt=.
 *** Shell
 I use =sh-shellcheck= as Shell checker, refer to this [[https://github.com/koalaman/shellcheck/][link]] for installation.
 *** YAML
-I use =yaml-yamllint= as YAML checker, refer to =requirements.txt=.
+I use =js-yaml= as YAML checker on my PC, this can be [[https://github.com/jsntn/emacs.d/commit/923aabd1dcfe55f8e65177b02a3d99a2ef49a80b][installed with Scoop]]
+easily.
+
+=yaml-yamllint= is another option as YAML checker, refer to =requirements.txt=.
 ** PlantUML
 The PlantUML is run as a local JAR file, which is configured in the
 [[https://github.com/jsntn/emacs.d/blob/master/lisp/init-plantuml.el][init-plantuml.el]]. And the plantuml.jar can be downloaded from [[https://plantuml.com/download][official download
