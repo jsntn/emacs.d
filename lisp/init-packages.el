@@ -66,6 +66,8 @@
     (setq evil-want-C-i-jump nil)
     )
   :config
+  (evil-set-undo-system 'undo-tree) ; https://github.com/emacs-evil/evil/issues/1372#issuecomment-712611291
+  (global-undo-tree-mode)
   (evil-mode 1)
   ;; change the cursor color in terms of evil mode
   (setq evil-emacs-state-cursor '("red" box))
@@ -74,7 +76,6 @@
   (setq evil-insert-state-cursor '("red" bar))
   (setq evil-replace-state-cursor '("red" bar))
   (setq evil-operator-state-cursor '("red" hollow))
-  (setq evil-undo-system 'undo-tree)
   )
 
 (use-package evil-collection
