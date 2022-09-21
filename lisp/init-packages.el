@@ -28,6 +28,13 @@
   (company-tng-configure-default)
   )
 
+(use-package cnfonts
+  :config
+  (cnfonts-mode 1)
+  (setq cnfonts-profiles
+	'("program" "org-mode" "read-book"))
+  )
+
 (use-package counsel)
 
 (use-package doom-themes
