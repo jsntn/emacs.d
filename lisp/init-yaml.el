@@ -4,7 +4,7 @@
 
 
 (defun my/yaml-mode-config ()
-  (setq flycheck-select-checker "yaml-yamllint")
+  (setq flycheck-select-checker "yaml-jsyaml")
   (setq auto-mode-alist
 	(append
 	 '(("\\.yml\\'" . yaml-mode))
