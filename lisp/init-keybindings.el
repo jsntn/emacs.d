@@ -32,8 +32,8 @@
 (when (display-graphic-p)
   (general-define-key
    ;; setup change size font, base on emacs-font-size-pair-list
-   "C-M-=" 'increase-emacs-font-size
-   "C-M--" 'decrease-emacs-font-size
+   "C-M-=" 'cnfonts-increase-fontsize
+   "C-M--" 'cnfonts-decrease-fontsize
    )
   )
 
