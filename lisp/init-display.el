@@ -29,9 +29,27 @@
 (set-default-coding-systems 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
 
+(progn
+  ;; set font for emoji (if before emacs 28, should come after setting
+  ;; symbols. emacs 28 now has 'emoji . before, emoji is part of 'symbol)
+  ;; http://xahlee.info/emacs/emacs/emacs_set_font_emoji.html
+  (set-fontset-font
+   t
+   (if (version< emacs-version "28.1")
+       '(#x1f300 . #x1fad0)
+     'emoji
+     )
+   (cond
+    ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
+    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
+    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
+    ((member "Symbola" (font-family-list)) "Symbola")))
+  )
+
 (when (display-graphic-p)
   ;; configuration for org-bullets package
-  (setq org-bullets-bullet-list '("⬛" "○" "¶" "►"))
+  (setq org-bullets-bullet-list '("◼️" "○" "¶" "►"))
   )
 
 (defun windows-split-toggle ()
