@@ -1,5 +1,5 @@
 custom.el
-elpa/
+elpa-*/
 network-security.data
 *~
 recentf
