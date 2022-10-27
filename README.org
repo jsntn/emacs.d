@@ -16,6 +16,7 @@ This is my personal Emacs configuration, continually used and tweaked since
   - [[#plantuml][PlantUML]]
 - [[#the-dependencies-installation][The Dependencies Installation]]
   - [[#for-windows-platform-specifics][For Windows Platform Specifics]]
+    - [[#emacsql-sqlite-binary][EmacSQL SQLite Binary]]
   - [[#for-macos-platform-specifics][For macOS Platform Specifics]]
 - [[#windows-platform-portable-software-integration][Windows Platform: Portable Software Integration]]
   - [[#flycheck-1][Flycheck]]
@@ -92,6 +93,9 @@ I [[//jason.haikebang.com/posts/scoop/][started using Scoop]] to manage some of 
   scoop install nodejs
   npm install -g js-yaml
   #+END_SRC
+*** EmacSQL SQLite Binary
+In case of getting the error message: "No EmacSQL SQLite binary available,
+aborting", follow [[//github.com/org-roam/org-roam/blob/e1873a6a1660b5c4f850df2da578d1a1b851f8ac/doc/installation.md#windows][this]] to fix.
 ** For macOS Platform Specifics
 On macOS, I [[//jsntn.com/mac/2017/12/09/homebrew.html][use Homebrew]] to manage apps, including,
 - Aspell
