@@ -40,9 +40,13 @@
    (cond
     ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
     ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+    ;;<2022-10-31 NotoColorEmoji uses the CBDT/CBLC color font format, which is
+    ;; supported by Android and Chrome/Chromium OS. Windows supports it starting
+    ;; with Windows 10 Anniversary Update in Chrome and Edge.
+    ;; Via https://github.com/googlefonts/noto-emoji/blob/f826707b28355f6cd1593f504427ca2b1f6c4c19/README.md#using-notocoloremoji
     ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
     ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-    ((member "Symbola" (font-family-list)) "Symbola")))
+    ((member "Symbola" (font-family-list)) "Symbola"))) ; http://xahlee.info/comp/unicode_font_download.html
   )
 
 (when (display-graphic-p)
