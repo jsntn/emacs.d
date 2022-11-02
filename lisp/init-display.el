@@ -49,6 +49,10 @@
     ((member "Symbola" (font-family-list)) "Symbola"))) ; http://xahlee.info/comp/unicode_font_download.html
   )
 
+(unless (member "Symbola" (font-family-list))
+  (yes-or-no-p "Symbola font is not installed, however, it is recommended to install for proper emoji display. Continue?")
+  )
+
 (when (display-graphic-p)
   ;; configuration for org-bullets package
   (setq org-bullets-bullet-list '("◼️" "○" "¶" "►"))
