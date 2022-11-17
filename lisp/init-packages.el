@@ -155,6 +155,16 @@
 
 (use-package plantuml-mode)
 
+(unless (executable-find "prettier")
+  (yes-or-no-p "Please be informed the Prettier is used in this configuration file, but the Prettier executable file is not found.
+You need to install it manually. Continue?")
+  )
+
+(unless (executable-find "shfmt")
+  (yes-or-no-p "Please be informed the shfmt is used in this configuration file, but the shfmt executable file is not found.
+You need to install it manually. Continue?")
+  )
+
 (use-package reformatter
   :config
   (reformatter-define css-yaml-format
