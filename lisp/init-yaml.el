@@ -22,6 +22,5 @@ You need to install it manually. Continue?")
 
 ;; Local Variables:
 ;; coding: utf-8
-;; no-byte-compile: t
 ;; End:
 ;;; init-yaml.el ends here

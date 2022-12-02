@@ -55,6 +55,5 @@
 
 ;; Local Variables:
 ;; coding: utf-8
-;; no-byte-compile: t
 ;; End:
 ;;; init-hooks.el ends here

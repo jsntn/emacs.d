@@ -80,6 +80,5 @@ current buffer's, reload dir-locals."
 
 ;; Local Variables:
 ;; coding: utf-8
-;; no-byte-compile: t
 ;; End:
 ;;; init-misc.el ends here

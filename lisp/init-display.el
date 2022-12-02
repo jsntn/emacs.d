@@ -127,6 +127,5 @@ Version 2017-03-12"
 
 ;; Local Variables:
 ;; coding: utf-8
-;; no-byte-compile: t
 ;; End:
 ;;; init-display.el ends here

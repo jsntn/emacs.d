@@ -15,6 +15,5 @@
 
 ;; Local Variables:
 ;; coding: utf-8
-;; no-byte-compile: t
 ;; End:
 ;;; init-speed-up.el ends here
