@@ -153,8 +153,6 @@
   :after ox
   )
 
-(use-package plantuml-mode)
-
 (unless (executable-find "prettier")
   (yes-or-no-p "Please be informed the Prettier is used in this configuration file, but the Prettier executable file is not found.
 You need to install it manually. Continue?")
