@@ -131,6 +131,21 @@
 
 (use-package imenu-list)
 
+(use-package lsp-mode
+  :hook
+  (lsp-mode . lsp-enable-which-key-integration) ; which-key integration
+  )
+
+(use-package lsp-pyright
+  :hook (python-mode . (lambda ()
+			 (require 'lsp-pyright)
+			 (lsp)))) ; or lsp-deferred
+
+(use-package lsp-ui
+  :config
+  (setq lsp-ui-doc-position 'top)
+  )
+
 (use-package neotree
   :config
   (setq neo-smart-open t)
