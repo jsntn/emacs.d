@@ -197,6 +197,20 @@ You need to install it manually. Continue?")
 
 (use-package swiper)
 
+;; { -- start: if emacs is running in a terminal
+;; to be tested...
+(unless (display-graphic-p)
+(add-to-list 'package-archives
+             '("cselpa" . "https://elpa.thecybershadow.net/packages/"))
+(use-package term-keys
+  :config
+  (term-keys-mode t)
+  )
+(delete '("cselpa" . "https://elpa.thecybershadow.net/packages/") package-archives)
+(yes-or-no-p "term-keys is used to handle keyboard input involving any combination of keys and modifiers in emacs through supported terminal emulator(Alacritty is recommended on Windows), refer to term-keys README for configuration. Continue?")
+  )
+;; -- end: if emacs is running in a terminal } 
+
 (use-package toc-org)
 
 (use-package undo-tree
