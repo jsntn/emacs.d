@@ -132,6 +132,8 @@
 (use-package imenu-list)
 
 (use-package lsp-mode
+  :config
+  (setq lsp-headerline-breadcrumb-enable nil)
   :hook
   (lsp-mode . lsp-enable-which-key-integration) ; which-key integration
   )
