@@ -201,27 +201,34 @@ You need to install it manually. Continue?")
 ;; to be tested...
 (unless (display-graphic-p)
 
-(add-to-list 'package-archives
-             '("cselpa" . "https://elpa.thecybershadow.net/packages/"))
- 
-(use-package term-keys
-  :config
-  (term-keys-mode t)
+  (add-to-list 'package-archives
+	       '("cselpa" . "https://elpa.thecybershadow.net/packages/"))
+
+  (use-package term-keys
+    :config
+    (term-keys-mode t)
+    ;; to configure alacritty for term-keys, use term-keys/alacritty-config to generate a alacritty.yml fragment:
+    ;; (require 'term-keys-alacritty)
+    ;; (with-temp-buffer
+    ;;   (insert (term-keys/alacritty-config))
+    ;;   (write-region (point-min) (point-max) "~/alacritty-for-term-keys.yml"))
+    ;; then, add the output to your main alacritty.yml file.
+    ;; via https://github.com/CyberShadow/term-keys#alacritty
+    )
+
+  (setq package-archives (delete '("cselpa" . "https://elpa.thecybershadow.net/packages/") package-archives))
+
+  (defun term-keys-reminder-messages ()
+    (yes-or-no-p "term-keys is used to handle keyboard input involving any combination of keys and modifiers in emacs through supported terminal emulator(Alacritty is recommended on Windows), refer to term-keys README for configuration. Continue?")
+    )
+
+  (if (boundp 'term-keys-reminder)
+      (when (symbol-value 'term-keys-reminder) (term-keys-reminder-messages))
+    (term-keys-reminder-messages)
+    )
+
   )
- 
-(delete '("cselpa" . "https://elpa.thecybershadow.net/packages/") package-archives)
-
-(defun term-keys-reminder-messages ()
-(yes-or-no-p "term-keys is used to handle keyboard input involving any combination of keys and modifiers in emacs through supported terminal emulator(Alacritty is recommended on Windows), refer to term-keys README for configuration. Continue?")
-)
-
-(if (boundp 'term-keys-reminder)
-(when (term-keys-reminder) (term-keys-reminder-messages))
-(term-keys-reminder-messages)
-)
-
-  )
-;; -- end: if emacs is running in a terminal } 
+;; -- end: if emacs is running in a terminal }
 
 (use-package toc-org)
 
