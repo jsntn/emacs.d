@@ -10,6 +10,9 @@
 
 (use-package ace-jump-mode)
 
+(use-package clipetty
+  :hook (after-init . global-clipetty-mode))
+
 (use-package company
   :init
   (global-company-mode)
