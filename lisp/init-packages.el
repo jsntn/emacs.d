@@ -191,6 +191,24 @@ You need to install it manually. Continue?")
 You need to install it manually. Continue?")
   )
 
+(use-package pyvenv
+  :config
+  ;; (pyvenv-mode t)
+
+  ;; set correct Python interpreter
+  (setq pyvenv-post-activate-hooks
+	(list (lambda ()
+		(if (equal system-type 'windows-nt)
+		    (setq python-shell-interpreter (concat pyvenv-virtual-env "Scripts/python"))
+		  (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python"))
+		  )
+		)))
+  (setq pyvenv-post-deactivate-hooks
+	(list (lambda ()
+		(setq python-shell-interpreter "python")
+		)))
+  )
+
 (use-package reformatter
   :config
   (reformatter-define css-yaml-format
