@@ -309,6 +309,12 @@ You need to install it manually. Continue?")
   (defun after-save-hook-setup ()
     (wg-save-session))
   (add-hook 'after-save-hook 'after-save-hook-setup)
+  
+  ;; auto save once kill emacs
+  ;; to be tested...
+  ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/emacsclient-Options.html
+  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Killing-Emacs.html
+  (add-hook 'kill-emacs-hook '(wg-save-session "last-wg"))
 
   ;; mode line changes
   ;; display workgroups in mode line
