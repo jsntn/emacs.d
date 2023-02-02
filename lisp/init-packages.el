@@ -12,9 +12,13 @@
 
 (unless (display-graphic-p)
   (use-package clipetty
-    ;; clipetty is aiming at sending text that you kill in Emacs to your Operating System's clipboard, but not the reverse,
+    ;; clipetty is aiming at sending text that you kill in Emacs to your
+    ;; Operating System's clipboard, but not the reverse,
     ;; https://github.com/spudlyo/clipetty/issues/10
-    :hook (after-init . global-clipetty-mode))
+    :disabled ; disable for now as I am using Alacritty and it has its own
+	      ; clipboard support
+    :hook (after-init . global-clipetty-mode)
+    )
   )
 
 (use-package company
