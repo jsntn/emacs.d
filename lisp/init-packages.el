@@ -286,6 +286,28 @@ You need to install it manually. Continue?")
   (window-numbering-mode)
   )
 
+(use-package workgroups2
+  :config
+  (setq wg-session-load-on-start t) ; default: (not (daemonp))
+
+  ;; change prefix key (before activating WG)
+  (setq wg-prefix-key (kbd "C-c z"))
+
+  ;; change workgroups session file
+  (setq wg-session-file
+	(expand-file-name ".emacs_workgroups" user-emacs-directory))
+
+  (workgroups-mode 1)
+
+  ;; what to do on Emacs exit / workgroups-mode exit?
+  (setq wg-emacs-exit-save-behavior 'save) ; Options: 'save 'ask nil
+  (setq wg-workgroups-mode-exit-save-behavior 'save) ; Options: 'save 'ask nil
+
+  ;; mode Line changes
+  ;; display workgroups in mode line
+  (setq wg-mode-line-display-on t) ; Default: (not (featurep 'powerline))
+  )
+
 (use-package yaml-mode)
 
 
