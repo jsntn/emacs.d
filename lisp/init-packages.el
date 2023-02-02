@@ -300,12 +300,19 @@ You need to install it manually. Continue?")
   (workgroups-mode 1)
 
   ;; what to do on Emacs exit / workgroups-mode exit?
-  (setq wg-emacs-exit-save-behavior 'save) ; Options: 'save 'ask nil
-  (setq wg-workgroups-mode-exit-save-behavior 'save) ; Options: 'save 'ask nil
+  (setq wg-emacs-exit-save-behavior 'save) ; options: 'save 'ask nil
+  (setq wg-workgroups-mode-exit-save-behavior 'save) ; options: 'save 'ask nil
+  ;; wg-save-session after after-save-hook
+  ;; https://github.com/pashinin/workgroups2/issues/93
+  ;; https://github.com/pashinin/workgroups2/issues/115
+  ;; to be tested...
+  (defun after-save-hook-setup ()
+    (wg-save-session))
+  (add-hook 'after-save-hook 'after-save-hook-setup)
 
-  ;; mode Line changes
+  ;; mode line changes
   ;; display workgroups in mode line
-  (setq wg-mode-line-display-on t) ; Default: (not (featurep 'powerline))
+  (setq wg-mode-line-display-on t) ; default: (not (featurep 'powerline))
   )
 
 (use-package yaml-mode)
