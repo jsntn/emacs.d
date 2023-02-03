@@ -182,6 +182,10 @@
  "o" 'helm-imenu
  "r" 'revert-buffer
  "w" 'windows-split-toggle
+ ;; for workgroups2
+ "c" 'wg-create-workgroup
+ "k" 'wg-kill-workgroup 
+ "o" 'wg-open-workgroup
  ;; ...
  )
 

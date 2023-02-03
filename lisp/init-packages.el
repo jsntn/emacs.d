@@ -290,9 +290,6 @@ You need to install it manually. Continue?")
   :config
   (setq wg-session-load-on-start t) ; default: (not (daemonp))
 
-  ;; change prefix key (before activating WG)
-  (setq wg-prefix-key (kbd "C-c z"))
-
   ;; change workgroups session file
   (setq wg-session-file
 	(expand-file-name ".emacs_workgroups" user-emacs-directory))
