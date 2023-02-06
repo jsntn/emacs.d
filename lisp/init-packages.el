@@ -10,6 +10,17 @@
 
 (use-package ace-jump-mode)
 
+(use-package annotate
+  :config
+  (annotate-mode 1)
+  (custom-set-faces
+   '(annotate-annotation ((t (:background "#ff7f4f" :foreground "white"))))
+   '(annotate-annotation-secondary ((t (:background "#ff7f4f" :foreground "white"))))
+   '(annotate-highlight ((t (:underline "white"))))
+   '(annotate-highlight-secondary ((t (:underline "white"))))
+   )
+  )
+
 (unless (display-graphic-p)
   (use-package clipetty
     ;; clipetty is aiming at sending text that you kill in Emacs to your
