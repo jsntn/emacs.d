@@ -21,6 +21,8 @@
    )
   )
 
+(use-package buffer-move)
+
 (unless (display-graphic-p)
   (use-package clipetty
     ;; clipetty is aiming at sending text that you kill in Emacs to your
