@@ -55,27 +55,6 @@
  )
 
 (general-define-key
- ;; enabling control-c and control-v to copy and paste in Emacs
- ;; keybindings for evil insert mode
- :states 'insert
- "C-c" 'kill-ring-save
- "C-x" 'kill-region
- "C-v" 'yank
- "C-z" 'undo-tree-undo
- "C-y" 'undo-tree-redo
- )
-
-(general-define-key
- ;; enabling control-c and control-v to copy and paste in Emacs
- ;; keybindings for evil visual mode
- :states 'visual
- "C-c" 'kill-ring-save
- "C-x" 'kill-region
- "C-z" 'undo-tree-undo
- "C-y" 'undo-tree-redo
- )
-
-(general-define-key
  ;; keybindings for evil normal and visual mode
  :states '(normal visual)
  "ff" 'evil-scroll-page-down
