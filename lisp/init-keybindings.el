@@ -82,6 +82,12 @@
  "p" 'neotree-previous-line
  "A" 'neotree-stretch-toggle
  "H" 'neotree-hidden-file-toggle
+ "+" 'neotree-create-node
+ "d" 'neotree-delete-node
+ "r" 'neotree-rename-node
+ "c" 'neotree-copy-node
+ "^" 'neotree-select-up-node
+ ;; to be added: page up/page down...
  ;; ...
  )
 
