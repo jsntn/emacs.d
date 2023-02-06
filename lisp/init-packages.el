@@ -279,6 +279,16 @@ You need to install it manually. Continue?")
   (global-undo-tree-mode)
   )
 
+(use-package vlf
+  :config
+  (require 'vlf-setup)
+  ;; without this package,
+  ;; Alt+x global-font-lock-mode and Alt+x global-linum-mode
+  ;; then, open the large file.
+  ;; another way to solve the opening large file problem is by using Alt+x find-file-literally. It'll open the file without syntax coloring, and without interpreting Unicode.
+  ;; via http://xahlee.info/emacs/misc/emacs_open_large_file_slow.html
+  )
+
 (use-package vline
   ;; make vline package load from local site-lisp folder
   :load-path (lambda () (symbol-value 'load-path))
