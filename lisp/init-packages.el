@@ -75,6 +75,8 @@
    `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6))))))
   )
 
+;; M-x elgrep: search a single directory
+;; C-u M-x elgrep: search the directory recursively
 (use-package elgrep)
 
 (use-package elpa-mirror)
