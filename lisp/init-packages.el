@@ -192,6 +192,11 @@
   (setq org-drill-scope 'agenda-with-archives)
   )
 
+(use-package orglink
+  :config
+  (global-orglink-mode)
+  )
+ 
 (use-package ox-hugo
   :after ox
   )
