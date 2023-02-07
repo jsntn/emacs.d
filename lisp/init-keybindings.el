@@ -19,11 +19,6 @@
  "C-M-<right>" 'enlarge-window-horizontally
  "C-M-<down>" 'shrink-window
  "C-M-<up>" 'enlarge-window
- ;; for buffer-move package
- "C-x-<up>" 'buf-move-up
- "C-x-<down>" 'buf-move-down
- "C-x-<left>" 'buf-move-left
- "C-x-<right>" 'buf-move-right
  ;; ...
  )
 
@@ -155,6 +150,11 @@
 (general-define-key
  :prefix "C-x"
  "C-r" 'helm-recentf
+ ;; for buffer-move package
+ "<up>" 'buf-move-up
+ "<down>" 'buf-move-down
+ "<left>" 'buf-move-left
+ "<right>" 'buf-move-right 
  ;; ...
  )
 
