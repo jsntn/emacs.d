@@ -14,7 +14,7 @@
 	       ; and C-r.
  "C-=" 'er/expand-region
  "C--" 'er/contract-region
- "C-'" 'imenu-list-smart-toggle
+ "C-'" 'helm-imenu
  "C-M-<left>" 'shrink-window-horizontally
  "C-M-<right>" 'enlarge-window-horizontally
  "C-M-<down>" 'shrink-window
@@ -169,7 +169,7 @@
  "b" 'bookmark-bmenu-list
  "d" 'dired
  "f" 'ace-jump-char-mode
- "o" 'helm-imenu
+ "'" 'imenu-list-smart-toggle
  "r" 'revert-buffer
  "w" 'windows-split-toggle
  ;; for workgroups2
