@@ -113,6 +113,7 @@
  :prefix "C-c"
  :keymaps 'org-mode-map
  "C-q" 'counsel-org-tag
+ ;; <oom> | definition -> [[./init-org.el::oom]]
  "o" 'org-open-maybe ; redefine file opening without clobbering universal
 		     ; argumnet ...
  ;; ...
@@ -154,7 +155,7 @@
  "<up>" 'buf-move-up
  "<down>" 'buf-move-down
  "<left>" 'buf-move-left
- "<right>" 'buf-move-right 
+ "<right>" 'buf-move-right
  ;; ...
  )
 

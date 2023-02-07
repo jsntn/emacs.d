@@ -22,7 +22,7 @@
 			      ))
     (org-open-at-point)))
 ;; Depending on universal argument try opening link
-(defun org-open-maybe (&optional arg)
+(defun org-open-maybe (&optional arg) ; <oom> | keybinding -> [[./init-keybindings.el::oom]]
   (interactive "P")
   (if arg
       (org-open-at-point)
