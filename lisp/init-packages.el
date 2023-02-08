@@ -53,6 +53,7 @@
   )
 
 (use-package cnfonts
+  :if window-system ; only load this package when in graphical Emacs
   :config
   (cnfonts-mode 1)
   (setq cnfonts-profiles
