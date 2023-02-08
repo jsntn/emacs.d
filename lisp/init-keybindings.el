@@ -57,8 +57,8 @@
 (general-define-key
  ;; keybindings for evil normal and visual mode
  :states '(normal visual)
- "ff" 'evil-scroll-page-down
- "bb" 'evil-scroll-page-up
+ "ff" 'evil-scroll-page-down ; <<page down>>
+ "bb" 'evil-scroll-page-up ; <<page-up>>
  "be" 'ibuffer
  "SPC" 'jsntn/toggle-hideshow-block
  ;; ...
@@ -72,7 +72,6 @@
  "SPC" 'neotree-quick-look
  "q" 'neotree-hide
  "RET" 'neotree-enter
- "g" 'neotree-refresh
  "n" 'neotree-next-line
  "p" 'neotree-previous-line
  "A" 'neotree-stretch-toggle
@@ -82,7 +81,8 @@
  "r" 'neotree-rename-node
  "c" 'neotree-copy-node
  "^" 'neotree-select-up-node
- ;; to be added: page up/page down...
+ ;; page up -> [[./init-keybindings.el::page-up]]
+ ;; page down -> [[./init-keybindings.el::page-down]]
  ;; ...
  )
 
