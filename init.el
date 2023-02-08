@@ -18,6 +18,21 @@
 
 
 ;; =============================================================================
+;; initial settings
+;; =============================================================================
+
+;; this is used to initiate the load-path setting for further require config
+
+;; alias emacs='emacs -q --load "/path/to/init.el"'
+(setq user-init-file (or load-file-name (buffer-file-name)))
+(setq user-emacs-directory (file-name-directory user-init-file))
+;; refer to https://emacs.stackexchange.com/a/4258/29715
+
+;; initiate 'lisp' folder to the load-path
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+
+;; =============================================================================
 ;; require settings
 ;; =============================================================================
 
