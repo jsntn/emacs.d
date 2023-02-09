@@ -41,14 +41,14 @@
   (setq company-idle-delay 0.2)
   ;; number the candidates (use M-1, M-2 etc to select completions).
   (setq company-show-numbers t)
-  ;; Show suggestions after entering one character.
+  ;; show suggestions after entering 3 character.
   (setq company-minimum-prefix-length 3)
-  ;; When the list of suggestions is shown, and you go through the list of
+  ;; when the list of suggestions is shown, and you go through the list of
   ;; suggestions and reach the end of the list, the end of the list of
   ;; suggestions does not wrap around to the top of the list again. This is a
   ;; minor inconvenience that can be solved:
   (setq company-selection-wrap-around t)
-  ;; Use tab key to cycle through suggestions.
+  ;; use tab key to cycle through suggestions.
   ;; ('tng' means 'tab and go')
   (company-tng-configure-default)
 
