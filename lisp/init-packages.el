@@ -38,10 +38,11 @@
   :init
   (global-company-mode)
   :config
-  ;; No delay in showing suggestions.
-  (setq company-idle-delay 0)
+  (setq company-idle-delay 0.2)
+  ;; number the candidates (use M-1, M-2 etc to select completions).
+  (setq company-show-numbers t)
   ;; Show suggestions after entering one character.
-  (setq company-minimum-prefix-length 2)
+  (setq company-minimum-prefix-length 3)
   ;; When the list of suggestions is shown, and you go through the list of
   ;; suggestions and reach the end of the list, the end of the list of
   ;; suggestions does not wrap around to the top of the list again. This is a
@@ -50,6 +51,42 @@
   ;; Use tab key to cycle through suggestions.
   ;; ('tng' means 'tab and go')
   (company-tng-configure-default)
+
+  ;; { START: company-candidates from abo-abo
+  ;; if candidate list was ("var0" "var1" "var2"), then entering 1 means:
+  ;; select the first candidate (i.e. "var0"), instead of:
+  ;; insert "1", resulting in "var1", i.e. the second candidate
+  ;; via,
+  ;; - https://oremacs.com/2017/12/27/company-numbers/
+  (defun ora-company-number ()
+    "Forward to `company-complete-number'.
+Unless the number is potentially part of the candidate.
+In that case, insert the number."
+    ;; via https://github.com/abo-abo/oremacs/blob/d217e22a3b8dc88d10f715b32a7d1facf1f7ae18/modes/ora-company.el#L22-L39
+    (interactive)
+    (let* ((k (this-command-keys))
+	   (re (concat "^" company-prefix k)))
+      (if (or (cl-find-if (lambda (s) (string-match re s))
+			  company-candidates)
+	      (> (string-to-number k)
+		 (length company-candidates))
+	      (looking-back "[0-9]+\\.[0-9]*" (line-beginning-position)))
+	  (self-insert-command 1)
+	(company-complete-number
+	 (if (equal k "0")
+	     10
+	   (string-to-number k))))))
+
+  (let ((map company-active-map))
+    ;; via https://github.com/abo-abo/oremacs/blob/d217e22a3b8dc88d10f715b32a7d1facf1f7ae18/modes/ora-company.el#L46-L53
+    (mapc (lambda (x) (define-key map (format "%d" x) 'ora-company-number))
+	  (number-sequence 0 9))
+    (define-key map " " (lambda ()
+			  (interactive)
+			  (company-abort)
+			  (self-insert-command 1)))
+    (define-key map (kbd "<return>") nil))
+  ;; END: company-candidates from abo-abo }
   )
 
 (use-package cnfonts
