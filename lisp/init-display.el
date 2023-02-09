@@ -122,6 +122,31 @@ Version 2017-03-12"
       (hs-hide-block)
     (hs-show-block)))
 
+;; { -- START --
+;; default inline image background in Org-mode
+;; https://emacs.stackexchange.com/a/37927/29715
+;; note: restart Emacs to make this change effective
+(defcustom org-inline-image-background nil
+  "The color used as the default background for inline images.
+When nil, use the default face background."
+  :group 'org
+  :type '(choice color (const nil)))
+
+(defun create-image-with-background-color (args)
+  "Specify background color of Org-mode inline image through modify `ARGS'."
+  (let* ((file (car args))
+	 (type (cadr args))
+	 (data-p (caddr args))
+	 (props (cdddr args)))
+    ;; Get this return result style from `create-image'.
+    (append (list file type data-p)
+	    (list :background "white")
+	    props)))
+
+(advice-add 'create-image :filter-args
+	    #'create-image-with-background-color)
+;; -- END -- } 
+
 
 (provide 'init-display)
 
