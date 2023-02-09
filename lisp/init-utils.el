@@ -22,6 +22,19 @@
     (org-edit-src-code))
   )
 
+(defun hide-dos-eol ()
+  "do not show ^M in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (unless buffer-display-table
+    (setq buffer-display-table (make-display-table)))
+  (aset buffer-display-table ?\^M []))
+
+(defun remove-dos-eol ()
+  "replace DOS eolns CR LF with Unix eolns CR."
+  (interactive)
+  (goto-char (point-min))
+  (while (search-forward "\r" nil t) (replace-match "")))
+
 
 (provide 'init-utils)
 
