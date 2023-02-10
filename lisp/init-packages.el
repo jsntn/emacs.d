@@ -249,6 +249,21 @@ You need to install it manually. Continue?")
 You need to install it manually. Continue?")
   )
 
+(use-package projectile
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+	      ("C-c p" . projectile-command-map))
+  :config
+  (setq projectile-completion-system 'default)
+  (setq projectile-enable-caching t)
+  ;; the alien indexing method uses external tools (e.g. git, find, etc) to speed up the indexing process.
+  (setq projectile-indexing-method 'alien)
+  (add-to-list 'projectile-globally-ignored-files "node_modules")
+  (add-to-list 'projectile-globally-ignored-files ".cache")
+  (add-to-list 'projectile-globally-ignored-files "_cache")
+  )
+ 
 (use-package pyvenv
   :config
   ;; (pyvenv-mode t)
