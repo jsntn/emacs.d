@@ -346,7 +346,7 @@ You need to install it manually. Continue?")
   ;; allow C-h to trigger which-key before it is done automatically
   (setq which-key-show-early-on-C-h t)
   (which-key-mode 1)
-  (which-key-setup-side-window-right)
+  (which-key-setup-side-window-bottom)
   )
 
 (use-package window-numbering
