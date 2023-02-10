@@ -297,6 +297,14 @@ You need to install it manually. Continue?")
     )
   )
 
+(use-package super-save
+  :config
+  (super-save-mode +1)
+  (setq super-save-auto-save-when-idle t)
+  (setq auto-save-default nil)
+  (setq super-save-exclude '(".gpg"))
+  )
+ 
 (use-package swiper)
 
 ;; { -- start: if emacs is running in a terminal
