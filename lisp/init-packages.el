@@ -230,7 +230,7 @@ In that case, insert the number."
   (setq org-drill-scope 'agenda-with-archives)
   )
 
-(use-package org-super-agenda
+(use-package org-super-agenda ; <<org-super-agenda>>
   :after org-agenda
   :config
   (setq org-agenda-compact-blocks t

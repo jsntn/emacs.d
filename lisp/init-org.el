@@ -159,6 +159,7 @@
 				  ;; move all these org-super-agenda
 				  ;; configuration here to fix the issue that -
 				  ;; "Symbol's value as variable is void"
+				  ;; org-super-agenda -> [[./init-packages.el::org-super-agenda]]
 
 				  (when (require 'org-super-agenda nil 'noerror) ; https://stackoverflow.com/a/7791820/4274775
 
