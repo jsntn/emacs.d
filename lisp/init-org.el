@@ -129,6 +129,20 @@
        ))
 ;; -- END -- org-agenda custom commands }
 
+;; teach Org where to look for all of the files you wish to include in your agenda
+;; https://stackoverflow.com/a/41969519/4274775
+(setq org-agenda-files
+	      (directory-files-recursively org-directory "\\.org$"))
+;; (length org-agenda-files)
+
+;; how to truncate the long task name in the agenda custom view?
+;; https://stackoverflow.com/a/16285673/4274775
+(defun my/org-agenda-mode-hook ()
+  (interactive)
+  (setq truncate-lines t))
+(add-hook 'org-agenda-mode-hook
+          'my/org-agenda-mode-hook)
+
 
 (provide 'init-org)
 
