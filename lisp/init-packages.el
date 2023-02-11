@@ -230,6 +230,66 @@ In that case, insert the number."
   (setq org-drill-scope 'agenda-with-archives)
   )
 
+(use-package org-super-agenda
+  :after org-agenda
+  :config
+  (setq org-agenda-compact-blocks t
+	org-agenda-start-day "+0d")
+  (org-super-agenda-mode 1)
+
+  (setq org-agenda-custom-commands
+	;; these org-agenda-custom-commands configurations here cannot be
+	;; included in the org-agenda-mode-hook together with the Eisenhower
+	;; Matrix configuration, as it should be loaded before the hook.
+
+	;; an Emacs configuration reference https://sachachua.com/dotemacs/index.html
+	`(
+	  ("g" "GTD Method - Critical/Priority/Effort"
+	   (
+	    (agenda "" ((org-agenda-overriding-header "")
+			(org-super-agenda-groups
+			 '(
+			   (:name "Time Driven - Critical & High Priority (within 2 days)"
+				  :and (:priority "A" :deadline today :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
+				  :and (:priority "A" :scheduled today :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
+				  :and (:priority "A" :deadline (before
+								 ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 2 86400)))
+								 ) :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
+				  :and (:priority "A" :scheduled (before
+								  ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
+								  ) :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
+				  :order 0)
+			   (:name "Energy Driven - Critical & Low Effort (<= 15 mins)"
+				  :and (:priority "A" :effort< "15" :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+				  :order 5)
+			   (:name "Critical & High Effort (> 15 mins)"
+				  :and (:priority "A" :effort> "16" :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+				  :order 10)
+			   (:discard (:habit t))
+			   ;; After the last group, the agenda will display items that didn't
+			   ;; match any of these groups, with the default order position of 99
+			   ))
+			))))
+	  ("h" "Habit Tracker"
+	   (
+	    (agenda "" ((org-agenda-overriding-header "")
+			(org-super-agenda-groups
+			 '(
+			   (:name "Habit(s) to be done today :)"
+				  :and (:scheduled today :habit t :not (:todo ("WAIT" "CANCEL")))
+				  :order 0)
+			   (:name "Habit(s) that missed in the past :("
+				  :and (:scheduled past :habit t :not (:todo ("WAIT" "CANCEL")))
+				  :order 5)
+			   (:discard (:not (:habit t)))
+			   ;; After the last group, the agenda will display items that didn't
+			   ;; match any of these groups, with the default order position of 99
+			   ))
+			))))
+
+	  ))
+  )
+ 
 (use-package orglink
   :config
   (global-orglink-mode)
