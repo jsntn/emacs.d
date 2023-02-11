@@ -63,6 +63,73 @@
   (add-hook 'org-add-hook 'my/modify-org-done-face))
 
 
+;; ===============================================================
+;; Org agenda settings ｜ <<org-agenda-settings>>
+;; ===============================================================
+;; Reference
+;; https://sainathadapa.github.io/emacs-spacemacs-config/org-config
+;; https://sachachua.com/dotemacs/
+(setq org-agenda-span 1) ; max number of days to show in agenda by default(C-a a a)
+
+;; don't show tasks in agenda if they are done
+(setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-scheduled-if-done t)
+(setq org-agenda-skip-timestamp-if-done t)
+
+(setq org-agenda-start-on-weekday 6) ; starting my weeks on Saturday
+;; (setq org-agenda-start-on-weekday nil) ; agenda starts on the current day
+
+(setq org-agenda-sorting-strategy
+      ;; sorting strategy
+      (quote
+       ((agenda priority-down alpha-up)
+	(todo priority-down alpha-up)
+	(tags priority-down alpha-up)))
+      )
+
+(setq
+ ;; org-agenda styling
+ org-agenda-block-separator ?─
+ org-agenda-time-grid
+ '((daily today require-timed)
+   (800 1000 1200 1400 1600 1800 2000)
+   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+ org-agenda-current-time-string
+ "⭠ now ─────────────────────────────────────────────────"
+ )
+
+(add-hook 'org-agenda-finalize-hook 'place-agenda-tags)
+(defun place-agenda-tags ()
+  "Put the agenda tags by the right border of the agenda window."
+  ;; http://lists.gnu.org/archive/html/emacs-orgmode//2010-12/msg00410.html
+  (setq org-agenda-tags-column (- 10 (window-width)))
+  (org-agenda-align-tags)
+  )
+
+;; { -- BEGIN -- org-agenda custom commands
+;; https://www.reddit.com/r/orgmode/comments/6ybjjw/aligned_agenda_view_anyway_to_make_this_more/
+(setq org-agenda-prefix-format ; the display format
+      ;; http://doc.endlessparentheses.com/Var/org-agenda-prefix-format.html
+      (quote
+       ((agenda . "%5e %12s %12t")
+	(timeline . "  % s")
+	(todo . " %12t")
+	(tags . " %12t")
+	(search . " %12t"))
+       ))
+(setq org-agenda-deadline-leaders
+      ;; http://doc.endlessparentheses.com/Var/org-agenda-deadline-leaders.html
+      (quote
+       (" Deadline " "In %3d d. " "%2d d. ago ")
+       ))
+(setq org-agenda-scheduled-leaders
+      ;; http://doc.endlessparentheses.com/Var/org-agenda-scheduled-leaders.html
+      (quote
+       (" Scheduled " "Sched.%2dx ")
+       ))
+;; -- END -- org-agenda custom commands }
+
+
 (provide 'init-org)
 
 ;; Local Variables:
