@@ -366,7 +366,7 @@ You need to install it manually. Continue?")
     ;; https://emacs.stackexchange.com/questions/24298/can-i-eval-a-value-in-quote
     )
   )
-;; END: reformatter config 
+;; END: reformatter config
 
 (use-package super-save
   :config
