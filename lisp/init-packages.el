@@ -289,12 +289,12 @@ In that case, insert the number."
 
 	  ))
   )
- 
+
 (use-package orglink
   :config
   (global-orglink-mode)
   )
- 
+
 (use-package ox-hugo
   :after ox
   )
@@ -323,7 +323,7 @@ You need to install it manually. Continue?")
   (add-to-list 'projectile-globally-ignored-files ".cache")
   (add-to-list 'projectile-globally-ignored-files "_cache")
   )
- 
+
 (use-package pyvenv
   :config
   ;; (pyvenv-mode t)
@@ -364,7 +364,7 @@ You need to install it manually. Continue?")
   (setq auto-save-default nil)
   (setq super-save-exclude '(".gpg"))
   )
- 
+
 (use-package swiper)
 
 ;; { -- start: if emacs is running in a terminal

@@ -155,7 +155,7 @@
 						 (directory-files-recursively org-mobile-directory "\\.org$"))))
 
 				  ;; { -- START --
-				  ;; <<4osa-start>> | the link anchor to the end: [[4osa-end]]
+				  ;; <<4osa-start>> | the link anchor to the end: [[./init-org.el::4osa-end]]
 
 				  ;; move all these org-super-agenda
 				  ;; configuration here to fix the issue that -
@@ -165,8 +165,8 @@
 				  (when (require 'org-super-agenda nil 'noerror) ; https://stackoverflow.com/a/7791820/4274775
 
 				    ;; { -- START --
-				    ;; <<calculate-date-start>> | the link anchor to the end: [[calculate-date-end]]
-				    
+				    ;; <<calculate-date-start>> | the link anchor to the end: [[./init-org.el::calculate-date-end]]
+
 				    ;; Return day of week: Sun=0, Mon=1, Tues=2, ..., Sat=6
 				    ;; refer to 14.7 org-super-agenda from,
 				    ;; https://web.archive.org/web/20220928105159/https://cmower.github.io/dotemacs/Emacs.html
@@ -206,8 +206,8 @@
 				    ;; ;; get date of tomorrow
 				    ;; (-let* (((sec minute hour day month year dow dst utcoff) (decode-time (+ (* 1 86400) (float-time))))) ;; 1 days
 				    ;;   (setq org-tomorrow-date (format "%d-%02d-%02d" year month day)))
-				    
-				    ;; <<calculate-date-end>> | the link anchor to the start: [[calculate-date-start]]
+
+				    ;; <<calculate-date-end>> | the link anchor to the start: [[./init-org.el::calculate-date-start]]
 				    ;; -- END -- }
 
 				    (setq org-super-agenda-groups
@@ -248,10 +248,10 @@
 					    ;; match any of these groups, with the default order position of 99
 					    ))
 				    )
-				    ;; <<4osa-end>> | the link anchor to the start: [[4osa-start]]
+				    ;; <<4osa-end>> | the link anchor to the start: [[./init-org.el::4osa-start]]
 				    ;; -- END -- }
 
-				  )) 
+				  ))
 
 
 (provide 'init-org)
