@@ -299,14 +299,14 @@ In that case, insert the number."
   :after ox
   )
 
-(unless (executable-find "prettier")
-  (yes-or-no-p "Please be informed the Prettier is used in this configuration file, but the Prettier executable file is not found.
-You need to install it manually. Continue?")
-  )
-
-(unless (executable-find "shfmt")
-  (yes-or-no-p "Please be informed the shfmt is used in this configuration file, but the shfmt executable file is not found.
-You need to install it manually. Continue?")
+(use-package org-roam
+  :config
+  (org-roam-db-autosync-mode)
+  (setq org-roam-mode-sections
+	(list #'org-roam-backlinks-section
+	      #'org-roam-reflinks-section
+	      #'org-roam-unlinked-references-section
+	      ))
   )
 
 (use-package projectile
@@ -342,6 +342,16 @@ You need to install it manually. Continue?")
 		)))
   )
 
+;; START: reformatter config
+(unless (executable-find "prettier")
+  (yes-or-no-p "Please be informed the Prettier is used in this configuration file, but the Prettier executable file is not found.
+You need to install it manually. Continue?")
+  )
+
+(unless (executable-find "shfmt")
+  (yes-or-no-p "Please be informed the shfmt is used in this configuration file, but the shfmt executable file is not found.
+You need to install it manually. Continue?")
+  )
 (use-package reformatter
   :config
   (reformatter-define css-yaml-format
@@ -356,6 +366,7 @@ You need to install it manually. Continue?")
     ;; https://emacs.stackexchange.com/questions/24298/can-i-eval-a-value-in-quote
     )
   )
+;; END: reformatter config 
 
 (use-package super-save
   :config
