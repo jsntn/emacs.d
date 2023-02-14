@@ -3,6 +3,22 @@
 ;;; Code:
 
 
+;; { -- START --
+;; check Linux distribution
+;; https://emacs.stackexchange.com/questions/18205/how-can-i-distinguish-between-linux-distributions-in-emacs
+(defun which-linux-distributor ()
+  "from lsb_release"
+  (interactive)
+  (when (eq system-type 'gnu/linux)
+     (shell-command-to-string "lsb_release -si")))
+
+(defun which-linux-release ()
+  "from lsb_release"
+  (interactive)
+  (when (eq system-type 'gnu/linux)
+     (shell-command-to-string "lsb_release -sr")))
+;; -- END -- } 
+ 
 (use-package all-the-icons
   :config
   ;; check if all-the-icons is installed
@@ -318,10 +334,16 @@ In that case, insert the number."
   :after ox
   )
 
+;; { START: Org-roam
+;; to be tested...
 (unless (executable-find "rg")
-  (yes-or-no-p "Please be informed the ripgrep (rg) is used by Org-roam in this configuration file, but the rg executable file is not found.
-You need to install it manually. Continue?")
+  (when (eq which-linux-distributor 'Ubuntu)
+    (if (string< which-linux-release '18.10)
+      (shell-command "curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb && sudo dpkg -i ripgrep_13.0.0_amd64.deb && sudo rm -rf ripgrep_13.0.0_amd64.deb")
+    (shell-command "sudo apt-get install ripgrep")
+    )
   )
+
 (use-package org-roam
   :config
   (org-roam-db-autosync-mode)
@@ -332,6 +354,12 @@ You need to install it manually. Continue?")
 	      #'org-roam-unlinked-references-section
 	      ))
   )
+
+(unless (executable-find "rg")
+  (yes-or-no-p "Please be informed the ripgrep (rg) is used by Org-roam in this configuration file, but the rg executable file is not found.
+You need to install it manually. Continue?")
+  )
+;; END: Org-roam }
 
 (use-package pinyinlib
   :config
