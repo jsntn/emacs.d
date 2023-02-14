@@ -3,6 +3,25 @@
 ;;; Code:
 
 
+(use-package all-the-icons
+  :config
+  ;; check if all-the-icons is installed
+  ;; reference
+  ;; https://github.com/domtronn/all-the-icons.el/issues/120
+  (when (and (not (member "all-the-icons" (font-family-list)))
+	     (equal system-type 'windows-nt))
+    (yes-or-no-p "The 'all-the-icons' fonts are recommended for this configuration with lsp-mode package. Continue and install it later?")
+    )
+  (when (and (not (member "all-the-icons" (font-family-list)))
+		  (not (equal system-type 'windows-nt)))
+    (all-the-icons-install-fonts t)
+    )
+  ;; all-the-icons configuration
+  (when (display-graphic-p)
+    (require 'all-the-icons))
+  (setq inhibit-compacting-font-caches t)
+  )
+
 (use-package benchmark-init
   :config
   ;; To disable collection of benchmark data after init is done.
