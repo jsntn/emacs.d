@@ -3,6 +3,10 @@
 ;;; Code:
 
 
+;; to be tested...
+(use-package jsntn-aspell
+  :ensure-system-package aspell)
+ 
 (unless (executable-find "aspell")
   (yes-or-no-p "Please be informed the Aspell is used in this configuration file, but the Aspell executable file is not found.
 You need to install it manually. Continue?")
