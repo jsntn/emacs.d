@@ -214,7 +214,12 @@ In that case, insert the number."
 
 (use-package expand-region)
 
-(use-package flycheck)
+(use-package flycheck
+  ;; to be tested...
+  :ensure-system-package
+  (shellcheck . shellcheck)
+  (js-yaml . "npm install -g js-yaml")
+  )
 
 (use-package general)
 
@@ -345,6 +350,8 @@ In that case, insert the number."
   )
 
 (use-package org-roam
+  :ensure-system-package
+  (rg . ripgrep)
   :config
   (org-roam-db-autosync-mode)
   (setq org-roam-mode-sections
@@ -461,16 +468,16 @@ You need to install it manually. Continue?")
   )
 
 ;; START: reformatter config
-(unless (executable-find "prettier")
-  (yes-or-no-p "Please be informed the Prettier is used in this configuration file, but the Prettier executable file is not found.
-You need to install it manually. Continue?")
+;; to be tested...
+(when (or (eq system-type 'gnu/linux) (eq system-type 'darwin))
+  (shell-command "curl -sS https://webi.sh/shfmt | sh")
   )
-
-(unless (executable-find "shfmt")
-  (yes-or-no-p "Please be informed the shfmt is used in this configuration file, but the shfmt executable file is not found.
-You need to install it manually. Continue?")
+(when (eq system-type 'windows-nt)
+  (shell-command "curl.exe https://webi.ms/shfmt | powershell")
   )
 (use-package reformatter
+  :ensure-system-package
+  (prettier . "npm install -g prettier")
   :config
   (reformatter-define css-yaml-format
     :program "prettier"
@@ -484,6 +491,15 @@ You need to install it manually. Continue?")
     ;; https://emacs.stackexchange.com/questions/24298/can-i-eval-a-value-in-quote
     )
   )
+(unless (executable-find "prettier")
+  (yes-or-no-p "Please be informed the Prettier is used in this configuration file, but the Prettier executable file is not found.
+You need to install it manually. Continue?")
+  )
+
+(unless (executable-find "shfmt")
+  (yes-or-no-p "Please be informed the shfmt is used in this configuration file, but the shfmt executable file is not found.
+You need to install it manually. Continue?")
+  ) 
 ;; END: reformatter config
 
 (use-package super-save
