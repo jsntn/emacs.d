@@ -299,12 +299,17 @@ In that case, insert the number."
   :after ox
   )
 
+(unless (executable-find "rg")
+  (yes-or-no-p "Please be informed the ripgrep (rg) is used by Org-roam in this configuration file, but the rg executable file is not found.
+You need to install it manually. Continue?")
+  )
 (use-package org-roam
   :config
   (org-roam-db-autosync-mode)
   (setq org-roam-mode-sections
 	(list #'org-roam-backlinks-section
 	      #'org-roam-reflinks-section
+	      ;; ripgrep (rg) is used for unlinked references below - (executable-find "rg")
 	      #'org-roam-unlinked-references-section
 	      ))
   )
