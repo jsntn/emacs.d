@@ -163,8 +163,7 @@
 				  (setq org-agenda-files
 					(delete-dups
 					 (append org-agenda-files
-						 ;; <<omd>>
-						 (directory-files-recursively org-mobile-directory "\\.org$"))))
+						 (directory-files-recursively org-mobile-directory "\\.org$")))) ; <<omd>>
 
 				  ;; { -- START --
 				  ;; <<4osa-start>> | the link anchor to the end: [[./init-org.el::4osa-end]]
