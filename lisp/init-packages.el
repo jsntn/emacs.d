@@ -407,6 +407,12 @@ You need to install it manually. Continue?")
   )
 ;; END: Org-roam }
 
+(use-package pangu-spacing
+  :config
+  (global-pangu-spacing-mode 1)
+  (setq pangu-spacing-real-insert-separtor t)
+  )
+
 (use-package pinyinlib
   :config
   ;; TL; DR
