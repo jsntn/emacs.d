@@ -488,6 +488,82 @@ You need to install it manually. Continue?")
   (add-to-list 'projectile-globally-ignored-files "_cache")
   )
 
+(use-package pyim
+  :config
+  (setq pyim-dicts
+        '((:name "BigDict"
+                 :file (expand-file-name "misc/pyim-bigdict.pyim.gz" user-emacs-directory)
+                 :coding utf-8-unix)))
+  ;; 激活 basedict 拼音词库
+  (use-package pyim-basedict
+    :config (pyim-basedict-enable))
+
+  ;; 五笔用户使用 wbdict 词库
+  ;; (use-package pyim-wbdict
+  ;;   :ensure nil
+  ;;   :config (pyim-wbdict-gbk-enable))
+
+  (setq default-input-method "pyim")
+
+  ;; 我使用全拼
+  (setq pyim-default-scheme 'quanpin)
+
+  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+  ;; 我自己使用的中英文动态切换规则是：
+  ;; <strike>1. 光标只有在注释里面时，才可以输入中文。<strike> -> 2021/10/01 commented this `pyim-probe-program-mode` below
+  ;; 2. 光标前是汉字字符时，才能输入中文。
+  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+  (setq-default pyim-english-input-switch-functions
+		'(pyim-probe-dynamic-english
+		  pyim-probe-isearch-mode
+		  ;; pyim-probe-program-mode
+		  pyim-probe-org-structure-template)
+		)
+
+  (setq-default pyim-punctuation-half-width-functions
+		'(pyim-probe-punctuation-line-beginning
+		  pyim-probe-punctuation-after-punctuation)
+		)
+
+  ;; 开启代码搜索中文功能（比如拼音，五笔码等）
+  (pyim-isearch-mode 1)
+  ;; 激活以上这个 mode 后，可以使用下面的方式强制关闭 isearch 搜索框中文输入
+  ;; （即使 在 pyim 激活的时候）。
+  ;; (setq-default pyim-english-input-switch-functions '(pyim-probe-isearch-mode))
+
+  ;; 使用 pupup-el 来绘制选词框
+  (setq pyim-page-tooltip 'popup)
+
+  ;; 选词框显示 9 个候选词
+  (setq pyim-page-length 9)
+
+  ;; 让 Emacs 启动时自动加载 pyim 词库
+  (add-hook 'emacs-startup-hook
+	    #'(lambda () (pyim-restart-1 t)))
+
+  ;; pyim-indicator-with-cursor-color 这个 indicator 很容易和其它设置 cursor 颜
+  ;; 色的包冲突，因为都调用 set-cursor-color，遇到这种情况后，用户需要自己解决冲
+  ;; 突， pyim-indicator 提供了一个简单的机制：
+  (setq pyim-indicator-list (list #'my-pyim-indicator-with-cursor-color #'pyim-indicator-with-modeline))
+
+  (defun my-pyim-indicator-with-cursor-color (input-method chinese-input-p)
+    (if (not (equal input-method "pyim"))
+	(progn
+	  ;; 用户在这里定义 pyim 未激活时的光标颜色设置语句
+	  (set-cursor-color "green"))
+      (if chinese-input-p
+	  (progn
+	    ;; 用户在这里定义 pyim 输入中文时的光标颜色设置语句
+	    (set-cursor-color "blue"))
+	;; 用户在这里定义 pyim 输入英文时的光标颜色设置语句
+	(set-cursor-color "red"))))
+
+  :bind
+  ;; FIXME: to be moved to init-keybindings.el...
+  (("M-i" . pyim-convert-string-at-point) ; 将光标处的拼音或者五笔字符串转换为中文（与 vimim 的"点石成金"功能类似）
+   ("C-;" . pyim-delete-word-from-personal-buffer))
+  )
+ 
 (use-package pyvenv
   :config
   ;; (pyvenv-mode t)
