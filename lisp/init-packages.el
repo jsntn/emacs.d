@@ -215,7 +215,6 @@ In that case, insert the number."
 (use-package expand-region)
 
 (use-package flycheck
-  ;; to be tested...
   :ensure-system-package
   ((shellcheck . shellcheck)
    (js-yaml    . "sudo npm install -g js-yaml"))
@@ -340,7 +339,6 @@ In that case, insert the number."
   )
 
 ;; { START: Org-roam
-;; to be tested...
 (unless (executable-find "rg")
   (when (string= (which-linux-distributor) "Ubuntu")
     (if (string< (which-linux-release) "18.10")
@@ -469,7 +467,6 @@ You need to install it manually. Continue?")
   )
 
 ;; START: reformatter config
-;; to be tested...
 (unless (executable-find "shfmt")
   (when (eq system-type 'gnu/linux)
     (shell-command "sudo snap install shfmt")
@@ -513,7 +510,6 @@ You need to install it manually. Continue?")
 (use-package swiper)
 
 ;; { -- start: if emacs is running in a terminal
-;; to be tested...
 (unless (display-graphic-p)
 
   (add-to-list 'package-archives
