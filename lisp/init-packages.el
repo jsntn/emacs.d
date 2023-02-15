@@ -344,7 +344,7 @@ In that case, insert the number."
 (unless (executable-find "rg")
   (when (eq which-linux-distributor 'Ubuntu)
     (if (string< which-linux-release '18.10)
-	(shell-command "curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb && sudo dpkg -i ripgrep_13.0.0_amd64.deb && sudo rm -rf ripgrep_13.0.0_amd64.deb")
+	(shell-command "sudo curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb && sudo dpkg -i ripgrep_13.0.0_amd64.deb && sudo rm -rf ripgrep_13.0.0_amd64.deb")
       (shell-command "sudo apt-get install ripgrep")
       )
     )
