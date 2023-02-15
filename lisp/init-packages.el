@@ -256,6 +256,7 @@ In that case, insert the number."
 	  ("VIA" :foreground "#5F87FF" :background "black" :box t)
 	)
       )
+  (global-hl-todo-mode)
   )
 
 (use-package imenu-list)
