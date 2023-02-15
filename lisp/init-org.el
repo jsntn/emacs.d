@@ -20,6 +20,18 @@
 
 (setq org-log-done 'note) ; record a note along with the timestamp
 
+;; inline images display in Org-mode
+(setq org-startup-with-inline-images t)
+
+;; https://emacs.stackexchange.com/a/18483/29715
+(setq org-startup-truncated nil)
+
+(setq org-tags-column -77) ; https://emacs.stackexchange.com/a/10526/29715
+;; reference https://www.reddit.com/r/orgmode/comments/ww1d7x/i_updated_my_orgtagscolumn_variable_now_how_to/
+;; read more
+;; - https://www.reddit.com/r/orgmode/comments/jss5rp/tags_does_not_align/
+;; - https://stackoverflow.com/questions/6210840/tag-position-in-org-mode
+
 (defun org-force-open-current-window ()
   ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
   (interactive)
