@@ -472,18 +472,13 @@ You need to install it manually. Continue?")
 ;; to be tested...
 (unless (executable-find "shfmt")
   (when (eq system-type 'gnu/linux)
-    (shell-command "sudo curl -sS https://webi.sh/shfmt | sh")
-    )
-  (when (eq system-type 'darwin)
-    (shell-command "curl -sS https://webi.sh/shfmt | sh")
-    )
-  (when (eq system-type 'windows-nt)
-    (shell-command "curl.exe https://webi.ms/shfmt | powershell")
+    (shell-command "sudo snap install shfmt")
     )
   )
 (use-package reformatter
   :ensure-system-package
-  (prettier . "sudo npm install -g prettier")
+  ((prettier . "sudo npm install -g prettier")
+   (shfmt    . shfmt))
   :config
   (reformatter-define css-yaml-format
     :program "prettier"
