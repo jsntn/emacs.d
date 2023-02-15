@@ -615,6 +615,19 @@ You need to install it manually. Continue?")
   )
 ;; END: reformatter config
 
+(use-package savehist
+  ;; from https://emacs-china.org/t/emacs/17606/9
+  :hook (after-init . savehist-mode)
+  :init (setq enable-recursive-minibuffers t ; allow commands in minibuffers
+	      history-length 1000
+	      savehist-additional-variables '(mark-ring
+					      global-mark-ring
+					      search-ring
+					      regexp-search-ring
+					      extended-command-history)
+	      savehist-autosave-interval 300)
+	      )
+ 
 (use-package super-save
   :config
   (super-save-mode +1)
