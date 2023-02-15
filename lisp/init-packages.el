@@ -723,6 +723,17 @@ You need to install it manually. Continue?")
 
 (use-package yaml-mode)
 
+(use-package yasnippet
+  :config
+  (add-to-list 'yas-snippet-dirs (expand-file-name "snippets" user-emacs-directory))
+  (yas-global-mode 1)
+  :hook (after-init . yas-global-mode)
+  )
+
+(use-package yasnippet-snippets
+  :after (yasnippet)
+  )
+
 
 (provide 'init-packages)
 
