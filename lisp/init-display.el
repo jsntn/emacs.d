@@ -27,6 +27,11 @@
 (setq-default buffer-file-coding-system 'utf-8-unix)
 (setq-default default-buffer-file-coding-system 'utf-8-unix)
 
+;; recent files
+;; https://stackoverflow.com/questions/50417/how-do-i-get-list-of-recent-files-in-gnu-emacs/50422#50422
+(recentf-mode 1)
+(setq recentf-max-menu-item 10)
+
 (progn
   ;; set font for emoji (if before emacs 28, should come after setting
   ;; symbols. emacs 28 now has 'emoji . before, emoji is part of 'symbol)
