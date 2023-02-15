@@ -218,7 +218,7 @@ In that case, insert the number."
   ;; to be tested...
   :ensure-system-package
   ((shellcheck . shellcheck)
-   (js-yaml    . "npm install -g js-yaml"))
+   (js-yaml    . "sudo npm install -g js-yaml"))
   )
 
 (use-package general)
@@ -471,7 +471,10 @@ You need to install it manually. Continue?")
 ;; START: reformatter config
 ;; to be tested...
 (unless (executable-find "shfmt")
-  (when (or (eq system-type 'gnu/linux) (eq system-type 'darwin))
+  (when (eq system-type 'gnu/linux)
+    (shell-command "sudo curl -sS https://webi.sh/shfmt | sh")
+    )
+  (when (eq system-type 'darwin)
     (shell-command "curl -sS https://webi.sh/shfmt | sh")
     )
   (when (eq system-type 'windows-nt)
@@ -480,7 +483,7 @@ You need to install it manually. Continue?")
   )
 (use-package reformatter
   :ensure-system-package
-  (prettier . "npm install -g prettier")
+  (prettier . "sudo npm install -g prettier")
   :config
   (reformatter-define css-yaml-format
     :program "prettier"
