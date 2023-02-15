@@ -374,6 +374,11 @@ In that case, insert the number."
   (global-orglink-mode)
   )
 
+(use-package org-drill
+  :config
+  (setq org-drill-leech-method "warn")
+  ) 
+
 (use-package ox-hugo
   :after ox
   )
