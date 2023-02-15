@@ -242,6 +242,8 @@ In that case, insert the number."
   )
 
 (use-package lsp-pyright
+  :ensure-system-package
+  (pyright . "sudo npm install -g pyright")
   :hook (python-mode . (lambda ()
 			 (require 'lsp-pyright)
 			 (lsp)))) ; or lsp-deferred
