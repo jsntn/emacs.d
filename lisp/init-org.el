@@ -3,6 +3,16 @@
 ;;; Code:
 
 
+(when (not (file-directory-p org-directory))
+  (yes-or-no-p "There will be 'No such file org directory' warning as the org-directory is not defined. Continue?")
+  ;; [[./init-org.el::od-1]]
+  ;; [[./init-org.el::od-2]]
+  )
+(when (not (boundp 'org-mobile-directory))
+  (yes-or-no-p "There will be void-variable error as the org-mobile-directory is not defined. Continue?")
+  ;; [[./init-org.el::omd]]
+  )
+
 (setq org-startup-indented t) ; enable org-indent mode
 
 (setq org-log-done 'time) ; keep track of when a certain TODO item was marked as
@@ -132,7 +142,7 @@
 ;; teach Org where to look for all of the files you wish to include in your agenda
 ;; https://stackoverflow.com/a/41969519/4274775
 (setq org-agenda-files
-	      (directory-files-recursively org-directory "\\.org$"))
+	      (directory-files-recursively org-directory "\\.org$")) ; <<od-1>>
 ;; (length org-agenda-files)
 
 ;; how to truncate the long task name in the agenda custom view?
@@ -148,10 +158,12 @@
 				  ;; https://orgmode.org/list/loom.20111014T204701-149@post.gmane.org/
 				  (setq org-agenda-files
 					(delete-dups (append org-agenda-files
+							     ;; <<od-2>>
 							     (directory-files-recursively org-directory "\\.org$"))))
 				  (setq org-agenda-files
 					(delete-dups
 					 (append org-agenda-files
+						 ;; <<omd>>
 						 (directory-files-recursively org-mobile-directory "\\.org$"))))
 
 				  ;; { -- START --
