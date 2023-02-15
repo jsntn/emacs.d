@@ -40,12 +40,12 @@
 (require 'init-load-path) ; load-path settings
 (require 'local-var nil 'noerror) ; allow users to provide an optional
 				  ; "local-var" containing personal variables
- 
+
 (require 'use-package) ; use-package initialization
 ;; enable the use-package extension to ensure system binaries exist alongside package declarations
 (use-package use-package-ensure-system-package
   :ensure t)
-  
+
 (require 'local-packages nil 'noerror) ; allow users to provide an optional
 				       ; "local-packages" containing local
 				       ; packages

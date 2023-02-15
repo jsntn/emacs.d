@@ -10,15 +10,15 @@
   "from lsb_release"
   (interactive)
   (when (eq system-type 'gnu/linux)
-     (shell-command-to-string "lsb_release -si")))
+    (shell-command-to-string "lsb_release -si")))
 
 (defun which-linux-release ()
   "from lsb_release"
   (interactive)
   (when (eq system-type 'gnu/linux)
-     (shell-command-to-string "lsb_release -sr")))
-;; -- END -- } 
- 
+    (shell-command-to-string "lsb_release -sr")))
+;; -- END -- }
+
 (use-package all-the-icons
   :config
   ;; check if all-the-icons is installed
@@ -217,8 +217,8 @@ In that case, insert the number."
 (use-package flycheck
   ;; to be tested...
   :ensure-system-package
-  (shellcheck . shellcheck)
-  (js-yaml . "npm install -g js-yaml")
+  ((shellcheck . shellcheck)
+   (js-yaml    . "npm install -g js-yaml"))
   )
 
 (use-package general)
@@ -344,8 +344,9 @@ In that case, insert the number."
 (unless (executable-find "rg")
   (when (eq which-linux-distributor 'Ubuntu)
     (if (string< which-linux-release '18.10)
-      (shell-command "curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb && sudo dpkg -i ripgrep_13.0.0_amd64.deb && sudo rm -rf ripgrep_13.0.0_amd64.deb")
-    (shell-command "sudo apt-get install ripgrep")
+	(shell-command "curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb && sudo dpkg -i ripgrep_13.0.0_amd64.deb && sudo rm -rf ripgrep_13.0.0_amd64.deb")
+      (shell-command "sudo apt-get install ripgrep")
+      )
     )
   )
 
@@ -433,7 +434,7 @@ You need to install it manually. Continue?")
 	  '((t . re-builder-extended-pattern)
 	    (t . ivy-prescient-re-builder))))
   )
- 
+
 (use-package projectile
   :init
   (projectile-mode +1)
@@ -469,11 +470,13 @@ You need to install it manually. Continue?")
 
 ;; START: reformatter config
 ;; to be tested...
-(when (or (eq system-type 'gnu/linux) (eq system-type 'darwin))
-  (shell-command "curl -sS https://webi.sh/shfmt | sh")
-  )
-(when (eq system-type 'windows-nt)
-  (shell-command "curl.exe https://webi.ms/shfmt | powershell")
+(unless (executable-find "shfmt")
+  (when (or (eq system-type 'gnu/linux) (eq system-type 'darwin))
+    (shell-command "curl -sS https://webi.sh/shfmt | sh")
+    )
+  (when (eq system-type 'windows-nt)
+    (shell-command "curl.exe https://webi.ms/shfmt | powershell")
+    )
   )
 (use-package reformatter
   :ensure-system-package
@@ -495,11 +498,10 @@ You need to install it manually. Continue?")
   (yes-or-no-p "Please be informed the Prettier is used in this configuration file, but the Prettier executable file is not found.
 You need to install it manually. Continue?")
   )
-
 (unless (executable-find "shfmt")
   (yes-or-no-p "Please be informed the shfmt is used in this configuration file, but the shfmt executable file is not found.
 You need to install it manually. Continue?")
-  ) 
+  )
 ;; END: reformatter config
 
 (use-package super-save
