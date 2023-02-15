@@ -10,13 +10,13 @@
   "from lsb_release"
   (interactive)
   (when (eq system-type 'gnu/linux)
-    (shell-command-to-string "lsb_release -si")))
+    (shell-command-to-string "echo -n $(lsb_release -si)"))) ; https://emacs.stackexchange.com/a/21906
 
 (defun which-linux-release ()
   "from lsb_release"
   (interactive)
   (when (eq system-type 'gnu/linux)
-    (shell-command-to-string "lsb_release -sr")))
+    (shell-command-to-string "echo -n $(lsb_release -sr)")))
 ;; -- END -- }
 
 (use-package all-the-icons
@@ -342,8 +342,8 @@ In that case, insert the number."
 ;; { START: Org-roam
 ;; to be tested...
 (unless (executable-find "rg")
-  (when (eq which-linux-distributor 'Ubuntu)
-    (if (string< which-linux-release '18.10)
+  (when (string= (which-linux-distributor) "Ubuntu")
+    (if (string< (which-linux-release) "18.10")
 	(shell-command "sudo curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb && sudo dpkg -i ripgrep_13.0.0_amd64.deb && sudo rm -rf ripgrep_13.0.0_amd64.deb")
       (shell-command "sudo apt-get install ripgrep")
       )
