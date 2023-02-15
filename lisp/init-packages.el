@@ -260,7 +260,14 @@ In that case, insert the number."
 	  ("VIA" :foreground "#5F87FF" :background "black" :box t)
 	)
       )
-  (global-hl-todo-mode)
+  ;; global-hl-todo-mode doesn't seem to work
+  ;; https://github.com/tarsius/hl-todo/issues/19
+  ;; https://github.com/tarsius/hl-todo/issues/45
+  (define-globalized-minor-mode my-global-hl-todo-mode hl-todo-mode
+    (lambda ()
+      (when (not (derived-mode-p 'magit-mode))
+	(hl-todo-mode 1))))
+  (my-global-hl-todo-mode 1)
   )
 
 (use-package imenu-list)
