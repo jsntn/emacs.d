@@ -234,6 +234,13 @@ In that case, insert the number."
   :hook (prog-mode-hook . highlight-indent-guides-mode)
   )
 
+(use-package highlight-parentheses
+  :config
+  (add-hook 'prog-mode-hook 'highlight-parentheses-mode)
+  (setq highlight-parentheses-colors
+    '("#3498DB" "#FF9900" "#38761D" "#9900FF"))
+  )
+
 (use-package hl-todo
   :config
   (setq hl-todo-highlight-punctuation ":"
@@ -377,7 +384,7 @@ In that case, insert the number."
 (use-package org-drill
   :config
   (setq org-drill-leech-method "warn")
-  ) 
+  )
 
 (use-package ox-hugo
   :after ox
@@ -574,7 +581,7 @@ You need to install it manually. Continue?")
   (("M-i" . pyim-convert-string-at-point) ; 将光标处的拼音或者五笔字符串转换为中文（与 vimim 的"点石成金"功能类似）
    ("C-;" . pyim-delete-word-from-personal-buffer))
   )
- 
+
 (use-package pyvenv
   :config
   ;; (pyvenv-mode t)
@@ -638,7 +645,7 @@ You need to install it manually. Continue?")
 					      extended-command-history)
 	      savehist-autosave-interval 300)
 	      )
- 
+
 (use-package super-save
   :config
   (super-save-mode +1)
