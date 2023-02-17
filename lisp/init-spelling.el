@@ -3,7 +3,6 @@
 ;;; Code:
 
 
-;; TODO: to be tested...
 (use-package ispell
   :ensure-system-package aspell)
 

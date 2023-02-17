@@ -406,6 +406,7 @@ In that case, insert the number."
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  (setq org-bullets-bullet-list '("◼️" "○" "¶" "►"))
   )
 
 (use-package org-drill
@@ -413,6 +414,23 @@ In that case, insert the number."
   ;; make all agenda files with any archive files associated with them as the
   ;; source of items for drill sessions(scope)
   (setq org-drill-scope 'agenda-with-archives)
+  )
+
+(use-package org-modern
+  :config
+  (global-org-modern-mode)
+  (set-face-attribute 'org-modern-label nil
+		      :height 0.95) ; adjusted the height, and this style is
+				    ; inherited by many other places
+  (setq
+   org-modern-star nil
+   org-modern-hide-stars nil
+   org-modern-todo nil
+   org-modern-faces nil
+   org-modern-label-border nil
+   ;; for some more parameters configuration, refer to
+   ;; https://github.com/minad/org-modern/blob/main/org-modern.el
+   )
   )
 
 (use-package org-super-agenda ; <<org-super-agenda>>

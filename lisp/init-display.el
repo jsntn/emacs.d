@@ -60,12 +60,6 @@
     )
   )
 
-;; TODO: test this on terminal emacs, and test org-modern...
-(when (display-graphic-p)
-  ;; configuration for org-bullets package
-  (setq org-bullets-bullet-list '("◼️" "○" "¶" "►"))
-  )
-
 (defun windows-split-toggle ()
   "Toggle between horizontal and vertical split with two windows."
   (interactive)
