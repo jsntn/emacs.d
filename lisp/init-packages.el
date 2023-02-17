@@ -246,7 +246,6 @@ In that case, insert the number."
 
 ;; automatically detects the programming language in a buffer or string
 (use-package language-detection
-  :load-path (lambda () (symbol-value 'load-path))
   :config
   (require 'cl-lib)
 
