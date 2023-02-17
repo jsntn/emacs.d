@@ -340,6 +340,17 @@ In that case, insert the number."
     '("#3498DB" "#FF9900" "#38761D" "#9900FF"))
   )
 
+;; automatic and manual symbol highlighting
+;; cycle through the locations of any symbol at point
+(use-package highlight-symbol
+  :config
+  (add-hook 'prog-mode-hook 'highlight-symbol-mode)
+  (add-hook 'prog-mode-hook 'highlight-symbol-nav-mode)
+  ;; keybindings for navigation in highlight-symbol-nav-mode:
+  ;; M-p highlight-symbol-prev
+  ;; M-n highlight-symbol-next
+  )
+
 (use-package hl-todo
   :config
   (setq hl-todo-highlight-punctuation ":"
