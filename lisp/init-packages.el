@@ -236,6 +236,7 @@ In that case, insert the number."
 ;; { -- START --
 ;; use helm-dash and language-detection
 ;; ... https://emacs-china.org/t/topic/5851/2
+
 ;; uses Dash docsets inside emacs to browse documentation
 (use-package helm-dash
   :config
