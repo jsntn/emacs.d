@@ -30,7 +30,6 @@
 ;; recent files
 ;; https://stackoverflow.com/questions/50417/how-do-i-get-list-of-recent-files-in-gnu-emacs/50422#50422
 (recentf-mode 1)
-(setq recentf-max-menu-item 10)
 
 (progn
   ;; set font for emoji (if before emacs 28, should come after setting
