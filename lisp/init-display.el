@@ -60,6 +60,7 @@
     )
   )
 
+;; TODO: test this on terminal emacs, and test org-modern...
 (when (display-graphic-p)
   ;; configuration for org-bullets package
   (setq org-bullets-bullet-list '("◼️" "○" "¶" "►"))
