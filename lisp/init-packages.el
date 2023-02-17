@@ -19,6 +19,7 @@
     (shell-command-to-string "echo -n $(lsb_release -sr)")))
 ;; -- END -- }
 
+;; a utility package to collect various Icon Fonts and propertize them within Emacs.
 (use-package all-the-icons
   :config
   ;; check if all-the-icons is installed
@@ -47,6 +48,9 @@
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
+;; keybindings:
+;; [[./init-keybindings.el::ajm-1]]
+;; [[./init-keybindings.el::ajm-2]]
 (use-package ace-jump-mode)
 
 (use-package annotate
@@ -60,6 +64,7 @@
    )
   )
 
+;; swap buffers, keybindings -> [[./init-keybindings.el::bm-k]]
 (use-package buffer-move)
 
 (unless (display-graphic-p)

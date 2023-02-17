@@ -104,7 +104,7 @@
  "a" 'org-agenda
  "b" 'counsel-bookmark
  "c" 'org-capture
- "f" 'ace-jump-char-mode
+ "f" 'ace-jump-char-mode ;; <<ajm-1>>
  ;; ...
  )
 
@@ -151,7 +151,7 @@
 (general-define-key
  :prefix "C-x"
  "C-r" 'helm-recentf
- ;; for buffer-move package
+ ;; for buffer-move package | <<bm-k>>
  "<up>" 'buf-move-up
  "<down>" 'buf-move-down
  "<left>" 'buf-move-left
@@ -169,7 +169,7 @@
  :keymaps 'normal
  "b" 'bookmark-bmenu-list
  "d" 'dired
- "f" 'ace-jump-char-mode
+ "f" 'ace-jump-char-mode ;; <<ajm-2>>
  "'" 'imenu-list-smart-toggle
  "r" 'revert-buffer
  "w" 'windows-split-toggle
