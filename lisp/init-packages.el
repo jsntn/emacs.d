@@ -239,6 +239,7 @@ In that case, insert the number."
 
 ;; uses Dash docsets inside emacs to browse documentation
 (use-package helm-dash
+  :ensure-system-package sqlite3
   :config
   (setq helm-dash-browser-func 'eww)
   (setq dash-docs-enable-debugging nil)
