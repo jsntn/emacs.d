@@ -147,6 +147,7 @@ In that case, insert the number."
   (cnfonts-mode 1)
   (setq cnfonts-profiles
 	'("program" "org-mode" "read-book"))
+  (setq cnfonts-use-system-type t) ; save profile config across different system-type
   )
 
 (use-package counsel)
