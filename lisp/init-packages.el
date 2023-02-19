@@ -528,6 +528,15 @@ In that case, insert the number."
   :after ox
   )
 
+;; play animated GIF or PNG inline in Org buffers
+;; M-x org-inline-anim-animate (or C-c C-x m) when the point is on the image
+;; with a single prefix (C-u), the animation will play and loop
+;; you can stop it with a double prefix (C-u C-u)
+(use-package org-inline-anim
+  :config
+  (add-hook 'org-mode-hook #'org-inline-anim-mode)
+  )
+
 ;; { START: Org-roam
 (unless (executable-find "rg")
   (when (string= (which-linux-distributor) "Ubuntu")
