@@ -399,6 +399,14 @@ In that case, insert the number."
 
 (use-package imenu-list)
 
+(use-package keyfreq
+  :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1)
+  (setq keyfreq-file (expand-file-name ".emacs.keyfreq" user-emacs-directory))
+  (setq keyfreq-file-lock (expand-file-name ".emacs.keyfreq.lock" user-emacs-directory))
+  )
+
 (use-package lsp-mode
   :config
   (setq lsp-headerline-breadcrumb-enable nil)
