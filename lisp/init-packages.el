@@ -449,6 +449,7 @@ In that case, insert the number."
    org-modern-todo nil
    org-modern-faces nil
    org-modern-label-border nil
+   org-modern-block-name '("‣ " . "‣ ")
    ;; for some more parameters configuration, refer to
    ;; https://github.com/minad/org-modern/blob/main/org-modern.el
    )
