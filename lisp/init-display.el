@@ -100,6 +100,7 @@ Version 2017-03-12"
   (font-lock-flush)
   )
 
+;; FIXME: to be tested...
 ;; visualize trailing whitespace
 (defun my/show-trailing-whitespace ()
   (setq show-trailing-whitespace t)
