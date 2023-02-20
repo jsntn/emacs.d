@@ -20,6 +20,8 @@
 
 (setq org-log-done 'note) ; record a note along with the timestamp
 
+(setq org-src-fontify-natively t) ; highlight the code in Org-mode
+
 (setq org-fontify-whole-block-delimiter-line t) ; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=52587
 (custom-set-faces
  ;; https://emacs.stackexchange.com/questions/52324/prevent-org-source-block-face-from-bleeding-out-in-fold#comment80865_52377
