@@ -22,6 +22,11 @@
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
+(when (eq system-type 'windows-nt)
+  ;; https://stackoverflow.com/a/50694212
+  (setenv "HOME" (getenv "UserProfile"))
+  )
+
 
 (provide 'init-portable)
 
