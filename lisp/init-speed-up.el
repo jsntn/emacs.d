@@ -9,6 +9,7 @@
 
 ;; http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold
 (defun my/minibuffer-setup-hook ()
+  ;; http://clhs.lisp.se/Body/v_most_p.htm
   (setq gc-cons-threshold most-positive-fixnum))
 
 (defun my/minibuffer-exit-hook ()
