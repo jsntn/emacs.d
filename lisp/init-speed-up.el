@@ -2,13 +2,20 @@
 ;;; Commentary:
 ;;; Code:
 
+;; `garage-collection-messages is not an optimization, it will actually slow
+;; down the garbage collector. only activate it for debugging purposes!
+;; https://github.com/doomemacs/doomemacs/issues/3108#issuecomment-627537230
+;; (setq garbage-collection-messages t)
 
-;; adjust garbage collection thresholds during startup, and thereafter
-(let ((normal-gc-cons-threshold (* 20 1024 1024))
-      (init-gc-cons-threshold (* 128 1024 1024)))
-  (setq gc-cons-threshold init-gc-cons-threshold)
-  (add-hook 'emacs-startup-hook
-            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+;; http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold
+(defun my/minibuffer-setup-hook ()
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun my/minibuffer-exit-hook ()
+  (setq gc-cons-threshold 800000))
+
+(add-hook 'minibuffer-setup-hook #'my/minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'my/minibuffer-exit-hook)
 
 
 (provide 'init-speed-up)
