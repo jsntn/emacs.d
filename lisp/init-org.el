@@ -22,12 +22,14 @@
 
 (setq org-src-fontify-natively t) ; highlight the code in Org-mode
 
+;; { START: temp WA to fix bug #52587
 (setq org-fontify-whole-block-delimiter-line t) ; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=52587
 (custom-set-faces
  ;; https://emacs.stackexchange.com/questions/52324/prevent-org-source-block-face-from-bleeding-out-in-fold#comment80865_52377
  ;; https://www.reddit.com/r/emacs/comments/cw0499/comment/ifcq16w/?utm_source=share&utm_medium=web2x&context=3
 `(org-block-begin-line ((t (:background ,(face-attribute 'default :background)))))
 )
+;; END: temp WA to fix bug #52587 }
 
 ;; inline images display in Org-mode
 (setq org-startup-with-inline-images t)
