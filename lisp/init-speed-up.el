@@ -14,7 +14,7 @@
   )
 
 (defun my/minibuffer-exit-hook ()
-  ;; defer it so that commands launched immediately after will enjoy the
+  ;; defer it (1sec) so that commands launched immediately after will enjoy the
   ;; benefits.
   ;; https://github.com/doomemacs/doomemacs/blob/develop/docs/faq.org#how-does-doom-start-up-so-quickly
   (run-at-time 1 nil
