@@ -59,6 +59,11 @@
     )
   )
 
+;; the default split-screen direction
+;; https://stackoverflow.com/a/7998271
+;; (setq split-width-threshold nil) ; for vertical split
+(setq split-width-threshold 1 ) ; for horizontal split
+
 (defun windows-split-toggle ()
   "Toggle between horizontal and vertical split with two windows."
   (interactive)
