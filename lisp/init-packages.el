@@ -43,11 +43,6 @@
   (setq inhibit-compacting-font-caches t)
   )
 
-(use-package benchmark-init
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
-
 ;; a quick cursor jump mode for emacs
 ;; keybindings:
 ;; [[./init-keybindings.el::ajm-1]]
@@ -72,6 +67,22 @@
    )
   )
 
+(use-package auto-capitalize
+  :straight (:host github :repo "yuutayamada/auto-capitalize-el")
+  :config
+  (setq auto-capitalize-words `("I" "English"))
+  ;; this configuration adds capitalized words of .aspell.en.pws
+  (setq auto-capitalize-aspell-file (expand-file-name "misc/aspell.en.pws" user-emacs-directory))
+  (auto-capitalize-setup)
+  ;; (add-hook 'after-change-major-mode-hook 'auto-capitalize-mode)
+  :hook (org-mode .  auto-capitalize-mode)
+  )
+
+(use-package benchmark-init
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
 ;; swap buffers, keybindings -> [[./init-keybindings.el::bm-k]]
 (use-package buffer-move)
 
@@ -84,6 +95,15 @@
 	      ; clipboard support
     :hook (after-init . global-clipetty-mode)
     )
+  )
+
+(use-package cnfonts
+  :if window-system ; only load this package when in graphical Emacs
+  :config
+  (cnfonts-mode 1)
+  (setq cnfonts-profiles
+	'("program" "org-mode" "read-book"))
+  (setq cnfonts-use-system-type t) ; save profile config across different system-type
   )
 
 (use-package company
@@ -141,13 +161,8 @@ In that case, insert the number."
   ;; END: company-candidates from abo-abo }
   )
 
-(use-package cnfonts
-  :if window-system ; only load this package when in graphical Emacs
-  :config
-  (cnfonts-mode 1)
-  (setq cnfonts-profiles
-	'("program" "org-mode" "read-book"))
-  (setq cnfonts-use-system-type t) ; save profile config across different system-type
+(use-package company-english-helper
+  :straight (:host github :repo "mjanateelazycat/company-english-helper")
   )
 
 (use-package counsel)
