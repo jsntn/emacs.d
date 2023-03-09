@@ -165,7 +165,7 @@ In that case, insert the number."
   :config
   (with-eval-after-load 'company
     (company-ctags-auto-setup))
-  ;; my config -> [[./lisp/init-misc.el::config-ce-cc]]
+  ;; my config -> [[./init-misc.el::config-ce-cc]]
   )
 
 (use-package company-english-helper
@@ -184,7 +184,7 @@ In that case, insert the number."
   ;; run `counsel-etags-scan-code' AUTOMATICALLY if tags file does not exist.
   ;; it also calls `counsel-etags-fallback-grep-function' if not tag is found.
 
-  ;; keybinding -> [[./lisp/init-keybindings.el::ftap]]
+  ;; keybinding -> [[./init-keybindings.el::ftap]]
 
   ;; :init
   ;; (add-hook 'prog-mode-hook
@@ -202,7 +202,7 @@ In that case, insert the number."
 	  (shell-command
            (format "ctags -e -R --tag-relative=never %s"
 		   (expand-file-name ".ctags" user-emacs-directory)))))
-  ;; my config -> [[./lisp/init-misc.el::config-ce-cc]]
+  ;; my config -> [[./init-misc.el::config-ce-cc]]
   )
 
 (use-package doom-themes

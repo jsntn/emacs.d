@@ -115,7 +115,7 @@ not visiting a file"
   (setq company-ctags-extra-tags-files my-tags-table-list)
   )
 
-;; keybinding -> [[./lisp/init-keybindings.el::m-ftf]]
+;; keybinding -> [[./init-keybindings.el::m-ftf]]
 (defun my/tags-table-list (&optional del)
   "calls `my/find-tags-file' to recursively search up the directory
 tree to find a file named 'TAGS'. If found, add/delete(C-u) it
