@@ -174,6 +174,13 @@ In that case, insert the number."
 
 (use-package counsel)
 
+;; { START: counsel-etags
+;; TODO: test the TAGS file creation on Ubuntu with this universal-ctags installed by snap
+(unless (executable-find "ctags")
+  (when (eq system-type 'gnu/linux)
+    (shell-command "sudo snap install universal-ctags")
+    )
+  )
 (use-package counsel-etags
   ;; ctags should be installed first, the Universal Ctags is recommended,
   ;; https://github.com/universal-ctags/ctags
@@ -192,6 +199,8 @@ In that case, insert the number."
   ;; 	      (add-hook 'after-save-hook
   ;; 			'counsel-etags-virtual-update-tags 'append 'local)))
 
+  :ensure-system-package
+  (ctags . universal-ctags)
   :config
   (setq counsel-etags-update-interval 60)
   (push "build" counsel-etags-ignore-directories)
@@ -204,6 +213,11 @@ In that case, insert the number."
 		   (expand-file-name ".ctags" user-emacs-directory)))))
   ;; my config -> [[./init-misc.el::config-ce-cc]]
   )
+(unless (executable-find "ctags")
+  (yes-or-no-p "Please be informed the ctags is used in this configuration file, but the executable file is not found.
+You need to install it manually. Continue?")
+  )
+;; END: counsel-etags } 
 
 (use-package doom-themes
   :config
