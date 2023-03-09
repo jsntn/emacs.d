@@ -75,6 +75,58 @@ current buffer's, reload dir-locals."
   (add-to-list 'org-export-filter-paragraph-functions 'eh-org-clean-space)
   )
 
+;; { START: config for counsel-etags and company-ctags
+;; <<config-ce-cc>>
+(defun my/find-tags-file ()
+  "recursively searches each parent directory for a file named 'TAGS' and returns the
+path to that file or nil if a tags file is not found. Returns nil if the buffer is
+not visiting a file"
+  (progn
+    (defun find-tags-file-r (path)
+      "find the tags file from the parent directories"
+      (let* ((parent (file-name-directory path))
+	     (possible-tags-file (concat parent "TAGS")))
+	(cond
+	 ((file-exists-p possible-tags-file) (throw 'found-it possible-tags-file))
+	 ((string= "/TAGS" possible-tags-file) (error "no tags file found"))
+	 (t (find-tags-file-r (directory-file-name parent))))))
+
+    (if (buffer-file-name)
+	(catch 'found-it
+	  (find-tags-file-r (buffer-file-name)))
+      (error "buffer is not visiting a file"))))
+
+(defun insert-into-my-tags-table-list()
+  ;; if `my-tags-table-list' is void, then set it to empty list
+  (unless (boundp 'my-tags-table-list)
+    (setq my-tags-table-list '()))
+  (setq existing-my-tags-table-list my-tags-table-list)
+  (setq my-tags-table-list '()) ; initiate empty list
+  (setq my-tags-table-list
+	(delq nil (delete-dups ; delete nil and duplicates
+		   (cons (my/find-tags-file)
+			 (nconc existing-my-tags-table-list tags-table-list)))))
+  (setq counsel-etags-extra-tags-files my-tags-table-list)
+  (setq company-ctags-extra-tags-files my-tags-table-list)
+  )
+(defun delete-from-my-tags-table-list ()
+  (setq my-tags-table-list (delete (my/find-tags-file) my-tags-table-list))
+  (setq counsel-etags-extra-tags-files my-tags-table-list)
+  (setq company-ctags-extra-tags-files my-tags-table-list)
+  )
+
+;; keybinding -> [[./lisp/init-keybindings.el::m-ftf]]
+(defun my/tags-table-list (&optional del)
+  "calls `my/find-tags-file' to recursively search up the directory
+tree to find a file named 'TAGS'. If found, add/delete(C-u) it
+to/from 'counsel-etags-extra-tags-files' and
+'company-ctags-extra-tags-files'."
+  (interactive "P")
+  (if del (delete-from-my-tags-table-list)
+    (insert-into-my-tags-table-list))
+  )
+;; END: config for counsel-etags and company-ctags }
+
 
 (provide 'init-misc)
 

@@ -161,11 +161,49 @@ In that case, insert the number."
   ;; END: company-candidates from abo-abo }
   )
 
+(use-package company-ctags
+  :config
+  (with-eval-after-load 'company
+    (company-ctags-auto-setup))
+  ;; my config -> [[./lisp/init-misc.el::config-ce-cc]]
+  )
+
 (use-package company-english-helper
   :straight (:host github :repo "mjanateelazycat/company-english-helper")
   )
 
 (use-package counsel)
+
+(use-package counsel-etags
+  ;; ctags should be installed first, the Universal Ctags is recommended,
+  ;; https://github.com/universal-ctags/ctags
+  ;; with Exuberant Ctags or Universal Ctags, this package works out of box.
+  ;; instructions,
+  ;; `counsel-etags-scan-code' to create tags file
+  ;; `counsel-etags-find-tag-at-point' to navigate.  This command will also
+  ;; run `counsel-etags-scan-code' AUTOMATICALLY if tags file does not exist.
+  ;; it also calls `counsel-etags-fallback-grep-function' if not tag is found.
+
+  ;; keybinding -> [[./lisp/init-keybindings.el::ftap]]
+
+  ;; :init
+  ;; (add-hook 'prog-mode-hook
+  ;; 	    (lambda ()
+  ;; 	      (add-hook 'after-save-hook
+  ;; 			'counsel-etags-virtual-update-tags 'append 'local)))
+
+  :config
+  (setq counsel-etags-update-interval 60)
+  (push "build" counsel-etags-ignore-directories)
+
+  ;; create TAGS with the absolute recorded file paths
+  (setq counsel-etags-update-tags-backend
+	(lambda (src-dir)
+	  (shell-command
+           (format "ctags -e -R --tag-relative=never %s"
+		   (expand-file-name ".ctags" user-emacs-directory)))))
+  ;; my config -> [[./lisp/init-misc.el::config-ce-cc]]
+  )
 
 (use-package doom-themes
   :config

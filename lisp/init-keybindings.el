@@ -61,6 +61,7 @@
  "bb" 'evil-scroll-page-up ; <<page-up>>
  "be" 'ibuffer
  "SPC" 'jsntn/toggle-hideshow-block
+ "C-]" 'counsel-etags-find-tag-at-point ; <<ftap>>
  ;; ...
  )
 
@@ -172,6 +173,7 @@
  "f" 'ace-jump-char-mode ;; <<ajm-2>>
  "'" 'imenu-list-smart-toggle
  "r" 'revert-buffer
+ "t" 'my/find-tags-file ; <<m-ftf>>
  "w" 'windows-split-toggle
  ;; for workgroups2
  "c" 'wg-create-workgroup
