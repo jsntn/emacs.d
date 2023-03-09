@@ -169,7 +169,7 @@ In that case, insert the number."
   )
 
 (use-package company-english-helper
-  :straight (:host github :repo "mjanateelazycat/company-english-helper")
+  :straight (:host github :repo "manateelazycat/company-english-helper")
   )
 
 (use-package counsel)
