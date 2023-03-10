@@ -173,7 +173,7 @@
  "f" 'ace-jump-char-mode ;; <<ajm-2>>
  "'" 'imenu-list-smart-toggle
  "r" 'revert-buffer
- "t" 'my/tags-table-list ; <<m-ftf>>
+ "t" 'my/set-tags-table-list ; <<m-ftf>>
  "w" 'windows-split-toggle
  ;; for workgroups2
  "c" 'wg-create-workgroup

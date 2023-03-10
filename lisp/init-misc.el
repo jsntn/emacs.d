@@ -124,7 +124,7 @@ not visiting a file"
   )
 
 ;; keybinding -> [[./init-keybindings.el::m-ftf]]
-(defun my/tags-table-list (&optional del)
+(defun my/set-tags-table-list (&optional del)
   "calls `my/find-tags-file' to recursively search up the directory
 tree to find a file named 'TAGS'. If found, add/delete(C-u) it
 to/from 'counsel-etags-extra-tags-files' and
@@ -134,6 +134,12 @@ to/from 'counsel-etags-extra-tags-files' and
     (insert-into-my-tags-table-list))
   )
 ;; END: config for counsel-etags and company-ctags }
+
+(defun my/tags-table-list ()
+  "check and display my tags-table list through message."
+  (interactive)
+  (message "tags-table list for counsel-etags/company-ctags:\n%s" my-tags-table-list)
+  )
 
 
 (provide 'init-misc)
