@@ -175,11 +175,14 @@ In that case, insert the number."
 (use-package counsel)
 
 ;; { START: counsel-etags
-;; TODO: test the TAGS file creation on Ubuntu with this universal-ctags installed by snap
 (unless (executable-find "ctags")
-  (when (eq system-type 'gnu/linux)
-    (shell-command "sudo snap install universal-ctags")
-    )
+  (when (eq system-type 'darwin)
+    (shell-command "brew install universal-ctags"))
+  (when (string= (which-linux-distributor) "Ubuntu")
+    (call-process "/bin/bash"
+		  (expand-file-name "scripts/ctags.sh" user-emacs-directory)))
+  (yes-or-no-p "Please be informed the ctags is started to install in the background...
+The installation result can be checked later manually with ctags command. Continue?")
   )
 (use-package counsel-etags
   ;; ctags should be installed first, the Universal Ctags is recommended,
@@ -200,7 +203,6 @@ In that case, insert the number."
   ;; 			'counsel-etags-virtual-update-tags 'append 'local)))
 
   :ensure-system-package
-  (ctags . universal-ctags)
   :config
   (setq counsel-etags-update-interval 60)
   (push "build" counsel-etags-ignore-directories)
@@ -209,15 +211,15 @@ In that case, insert the number."
   (setq counsel-etags-update-tags-backend
 	(lambda (src-dir)
 	  (shell-command
-           (format "ctags -e -R --tag-relative=never %s"
-		   (expand-file-name ".ctags" user-emacs-directory)))))
+           (format "ctags -e -R --tag-relative=never"))))
   ;; my config -> [[./init-misc.el::config-ce-cc]]
   )
-(unless (executable-find "ctags")
-  (yes-or-no-p "Please be informed the ctags is used in this configuration file, but the executable file is not found.
+(when (or (eq system-type 'darwin) (eq system-type 'windows-nt))
+  (unless (executable-find "ctags")
+    (yes-or-no-p "Please be informed the ctags is used in this configuration file, but the executable file is not found.
 You need to install it manually. Continue?")
-  )
-;; END: counsel-etags } 
+    ))
+;; END: counsel-etags }
 
 (use-package doom-themes
   :config
