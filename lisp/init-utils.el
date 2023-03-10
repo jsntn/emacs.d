@@ -3,8 +3,8 @@
 ;;; Code:
 
 
-(defun org-insert-src-block (src-code-type)
-  "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+(defun my/org-insert-src-block (src-code-type)
+  "insert a `SRC-CODE-TYPE' type source code block in org-mode."
   (interactive
    (let ((src-code-types
 	  '("emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "C++" "css"
@@ -22,14 +22,14 @@
     (org-edit-src-code))
   )
 
-(defun hide-dos-eol ()
+(defun my/hide-dos-eol ()
   "do not show ^M in files containing mixed UNIX and DOS line endings."
   (interactive)
   (unless buffer-display-table
     (setq buffer-display-table (make-display-table)))
   (aset buffer-display-table ?\^M []))
 
-(defun remove-dos-eol ()
+(defun my/remove-dos-eol ()
   "replace DOS eolns CR LF with Unix eolns CR."
   (interactive)
   (goto-char (point-min))
