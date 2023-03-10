@@ -3,7 +3,7 @@
 ;;; Code:
 
 
-(defun jsntn/hs-hide-all ()
+(defun my/hs-hide-all ()
   (hs-minor-mode 1)
   (hs-hide-all)
   (set (make-variable-buffer-local 'my-hs-hide-all) t)
@@ -14,7 +14,7 @@
 		sh-mode-hook
 		lisp-mode-hook
 		))
-  (add-hook hook 'jsntn/hs-hide-all))
+  (add-hook hook 'my/hs-hide-all))
 
 (dolist (hook '(
 		prog-mode-hook

@@ -114,14 +114,14 @@ Version 2017-03-12"
 ;; codes folding
 (load-library "hideshow")
 ;; refer to https://sachachua.com/blog/2006/10/emacs-hideshow/
-(defun jsntn/toggle-hideshow-all ()
+(defun my/toggle-hideshow-all ()
   "Toggle hideshow all."
   (interactive)
   (set (make-variable-buffer-local 'my-hs-hide-all) (not my-hs-hide-all))
   (if my-hs-hide-all
       (hs-hide-all)
     (hs-show-all)))
-(defun jsntn/toggle-hideshow-block ()
+(defun my/toggle-hideshow-block ()
   "Toggle hideshow block."
   (interactive)
   (set (make-variable-buffer-local 'my-hs-hide-block) (not my-hs-hide-block))

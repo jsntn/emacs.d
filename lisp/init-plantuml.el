@@ -5,7 +5,7 @@
 
 ;; check the configuration for plantuml-mode
 ;; https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-plantuml.html
-(defun jsntn/plantuml-checking ()
+(defun my/plantuml-checking ()
   (unless (file-exists-p org-plantuml-jar-path)
     (yes-or-no-p "Please be informed the org-plantuml-jar-path is not found.
 You might need to set it manually. Continue?")
@@ -20,7 +20,7 @@ Continue?")
     )
   )
 
-(add-hook 'plantuml-mode-hook 'jsntn/plantuml-checking)
+(add-hook 'plantuml-mode-hook 'my/plantuml-checking)
 
 ;; integration with Org-mode by registering it with the PlantUML language
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))

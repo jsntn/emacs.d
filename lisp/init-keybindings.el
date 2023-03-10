@@ -60,7 +60,7 @@
  "ff" 'evil-scroll-page-down ; <<page down>>
  "bb" 'evil-scroll-page-up ; <<page-up>>
  "be" 'ibuffer
- "SPC" 'jsntn/toggle-hideshow-block
+ "SPC" 'my/toggle-hideshow-block
  "C-]" 'counsel-etags-find-tag-at-point ; <<ftap>>
  ;; ...
  )
@@ -144,7 +144,7 @@
 (general-define-key
  :prefix "C-c"
  :states 'normal
- "SPC" 'jsntn/toggle-hideshow-all
+ "SPC" 'my/toggle-hideshow-all
  ;; ...
  )
 
