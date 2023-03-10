@@ -75,6 +75,13 @@ current buffer's, reload dir-locals."
   (add-to-list 'org-export-filter-paragraph-functions 'eh-org-clean-space)
   )
 
+(defun my/create-TAGS-with-absolute-paths-inside (dir-name)
+  "create TAGS file with absolute paths recorded inside."
+  (interactive "DDirectory: ")
+  (shell-command
+   (format "ctags -e -R --tag-relative=never %s" (directory-file-name dir-name)))
+  )
+
 ;; { START: config for counsel-etags and company-ctags
 ;; <<config-ce-cc>>
 (defun my/find-tags-file ()
