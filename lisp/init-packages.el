@@ -211,7 +211,10 @@ The installation result can be checked later manually with ctags command. Contin
   (setq counsel-etags-update-tags-backend
 	(lambda (src-dir)
 	  (shell-command
-           (format "ctags -e -R --tag-relative=never"))))
+	   ;; relative path is more portable and uses less memory (this package
+	   ;; reads the tags file's content into memory)
+	   ;; https://github.com/redguardtoo/counsel-etags/pull/88
+           (format "ctags -e -R"))))
   ;; my config -> [[./init-misc.el::config-ce-cc]]
   )
 (when (or (eq system-type 'darwin) (eq system-type 'windows-nt))

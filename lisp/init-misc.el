@@ -107,11 +107,13 @@ not visiting a file"
 		   (cons (my/find-tags-file) (symbol-value 'existing-my-tags-table-list)))))
   (setq counsel-etags-extra-tags-files my-tags-table-list)
   (setq company-ctags-extra-tags-files my-tags-table-list)
+  (message "tags-table list for counsel-etags/company-ctags:\n%s" my-tags-table-list)
   )
 (defun delete-from-my-tags-table-list ()
   (setq my-tags-table-list (delete (my/find-tags-file) my-tags-table-list))
   (setq counsel-etags-extra-tags-files my-tags-table-list)
   (setq company-ctags-extra-tags-files my-tags-table-list)
+  (message "tags-table list for counsel-etags/company-ctags:\n%s" my-tags-table-list)
   )
 
 ;; keybinding -> [[./init-keybindings.el::m-ftf]]
