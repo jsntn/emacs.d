@@ -104,8 +104,7 @@ not visiting a file"
   (setq my-tags-table-list '()) ; initiate empty list
   (setq my-tags-table-list
 	(delq nil (delete-dups ; delete nil and duplicates
-		   (cons (my/find-tags-file)
-			 (nconc existing-my-tags-table-list tags-table-list)))))
+		   (cons (my/find-tags-file) (symbol-value 'existing-my-tags-table-list)))))
   (setq counsel-etags-extra-tags-files my-tags-table-list)
   (setq company-ctags-extra-tags-files my-tags-table-list)
   )
