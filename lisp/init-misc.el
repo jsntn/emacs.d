@@ -87,7 +87,7 @@ current buffer's, reload dir-locals."
   (interactive "DDirectory: ")
   (shell-command
    (format "ctags -e -R --tag-relative=yes %s" (directory-file-name dir-name)))
-  ) 
+  )
 
 ;; { START: config for counsel-etags and company-ctags
 ;; <<config-ce-cc>>
