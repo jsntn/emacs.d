@@ -335,6 +335,8 @@ You need to install it manually. Continue?")
 
 (use-package general)
 
+(use-package git-messenger)
+
 (use-package helm)
 
 ;; { -- START --
