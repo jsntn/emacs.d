@@ -49,7 +49,7 @@
 ;; [[./init-keybindings.el::ajm-2]]
 (use-package ace-jump-mode)
 
-;; jump to Chinese character by pinyin with `avy' or `ace-jump-mode`
+;; jump to Chinese character by pinyin with `avy' or `ace-jump-mode'
 (use-package ace-pinyin
   :config
   (setq ace-pinyin-use-avy nil) ; use `ace-jump-mode'
