@@ -66,6 +66,9 @@
    )
   ;; { START: my/annotate-mode-hook
   (defun my/set-default-annotation-file (annotate-mode-status)
+    "set my default annotation-file, which is used in case the
+`.annotations' in the directory of the current buffer does not
+exist."
     (interactive)
     (setq annotate-file
 	  (expand-file-name ".annotations" user-emacs-directory))
@@ -75,6 +78,10 @@
 	     annotate-mode-status user-emacs-directory)
     )
   (defun my/annotate-mode-hook ()
+    "my annotate-mode hook to check if `.annotations' exists in the
+directory of the current buffer then use it as the
+`annotate-file', otherwise call the
+`my/set-default-annotate-file'."
     (interactive)
     (if (bound-and-true-p annotate-mode); if annotate-mode is on
 	(if (file-exists-p ".annotations") ; if .annotations file exists
