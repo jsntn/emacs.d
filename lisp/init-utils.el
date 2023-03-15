@@ -3,6 +3,19 @@
 ;;; Code:
 
 
+;; { START: undo fill-paragraph
+;; https://stackoverflow.com/a/2478549
+(defun my/unfill-paragraph ()
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
+
+(defun my/unfill-region ()
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-region (region-beginning) (region-end) nil)))
+;; END: undo fill-paragraph
+
 (defun my/org-insert-src-block (src-code-type)
   "insert a `SRC-CODE-TYPE' type source code block in org-mode."
   (interactive
