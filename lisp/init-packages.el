@@ -558,7 +558,9 @@ You need to install it manually. Continue?")
   (setq
    org-modern-star nil
    org-modern-hide-stars nil
-   org-modern-horizontal-rule nil ; horizontal line: -----
+   org-modern-horizontal-rule nil ; horizontal line: -----. FIXME: disable for
+				  ; now, as in my case the org-modern package is
+				  ; not working properly on this...
    org-modern-todo nil
    org-modern-faces nil
    org-modern-label-border nil
