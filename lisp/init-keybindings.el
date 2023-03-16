@@ -19,6 +19,8 @@
  "C-M-<right>" 'enlarge-window-horizontally
  "C-M-<down>" 'shrink-window
  "C-M-<up>" 'enlarge-window
+ "M-i" 'pyim-convert-string-at-point ; <<pyim-csap>>
+ "C-;" 'pyim-delete-word-from-personal-buffer
  ;; ...
  )
 
