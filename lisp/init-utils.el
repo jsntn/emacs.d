@@ -3,6 +3,13 @@
 ;;; Code:
 
 
+;; https://stackoverflow.com/a/7043786
+(defun my/sudo-find-file (file-name)
+  "like find file, but opens the file as root."
+  (interactive "FSudo Find File: ")
+  (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
+    (find-file tramp-file-name)))
+
 ;; { START: undo fill-paragraph
 ;; https://stackoverflow.com/a/2478549
 (defun my/unfill-paragraph ()
