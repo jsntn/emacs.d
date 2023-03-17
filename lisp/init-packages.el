@@ -258,7 +258,10 @@ You need to install it manually. Continue?")
   :config
   ;; global settings (defaults)
   (setq doom-themes-enable-bold t) ; if nil, bold is universally disabled
-  (doom-themes-org-config)
+  ;; corrects (and improves) org-mode's native fontification
+  ;; (doom-themes-org-config) ; disable this as it is not compatible with
+					; org-modern horizontal line, see,
+					; https://github.com/jsntn/emacs.d/issues/13
   ;; personal modified version of doom-monokai-classic
   (add-to-list 'custom-theme-load-path (expand-file-name "themes/" user-emacs-directory))
   (load-theme 'doom-monokai-classic t)
@@ -558,9 +561,6 @@ You need to install it manually. Continue?")
   (setq
    org-modern-star nil
    org-modern-hide-stars nil
-   org-modern-horizontal-rule nil ; horizontal line: -----. FIXME: disable for
-				  ; now, as in my case the org-modern package is
-				  ; not working properly on this...
    org-modern-todo nil
    org-modern-faces nil
    org-modern-label-border nil
