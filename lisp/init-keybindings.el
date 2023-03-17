@@ -176,7 +176,7 @@
  "'" 'imenu-list-smart-toggle
  "r" 'revert-buffer
  "t" 'my/set-tags-table-list ; <<m-ftf>>
- "w" 'windows-split-toggle
+ "w" 'my/windows-split-toggle
  ;; for workgroups2
  "c" 'wg-create-workgroup
  "k" 'wg-kill-workgroup

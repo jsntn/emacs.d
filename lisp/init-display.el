@@ -64,7 +64,7 @@
 ;; (setq split-width-threshold nil) ; for vertical split
 (setq split-width-threshold 1 ) ; for horizontal split
 
-(defun windows-split-toggle ()
+(defun my/windows-split-toggle ()
   "Toggle between horizontal and vertical split with two windows."
   (interactive)
   (if (> (length (window-list)) 2)

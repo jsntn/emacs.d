@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+
 ;; `garage-collection-messages is not an optimization, it will actually slow
 ;; down the garbage collector. only activate it for debugging purposes!
 ;; https://github.com/doomemacs/doomemacs/issues/3108#issuecomment-627537230
