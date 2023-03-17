@@ -120,21 +120,48 @@ not visiting a file"
 	  (find-tags-file-r (buffer-file-name)))
       (error "buffer is not visiting a file"))))
 
-(defun insert-into-my-tags-table-list()
-  ;; if `my-tags-table-list' is void, then set it to empty list
+(defun my/file ()
+  "prompt user to enter a file name, with completion and history support."
+  ;; http://xahlee.info/emacs/emacs/elisp_idioms_prompting_input.html
+  (interactive)
+  (setq my-file-value (read-file-name "Input file name: "))
+  (message "my-file-value is %s" my-file-value)
+  )
+
+(defun my/insert-into-my-tags-table-list(&optional select)
+  "automatically insert the TAGS file or select TAGS file to
+insert(C-u), into `my-tags-table-list',
+`counsel-etags-extra-tags-files' and
+`company-ctags-extra-tags-files'."
+  (interactive "P")
   (unless (boundp 'my-tags-table-list)
+    ;; if `my-tags-table-list' is void, then set it to empty list
     (setq my-tags-table-list '()))
   (setq existing-my-tags-table-list my-tags-table-list)
   (setq my-tags-table-list '()) ; initiate empty list
+  (if select
+      (progn (my/file)
+	     (setq my-tags-file my-file-value))
+    (setq my-tags-file (my/find-tags-file)))
   (setq my-tags-table-list
 	(delq nil (delete-dups ; delete nil and duplicates
-		   (cons (my/find-tags-file) (symbol-value 'existing-my-tags-table-list)))))
+		   (cons (symbol-value 'my-tags-file) (symbol-value 'existing-my-tags-table-list)))))
   (setq counsel-etags-extra-tags-files my-tags-table-list)
   (setq company-ctags-extra-tags-files my-tags-table-list)
   (message "tags-table list for counsel-etags/company-ctags:\n%s" my-tags-table-list)
   )
-(defun delete-from-my-tags-table-list ()
-  (setq my-tags-table-list (delete (my/find-tags-file) my-tags-table-list))
+
+(defun my/delete-from-my-tags-table-list (&optional select)
+  "automatically delete the TAGS file or select TAGS file to
+delete(C-u), from `my-tags-table-list',
+`counsel-etags-extra-tags-files' and
+`company-ctags-extra-tags-files'."
+  (interactive "P")
+  (if select
+      (progn (my/file)
+	     (setq my-tags-file my-file-value))
+    (setq my-tags-file (my/find-tags-file)))
+  (setq my-tags-table-list (delete (symbol-value 'my-tags-file) my-tags-table-list))
   (setq counsel-etags-extra-tags-files my-tags-table-list)
   (setq company-ctags-extra-tags-files my-tags-table-list)
   (message "tags-table list for counsel-etags/company-ctags:\n%s" my-tags-table-list)
@@ -147,16 +174,16 @@ tree to find a file named 'TAGS'. If found, add/delete(C-u) it
 to/from 'counsel-etags-extra-tags-files' and
 'company-ctags-extra-tags-files'."
   (interactive "P")
-  (if del (delete-from-my-tags-table-list)
-    (insert-into-my-tags-table-list))
+  (if del (my/delete-from-my-tags-table-list)
+    (my/insert-into-my-tags-table-list))
   )
-;; END: config for counsel-etags and company-ctags }
 
 (defun my/tags-table-list ()
   "check and display my tags-table list through message."
   (interactive)
   (message "tags-table list for counsel-etags/company-ctags:\n%s" my-tags-table-list)
   )
+;; END: config for counsel-etags and company-ctags }
 
 
 (provide 'init-misc)
