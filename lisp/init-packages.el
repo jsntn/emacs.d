@@ -232,7 +232,6 @@ The installation result can be checked later manually with ctags command. Contin
   ;; 	      (add-hook 'after-save-hook
   ;; 			'counsel-etags-virtual-update-tags 'append 'local)))
 
-  :ensure-system-package
   :config
   (setq counsel-etags-update-interval 60)
   (push "build" counsel-etags-ignore-directories)
