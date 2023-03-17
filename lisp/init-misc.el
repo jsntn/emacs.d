@@ -99,8 +99,6 @@ current buffer's, reload dir-locals."
 	     (directory-file-name dir-name)))
     ))
 
-;; { START: config for counsel-etags and company-ctags
-;; <<config-ce-cc>>
 (defun my/find-tags-file ()
   "recursively searches each parent directory for a file named 'TAGS' and returns the
 path to that file or nil if a tags file is not found. Returns nil if the buffer is
@@ -128,6 +126,8 @@ not visiting a file"
   (message "my-file-value is %s" my-file-value)
   )
 
+;; { START: config for counsel-etags and company-ctags
+;; <<config-ce-cc>>
 (defun my/insert-into-my-tags-table-list(&optional select)
   "automatically insert the TAGS file or select TAGS file to
 insert(C-u), into `my-tags-table-list',
