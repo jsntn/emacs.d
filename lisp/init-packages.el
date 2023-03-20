@@ -687,7 +687,10 @@ You need to install it manually. Continue?")
   (setq org-roam-ui-sync-theme t
 	org-roam-ui-follow t
 	org-roam-ui-update-on-save t
-	org-roam-ui-open-on-start t))
+	org-roam-ui-open-on-start nil)
+  ;; [BUG] Org-roam-ui doesn't show the node's text if in a .dir-locals.el
+  ;; location, see https://github.com/org-roam/org-roam-ui/issues/236
+  )
 
 (use-package pangu-spacing
   :config
