@@ -49,6 +49,11 @@
  )
 
 (general-define-key
+ :keymaps 'process-menu-mode-map
+ "C-k" 'my/delete-process-at-point ; <<my-dpap>>
+ )
+
+(general-define-key
  :keymaps 'ibuffer-mode-map
  "g" 'evil-goto-first-line
  "G" 'evil-goto-line

@@ -3,6 +3,18 @@
 ;;; Code:
 
 
+;; https://stackoverflow.com/a/10628109/4274775
+;; keybinding: =C-k= -> [[./init-keybindings.el::my-dpap]]
+(defun my/delete-process-at-point ()
+  (interactive)
+  (let ((process (get-text-property (point) 'tabulated-list-id)))
+    (cond ((and process
+                (processp process))
+           (delete-process process)
+           (revert-buffer))
+          (t
+           (error "no process at point!")))))
+
 ;; https://stackoverflow.com/a/7043786
 (defun my/sudo-find-file (file-name)
   "like find file, but opens the file as root."
