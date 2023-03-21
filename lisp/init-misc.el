@@ -5,7 +5,8 @@
 
 ;; misc config - yet to be placed in separate files
 
-;; Org-roam does not resolve symbolic links. One can however instruct Emacs to always resolve symlinks, at a performance cost:
+;; Org-roam does not resolve symbolic links. One can however instruct Emacs to
+;; always resolve symlinks, at a performance cost:
 (setq find-file-visit-truename t)
 
 (defun my/open-init-file()
@@ -51,7 +52,8 @@ current buffer's, reload dir-locals."
 			nil t))))
 
 (defun eh-org-clean-space (text backend info)
-  "Remove the space between chinese characters during exporting to HTML files."
+  "remove the space between chinese characters during exporting
+to HTML files."
   ;; https://github.com/hick/emacs-chinese#%E4%B8%AD%E6%96%87%E6%96%AD%E8%A1%8C
   (when (org-export-derived-backend-p backend 'html)
     (let ((regexp "[[:multibyte:]]")
@@ -103,9 +105,9 @@ current buffer's, reload dir-locals."
     ))
 
 (defun my/find-tags-file ()
-  "recursively searches each parent directory for a file named 'TAGS' and returns the
-path to that file or nil if a tags file is not found. Returns nil if the buffer is
-not visiting a file"
+  "recursively searches each parent directory for a file named
+'TAGS' and returns the path to that file or nil if a tags file is
+not found. Returns nil if the buffer is not visiting a file"
   (progn
     (defun find-tags-file-r (path)
       "find the tags file from the parent directories"
@@ -122,7 +124,8 @@ not visiting a file"
       (error "buffer is not visiting a file"))))
 
 (defun my/file ()
-  "prompt user to enter a file name, with completion and history support."
+  "prompt user to enter a file name, with completion and history
+support."
   ;; http://xahlee.info/emacs/emacs/elisp_idioms_prompting_input.html
   (interactive)
   (setq my-file-value (read-file-name "Input file name: "))
