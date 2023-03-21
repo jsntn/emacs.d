@@ -5,6 +5,9 @@
 
 ;; misc config - yet to be placed in separate files
 
+;; Org-roam does not resolve symbolic links. One can however instruct Emacs to always resolve symlinks, at a performance cost:
+(setq find-file-visit-truename t)
+
 (defun my/open-init-file()
   "open init.el."
   (interactive)
