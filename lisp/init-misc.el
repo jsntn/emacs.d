@@ -85,10 +85,12 @@ to HTML files."
   (interactive "P\nDDirectory: ")
   (if sudo
       (shell-command
-       (format "sudo ctags -e -R --tag-relative=never %s"
+       (format "sudo ctags --options=%s -e -R --tag-relative=never %s"
+	       (expand-file-name ".ctags" user-emacs-directory)
 	       (directory-file-name dir-name)))
     (shell-command
-     (format "ctags -e -R --tag-relative=never %s"
+     (format "ctags --options=%s -e -R --tag-relative=never %s"
+	     (expand-file-name ".ctags" user-emacs-directory)
 	     (directory-file-name dir-name)))
     ))
 
@@ -97,10 +99,12 @@ to HTML files."
   (interactive "P\nDDirectory: ")
   (if sudo
       (shell-command
-       (format "sudo ctags -e -R --tag-relative=yes %s"
+       (format "sudo ctags --options=%s -e -R --tag-relative=yes %s"
+	       (expand-file-name ".ctags" user-emacs-directory)
 	       (directory-file-name dir-name)))
     (shell-command
-     (format "ctags -e -R --tag-relative=yes %s"
+     (format "ctags --options=%s -e -R --tag-relative=yes %s"
+	     (expand-file-name ".ctags" user-emacs-directory)
 	     (directory-file-name dir-name)))
     ))
 

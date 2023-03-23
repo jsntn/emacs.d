@@ -243,7 +243,8 @@ The installation result can be checked later manually with ctags command. Contin
 	   ;; relative path is more portable and uses less memory (this package
 	   ;; reads the tags file's content into memory)
 	   ;; https://github.com/redguardtoo/counsel-etags/pull/88
-           (format "ctags -e -R"))))
+           (format "ctags --options=%s -e -R"
+		   (expand-file-name ".ctags" user-emacs-directory)))))
   ;; my config -> [[./init-misc.el::config-ce-cc]]
   )
 (when (or (eq system-type 'darwin) (eq system-type 'windows-nt))
