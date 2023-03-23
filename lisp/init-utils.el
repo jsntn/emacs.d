@@ -5,6 +5,10 @@
 
 ;; https://stackoverflow.com/a/10628109/4274775
 ;; keybinding: =C-k= -> [[./init-keybindings.el::my-dpap]]
+;; <2023-03-23 Thu 10:22> In Emacs 25, you can do what you'd expect: in the
+;; process list, hit d(M-x process-menu-delete-process) to "delete" the process
+;; under point(D is binded in evil-mode). See
+;; https://stackoverflow.com/a/31538514/4274775
 (defun my/delete-process-at-point ()
   (interactive)
   (let ((process (get-text-property (point) 'tabulated-list-id)))
