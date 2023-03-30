@@ -3,6 +3,33 @@
 ;;; Code:
 
 
+(defun my/org-repeated-deadline (arg &optional time repeater)
+  (interactive "P")
+  (unless arg
+    (setq repeater (read-string "Input the repeater: ")))
+  ;;  +1m -> the date shift is always exactly 1 month
+  ;; .+1m -> repeat in 1 month from the last time I marked it done
+  ;; ++1m -> repeat in at least 1 month from the last time I marked it done, and
+  ;; keep it on the same day of the week move the due date into the future by
+  ;; increments of month.
+  (let ((org-time-stamp-formats
+	 (if repeater
+	     `(,(concat "<%Y-%m-%d %a " repeater ">") .
+	       ,(concat "<%Y-%m-%d %a %H:%M " repeater ">"))
+	   org-time-stamp-formats)))
+    (org-deadline arg time)))
+
+(defun my/org-repeated-schedule (arg &optional time repeater)
+  (interactive "P")
+  (unless arg
+    (setq repeater (read-string "Input the repeater: ")))
+  (let ((org-time-stamp-formats
+	 (if repeater
+	     `(,(concat "<%Y-%m-%d %a " repeater ">") .
+	       ,(concat "<%Y-%m-%d %a %H:%M " repeater ">"))
+	   org-time-stamp-formats)))
+    (org-schedule arg time)))
+
 ;; https://stackoverflow.com/a/10628109/4274775
 ;; keybinding: =C-k= -> [[./init-keybindings.el::my-dpap]]
 ;; <2023-03-23 Thu 10:22> In Emacs 25, you can do what you'd expect: in the
