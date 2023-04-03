@@ -86,9 +86,12 @@
 			       ("FIXED" (:foreground "#4B5556" :strike-through t :box t))
 			       ))
 
-(defun my/modify-org-done-face ()
+(defun my/modify-org-done-face (&optional disable)
+  (interactive "P")
   (setq org-fontify-done-headline t)
-  (set-face-attribute 'org-done nil :strike-through t)
+  (if disable
+      (set-face-attribute 'org-done nil :strike-through nil)
+    (set-face-attribute 'org-done nil :strike-through t))
   (set-face-attribute 'org-headline-done nil
 		      :strike-through t
 		      :foreground "white")
