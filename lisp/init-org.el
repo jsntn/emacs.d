@@ -87,6 +87,7 @@
 			       ))
 
 (defun my/modify-org-done-face (&optional disable)
+  "enable or disable(C-u) the strike style for `org-done' item."
   (interactive "P")
   (setq org-fontify-done-headline t)
   (if disable
