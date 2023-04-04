@@ -88,7 +88,8 @@ to HTML files."
 (defun my/create-TAGS (&optional sudo dir-name tag-relative)
   "create TAGS file with absolute or relative paths recorded inside.
    With a prefix argument SUDO, run the command with sudo privilege.
-   With a prefix argument TAG-RELATIVE, create the TAGS file with relative paths recorded inside."
+   With a prefix argument TAG-RELATIVE, create the TAGS file with 
+   relative paths recorded inside."
   (interactive "P\nDDirectory: \nPCreate TAGS file with relative paths (y/n): ")
   (let* ((ctags-cmd (format "ctags --options=%s -e -R --tag-relative=%s -f %s %s"
                             (expand-file-name ".ctags" user-emacs-directory)
@@ -106,15 +107,17 @@ not found. Returns nil if the buffer is not visiting a file"
     (defun find-tags-file-r (path)
       "find the tags file from the parent directories"
       (let* ((parent (file-name-directory path))
-	     (possible-tags-file (concat parent "TAGS")))
-	(cond
-	 ((file-exists-p possible-tags-file) (throw 'found-it possible-tags-file))
-	 ((string= "/TAGS" possible-tags-file) (error "no tags file found"))
-	 (t (find-tags-file-r (directory-file-name parent))))))
+             (possible-tags-file (concat parent "TAGS")))
+        (cond
+         ((file-exists-p possible-tags-file) 
+          (throw 'found-it possible-tags-file))
+         ((string= "/TAGS" possible-tags-file) 
+          (error "no tags file found"))
+         (t (find-tags-file-r (directory-file-name parent))))))
 
     (if (buffer-file-name)
-	(catch 'found-it
-	  (find-tags-file-r (buffer-file-name)))
+        (catch 'found-it
+          (find-tags-file-r (buffer-file-name)))
       (error "buffer is not visiting a file"))))
 
 (defun my/file ()
