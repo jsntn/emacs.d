@@ -88,14 +88,14 @@ to HTML files."
       (start-process-shell-command "create TAGS" nil
        (format "sudo ctags --options=%s -e -R --tag-relative=never -f %s %s"
 	       (expand-file-name ".ctags" user-emacs-directory)
-	       (expand-file-name "/TAGS" ctags-working-dir)
-	       (expand-file-name "/*" ctags-working-dir)
+	       (expand-file-name "TAGS" ctags-working-dir)
+	       (expand-file-name "*" ctags-working-dir)
 	       ))
     (start-process-shell-command "create TAGS" nil
      (format "ctags --options=%s -e -R --tag-relative=never -f %s %s"
 	     (expand-file-name ".ctags" user-emacs-directory)
-	     (expand-file-name "/TAGS" ctags-working-dir)
-	     (expand-file-name "/*" ctags-working-dir)
+	     (expand-file-name "TAGS" ctags-working-dir)
+	     (expand-file-name "*" ctags-working-dir)
 	     ))
     ))
 
@@ -107,14 +107,14 @@ to HTML files."
       (start-process-shell-command "create TAGS" nil
        (format "sudo ctags --options=%s -e -R --tag-relative=yes -f %s %s"
 	       (expand-file-name ".ctags" user-emacs-directory)
-	       (expand-file-name "/TAGS" ctags-working-dir)
-	       (expand-file-name "/*" ctags-working-dir)
+	       (expand-file-name "TAGS" ctags-working-dir)
+	       (expand-file-name "*" ctags-working-dir)
 	       ))
     (start-process-shell-command "create TAGS" nil
      (format "ctags --options=%s -e -R --tag-relative=yes -f %s %s"
 	     (expand-file-name ".ctags" user-emacs-directory)
-	     (expand-file-name "/TAGS" ctags-working-dir)
-	     (expand-file-name "/*" ctags-working-dir)
+	     (expand-file-name "TAGS" ctags-working-dir)
+	     (expand-file-name "*" ctags-working-dir)
 	     ))
     ))
 
