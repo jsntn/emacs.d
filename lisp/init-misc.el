@@ -80,30 +80,24 @@ to HTML files."
   (add-to-list 'org-export-filter-paragraph-functions 'eh-org-clean-space)
   )
 
-;; TODO: the simplified version by ChatGPT, to be tested...
-(defun my/create-TAGS-with-absolute-paths-inside (&optional sudo dir-name)
-  "create TAGS file with absolute paths recorded inside."
-  (interactive "P\nDDirectory: ")
-  (let ((ctags-cmd (format "ctags --options=%s -e -R --tag-relative=never -f %s %s"
-                           (expand-file-name ".ctags" user-emacs-directory)
-                           (expand-file-name "TAGS" (directory-file-name dir-name))
-                           (expand-file-name "*" (directory-file-name dir-name))))))
-    (if sudo
-        (start-process-shell-command "create TAGS" nil (concat "sudo " ctags-cmd))
-      (start-process-shell-command "create TAGS" nil ctags-cmd))))
+;; TODO: the updated version by ChatGPT, to be tested...
+;; With this modification, when you call the function using M-x my/create-TAGS,
+;; Emacs will prompt you for the directory name and then ask whether you want to
+;; create the TAGS file with relative paths. It will display (y/n): to indicate
+;; that you should type either y or n and press RET.
+(defun my/create-TAGS (&optional sudo dir-name tag-relative)
+  "create TAGS file with absolute or relative paths recorded inside.
+   With a prefix argument SUDO, run the command with sudo privilege.
+   With a prefix argument TAG-RELATIVE, create the TAGS file with relative paths recorded inside."
+  (interactive "P\nDDirectory: \nPCreate TAGS file with relative paths (y/n): ")
+  (let* ((ctags-cmd (format "ctags --options=%s -e -R --tag-relative=%s -f %s %s"
+                            (expand-file-name ".ctags" user-emacs-directory)
+                            (if tag-relative "yes" "never")
+                            (expand-file-name "TAGS" (directory-file-name dir-name))
+                            (expand-file-name "*" (directory-file-name dir-name))))
+         (command (if sudo (concat "sudo " ctags-cmd) ctags-cmd)))
+    (start-process-shell-command "create TAGS" nil command)))
 
-;; TODO: the simplified version by ChatGPT, to be tested...
-(defun my/create-TAGS-with-relative-paths-inside (&optional sudo dir-name)
-  "create TAGS file with relative paths recorded inside."
-  (interactive "P\nDDirectory: ")
-  (let ((ctags-cmd (format "ctags --options=%s -e -R --tag-relative=yes -f %s %s"
-                           (expand-file-name ".ctags" user-emacs-directory)
-                           (expand-file-name "TAGS" (directory-file-name dir-name))
-                           (expand-file-name "*" (directory-file-name dir-name))))))
-    (if sudo
-        (start-process-shell-command "create TAGS" nil (concat "sudo " ctags-cmd))
-      (start-process-shell-command "create TAGS" nil ctags-cmd))))
-  
 (defun my/find-tags-file ()
   "recursively searches each parent directory for a file named
 'TAGS' and returns the path to that file or nil if a tags file is
