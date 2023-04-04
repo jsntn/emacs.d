@@ -88,6 +88,7 @@
 
 (defun my/modify-org-done-face (&optional disable)
   "enable or disable(C-u) the strike style for `org-done' item."
+  ;; https://emacs.stackexchange.com/questions/10595/how-to-strike-out-done-items-in-org-mode
   (interactive "P")
   ;; `org-headline-done' is used to indicate that a headline is DONE. This face
   ;; is only used if `org-fontify-done-headline' is set.
@@ -102,9 +103,6 @@
       (set-face-attribute 'org-headline-done nil
 			  :strike-through t
 			  :foreground "white"))))
-;; https://emacs.stackexchange.com/questions/10595/how-to-strike-out-done-items-in-org-mode
-(eval-after-load "org"
-  (add-hook 'org-mode-hook 'my/modify-org-done-face))
 
 (unless (display-graphic-p)
   (yes-or-no-p "Please be informed that on Terminal Emacs, the strike-through might not work on the `org-fontify-done-headline' and `org-modern-horizontal-rule' in this configuration. Continue?")

@@ -45,7 +45,11 @@
 		))
   (add-hook hook 'hl-todo-mode))
 
-(add-hook 'org-mode-hook 'toc-org-mode)
+(dolist (my-org-mode-hook-settings '(
+		toc-org-mode
+		my/modify-org-done-face
+		))
+  (add-hook 'org-mode-hook my-org-mode-hook-settings))
 
 ;; undo in non-file buffers
 (add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
