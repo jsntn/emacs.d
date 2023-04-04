@@ -89,14 +89,19 @@
 (defun my/modify-org-done-face (&optional disable)
   "enable or disable(C-u) the strike style for `org-done' item."
   (interactive "P")
+  ;; `org-headline-done' is used to indicate that a headline is DONE. This face
+  ;; is only used if `org-fontify-done-headline' is set.
   (setq org-fontify-done-headline t)
   (if disable
-      (set-face-attribute 'org-done nil :strike-through nil)
-    (set-face-attribute 'org-done nil :strike-through t))
-  (set-face-attribute 'org-headline-done nil
-		      :strike-through t
-		      :foreground "white")
-  )
+      (progn
+	;; `org-done' is the face used for todo keywords that indicate DONE items.
+	(set-face-attribute 'org-done nil :strike-through nil)
+	(set-face-attribute 'org-headline-done nil :strike-through nil))
+    (progn
+      (set-face-attribute 'org-done nil :strike-through t)
+      (set-face-attribute 'org-headline-done nil
+			  :strike-through t
+			  :foreground "white"))))
 ;; https://emacs.stackexchange.com/questions/10595/how-to-strike-out-done-items-in-org-mode
 (eval-after-load "org"
   (add-hook 'org-add-hook 'my/modify-org-done-face))
