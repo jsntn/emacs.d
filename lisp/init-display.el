@@ -106,6 +106,17 @@ Version 2017-03-12"
   )
 
 ;; FIXME: to be tested...
+
+;; explaination from ChatGPT,
+
+;; When show-trailing-whitespace is set to t, it makes whitespace characters
+;; at the end of lines in the buffer visible by highlighting them. This is
+;; useful for detecting trailing whitespace, which can cause problems in
+;; certain programming languages or when copying and pasting code.
+;;
+;; So in summary, the line (setq show-trailing-whitespace t) enables
+;; highlighting of trailing whitespace characters in the buffer.
+
 ;; visualize trailing whitespace
 (defun my/show-trailing-whitespace ()
   (setq show-trailing-whitespace t)
