@@ -86,23 +86,22 @@
 			       ("FIXED" (:foreground "#4B5556" :strike-through t :box t))
 			       ))
 
+TODO: optimized version by ChatGPT, to be tested...
 (defun my/modify-org-done-face (&optional disable)
   "enable or disable(C-u) the strike style for `org-done' item."
   ;; https://emacs.stackexchange.com/questions/10595/how-to-strike-out-done-items-in-org-mode
   (interactive "P")
   ;; `org-headline-done' is used to indicate that a headline is DONE. This face
   ;; is only used if `org-fontify-done-headline' is set.
+  ;; `org-done' is the face used for todo keywords that indicate DONE items.
   (setq org-fontify-done-headline t)
   (if disable
-      (progn
-	;; `org-done' is the face used for todo keywords that indicate DONE items.
-	(set-face-attribute 'org-done nil :strike-through nil)
-	(set-face-attribute 'org-headline-done nil :strike-through nil))
-    (progn
-      (set-face-attribute 'org-done nil :strike-through t)
-      (set-face-attribute 'org-headline-done nil
-			  :strike-through t
-			  :foreground "white"))))
+     (mapc (lambda (face) (set-face-attribute face nil :strike-through nil))
+	   '(org-done org-headline-done))
+   (mapc (lambda (face) (set-face-attribute face nil :strike-through t))
+	 '(org-done org-headline-done))
+   (set-face-attribute 'org-headline-done nil
+		:foreground "white")))
 
 (unless (display-graphic-p)
   (yes-or-no-p "Please be informed that on Terminal Emacs, the strike-through might not work on the `org-fontify-done-headline' and `org-modern-horizontal-rule' in this configuration. Continue?")
