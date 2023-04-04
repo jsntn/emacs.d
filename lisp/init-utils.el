@@ -3,32 +3,55 @@
 ;;; Code:
 
 
-(defun my/org-repeated-deadline (arg &optional time repeater)
-  (interactive "P")
-  (unless arg
-    (setq repeater (read-string "Input the repeater: ")))
-  ;;  +1m -> the date shift is always exactly 1 month
-  ;; .+1m -> repeat in 1 month from the last time I marked it done
-  ;; ++1m -> repeat in at least 1 month from the last time I marked it done, and
-  ;; keep it on the same day of the week move the due date into the future by
-  ;; increments of month.
-  (let ((org-time-stamp-formats
-	 (if repeater
-	     `(,(concat "<%Y-%m-%d %a " repeater ">") .
-	       ,(concat "<%Y-%m-%d %a %H:%M " repeater ">"))
-	   org-time-stamp-formats)))
-    (org-deadline arg time)))
+;; TODO: improved and combined version by ChatGPT, to be tested...
 
-(defun my/org-repeated-schedule (arg &optional time repeater)
-  (interactive "P")
+;; explaination from ChatGPT:
+
+;; The changes made to the original code are:
+
+;; 1. Combined the two functions into one that takes a new argument 
+;;    `type` that determines whether to call `org-deadline` or 
+;;    `org-schedule`.
+
+;; 2. Used `(list (intern (completing-read ...)) current-prefix-arg nil)` 
+;;    to prompt for the `type` argument using completion.
+
+;; 3. Renamed the function to `my/org-repeated-deadline-schedule`.
+
+;; This code works with `M-x interactive` operation, and prompts for 
+;; the `type` argument using completion. If the universal argument is 
+;; used, it prompts for the repeater string. Otherwise, it uses 
+;; `org-time-stamp-formats` to set the time stamp format.
+
+;; With this new function, you can call 
+;; `(my/org-repeated-deadline-schedule 'deadline)` or 
+;; `(my/org-repeated-deadline-schedule 'schedule)` to create repeated 
+;; deadlines or scheduled tasks, respectively.
+
+(defun my/org-repeated-deadline-schedule (type &optional arg time repeater)
+  "Create repeated deadlines or scheduled tasks.
+  TYPE is either 'deadline or 'schedule.
+  With universal argument, prompt for REPEATER string.
+  Otherwise, use org-time-stamp-formats.
+
+  Repeater string should be in the format of `+1m' (exactly 1 month),
+  `.+1m' (1 month from last completion) or `++1m' (at least 1 month from
+  last completion, and keep it on the same day of the week, moving the
+  due date into the future by increments of month)."
+  (interactive
+   (list (intern (completing-read "Type: "
+                                  '(("deadline") ("schedule")))) 
+         current-prefix-arg nil))
   (unless arg
     (setq repeater (read-string "Input the repeater: ")))
   (let ((org-time-stamp-formats
-	 (if repeater
-	     `(,(concat "<%Y-%m-%d %a " repeater ">") .
-	       ,(concat "<%Y-%m-%d %a %H:%M " repeater ">"))
-	   org-time-stamp-formats)))
-    (org-schedule arg time)))
+         (if repeater
+             `(,(concat "<%Y-%m-%d %a " repeater ">") .
+               ,(concat "<%Y-%m-%d %a %H:%M " repeater ">"))
+           org-time-stamp-formats)))
+    (case type
+      (deadline (org-deadline arg time))
+      (schedule (org-schedule arg time))))))
 
 ;; https://stackoverflow.com/a/10628109/4274775
 ;; keybinding: =C-k= -> [[./init-keybindings.el::my-dpap]]
