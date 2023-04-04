@@ -84,11 +84,11 @@ to HTML files."
   "create TAGS file with absolute paths recorded inside."
   (interactive "P\nDDirectory: ")
   (if sudo
-      (shell-command
+      (start-process-shell-command "create TAGS" nil
        (format "sudo ctags --options=%s -e -R --tag-relative=never %s"
 	       (expand-file-name ".ctags" user-emacs-directory)
 	       (directory-file-name dir-name)))
-    (shell-command
+    (start-process-shell-command "create TAGS" nil
      (format "ctags --options=%s -e -R --tag-relative=never %s"
 	     (expand-file-name ".ctags" user-emacs-directory)
 	     (directory-file-name dir-name)))
@@ -98,11 +98,11 @@ to HTML files."
   "create TAGS file with relative paths recorded inside."
   (interactive "P\nDDirectory: ")
   (if sudo
-      (shell-command
+      (start-process-shell-command "create TAGS" nil
        (format "sudo ctags --options=%s -e -R --tag-relative=yes %s"
 	       (expand-file-name ".ctags" user-emacs-directory)
 	       (directory-file-name dir-name)))
-    (shell-command
+    (start-process-shell-command "create TAGS" nil
      (format "ctags --options=%s -e -R --tag-relative=yes %s"
 	     (expand-file-name ".ctags" user-emacs-directory)
 	     (directory-file-name dir-name)))
