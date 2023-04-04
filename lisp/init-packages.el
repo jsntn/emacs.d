@@ -6,17 +6,28 @@
 ;; { -- START --
 ;; check Linux distribution
 ;; https://emacs.stackexchange.com/questions/18205/how-can-i-distinguish-between-linux-distributions-in-emacs
-(defun which-linux-distributor ()
-  "from lsb_release"
-  (interactive)
-  (when (eq system-type 'gnu/linux)
-    (shell-command-to-string "echo -n $(lsb_release -si)"))) ; https://emacs.stackexchange.com/a/21906
 
-(defun which-linux-release ()
-  "from lsb_release"
-  (interactive)
+;; TODO: combined and improved version by ChatGPT, to be tested...
+
+;; explaination from ChatGPT,
+;; This function `which-linux-release-info` can be called interactively or used
+;; in other functions, passing an argument to indicate which information type
+;; ("distributor" or "release") to retrieve. For example, to get the Linux
+;; distributor, call `(which-linux-release-info "distributor")`. The function
+;; will return the output of running the `lsb_release` command with the
+;; appropriate option based on the information type specified. Note that this
+;; will only work on Linux systems and will not work on other operating systems.
+
+(defun which-linux-release-info (info-type)
+  "Get information about the Linux distributor or release.
+   Information types: 'distributor', 'release'"
+  (interactive "MInformation type (distributor/release): ")
   (when (eq system-type 'gnu/linux)
-    (shell-command-to-string "echo -n $(lsb_release -sr)")))
+    (let ((command (pcase info-type
+                     ("distributor" "lsb_release -si")
+                     ("release" "lsb_release -sr")
+                     (_ (error "Invalid information type: %s" info-type)))))
+      (shell-command-to-string (concat "echo -n $(" command ")")))))
 ;; -- END -- }
 
 ;; a utility package to collect various Icon Fonts and propertize them within Emacs.
@@ -208,7 +219,7 @@ In that case, insert the number."
 (unless (executable-find "ctags")
   (when (eq system-type 'darwin)
     (shell-command "brew install universal-ctags"))
-  (when (string= (which-linux-distributor) "Ubuntu")
+  (when (string= (which-linux-release-info "distributor") "Ubuntu")
     (call-process "/bin/bash"
 		  (expand-file-name "scripts/ctags.sh" user-emacs-directory)))
   (yes-or-no-p "Please be informed the ctags is started to install in the background...
@@ -655,8 +666,8 @@ You need to install it manually. Continue?")
 
 ;; { START: Org-roam
 (unless (executable-find "rg")
-  (when (string= (which-linux-distributor) "Ubuntu")
-    (if (string< (which-linux-release) "18.10")
+  (when (string= (which-linux-release-info "distributor") "Ubuntu")
+    (if (string< (which-linux-release-info "release") "18.10")
 	(shell-command "sudo curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb && sudo dpkg -i ripgrep_13.0.0_amd64.deb && sudo rm -rf ripgrep_13.0.0_amd64.deb")
       (shell-command "sudo apt-get install ripgrep")
       )
