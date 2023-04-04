@@ -83,29 +83,39 @@ to HTML files."
 (defun my/create-TAGS-with-absolute-paths-inside (&optional sudo dir-name)
   "create TAGS file with absolute paths recorded inside."
   (interactive "P\nDDirectory: ")
+  (setq ctags-working-dir (directory-file-name dir-name))
   (if sudo
       (start-process-shell-command "create TAGS" nil
-       (format "sudo ctags --options=%s -e -R --tag-relative=never %s"
+       (format "sudo ctags --options=%s -e -R --tag-relative=never -f %s %s"
 	       (expand-file-name ".ctags" user-emacs-directory)
-	       (directory-file-name dir-name)))
+	       (expand-file-name "/TAGS" ctags-working-dir)
+	       (expand-file-name "/*" ctags-working-dir)
+	       ))
     (start-process-shell-command "create TAGS" nil
-     (format "ctags --options=%s -e -R --tag-relative=never %s"
+     (format "ctags --options=%s -e -R --tag-relative=never -f %s %s"
 	     (expand-file-name ".ctags" user-emacs-directory)
-	     (directory-file-name dir-name)))
+	     (expand-file-name "/TAGS" ctags-working-dir)
+	     (expand-file-name "/*" ctags-working-dir)
+	     ))
     ))
 
 (defun my/create-TAGS-with-relative-paths-inside (&optional sudo dir-name)
   "create TAGS file with relative paths recorded inside."
   (interactive "P\nDDirectory: ")
+  (setq ctags-working-dir (directory-file-name dir-name))
   (if sudo
       (start-process-shell-command "create TAGS" nil
-       (format "sudo ctags --options=%s -e -R --tag-relative=yes %s"
+       (format "sudo ctags --options=%s -e -R --tag-relative=yes -f %s %s"
 	       (expand-file-name ".ctags" user-emacs-directory)
-	       (directory-file-name dir-name)))
+	       (expand-file-name "/TAGS" ctags-working-dir)
+	       (expand-file-name "/*" ctags-working-dir)
+	       ))
     (start-process-shell-command "create TAGS" nil
-     (format "ctags --options=%s -e -R --tag-relative=yes %s"
+     (format "ctags --options=%s -e -R --tag-relative=yes -f %s %s"
 	     (expand-file-name ".ctags" user-emacs-directory)
-	     (directory-file-name dir-name)))
+	     (expand-file-name "/TAGS" ctags-working-dir)
+	     (expand-file-name "/*" ctags-working-dir)
+	     ))
     ))
 
 (defun my/find-tags-file ()
