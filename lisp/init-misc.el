@@ -81,22 +81,38 @@ to HTML files."
   )
 
 ;; TODO: the updated version by ChatGPT, to be tested...
-;; With this modification, when you call the function using M-x my/create-TAGS,
-;; Emacs will prompt you for the directory name and then ask whether you want to
-;; create the TAGS file with relative paths. It will display (y/n): to indicate
-;; that you should type either y or n and press RET.
 (defun my/create-TAGS (&optional sudo dir-name tag-relative)
-  "create TAGS file with absolute or relative paths recorded inside.
-   With a prefix argument SUDO, run the command with sudo privilege.
-   With a prefix argument TAG-RELATIVE, create the TAGS file with 
-   relative paths recorded inside."
-  (interactive "P\nDDirectory: \nPCreate TAGS file with relative paths (y/n): ")
-  (let* ((ctags-cmd (format "ctags --options=%s -e -R --tag-relative=%s -f %s %s"
-                            (expand-file-name ".ctags" user-emacs-directory)
-                            (if tag-relative "yes" "never")
-                            (expand-file-name "TAGS" (directory-file-name dir-name))
-                            (expand-file-name "*" (directory-file-name dir-name))))
-         (command (if sudo (concat "sudo " ctags-cmd) ctags-cmd)))
+  "Create a TAGS file with absolute or relative paths recorded inside. With a
+prefix argument SUDO, run the command with sudo privilege. With a prefix
+argument TAG-RELATIVE, create the TAGS file with relative paths recorded inside.
+
+When called interactively, prompt the user for the directory name to create the
+TAGS file. If no input is given, use the current working directory.
+
+The `ctags` command is executed with the `--tag-relative` option set to `yes` if
+the `tag-relative` prefix argument is set to 'y', or 'never' otherwise. The `*`
+wildcard is included in the `ctags` command to create TAGS for all files in the
+directory.
+
+Example usage:
+  - To create a TAGS file for the current directory:
+      M-x my/create-TAGS RET RET
+  - To create a TAGS file for a specific directory with relative paths recorded:
+      M-x my/create-TAGS RET /path/to/directory RET y RET
+  - To create a TAGS file for a specific directory with absolute paths recorded,
+    using sudo privilege:
+      C-u M-x my/create-TAGS RET /path/to/directory RET RET"
+
+  (interactive "P\nDEnter the directory to create TAGS file: \nMCreate TAGS file with relative paths (y/n): ")
+  (let* ((target-dir (if (string= "" dir-name)
+			 default-directory
+		       (expand-file-name dir-name)))
+	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s -f %s *"
+			    target-dir
+			    (expand-file-name ".ctags" user-emacs-directory)
+			    (if (string-equal tag-relative 'y) "yes" "never")
+			    (expand-file-name "TAGS" target-dir)))
+	 (command (if sudo (concat "sudo " ctags-cmd) ctags-cmd)))
     (start-process-shell-command "create TAGS" nil command)))
 
 (defun my/find-tags-file ()
