@@ -86,22 +86,42 @@
 			       ("FIXED" (:foreground "#4B5556" :strike-through t :box t))
 			       ))
 
-TODO: optimized version by ChatGPT, to be tested...
 (defun my/modify-org-done-face (&optional disable)
   "enable or disable(C-u) the strike style for `org-done' item."
   ;; https://emacs.stackexchange.com/questions/10595/how-to-strike-out-done-items-in-org-mode
+
+  ;; This function is improved by ChatGPT :)
+  ;; Explanation from ChatGPT,
+
+  ;; In the my/modify-org-done-face function, there is indeed what appears to be
+  ;; two else clauses.
+
+  ;; However, this is not actually two separate else clauses. It is a single if
+  ;; statement with two branches in the then clause.
+
+  ;; In this if statement, disable is the condition being tested. If disable is
+  ;; non-nil (i.e., a prefix argument was given when the function was called), the
+  ;; first branch of the then clause is taken, which disables the strike-through
+  ;; style for both org-done and org-headline-done faces.
+
+  ;; If disable is nil, the second branch of the then clause is taken, which
+  ;; enables the strike-through style for both faces. The third form
+  ;; set-face-attribute is not actually part of an else clause, but is instead
+  ;; an additional statement that will always be executed, regardless of the
+  ;; value of disable. It sets the foreground color of the org-headline-done
+  ;; face to white.
   (interactive "P")
   ;; `org-headline-done' is used to indicate that a headline is DONE. This face
   ;; is only used if `org-fontify-done-headline' is set.
   ;; `org-done' is the face used for todo keywords that indicate DONE items.
   (setq org-fontify-done-headline t)
   (if disable
-     (mapc (lambda (face) (set-face-attribute face nil :strike-through nil))
-	   '(org-done org-headline-done))
-   (mapc (lambda (face) (set-face-attribute face nil :strike-through t))
-	 '(org-done org-headline-done))
-   (set-face-attribute 'org-headline-done nil
-		:foreground "white")))
+      (mapc (lambda (face) (set-face-attribute face nil :strike-through nil))
+	    '(org-done org-headline-done))
+    (mapc (lambda (face) (set-face-attribute face nil :strike-through t))
+	  '(org-done org-headline-done))
+    (set-face-attribute 'org-headline-done nil
+			:foreground "white")))
 
 (unless (display-graphic-p)
   (yes-or-no-p "Please be informed that on Terminal Emacs, the strike-through might not work on the `org-fontify-done-headline' and `org-modern-horizontal-rule' in this configuration. Continue?")

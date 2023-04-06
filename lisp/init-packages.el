@@ -7,26 +7,27 @@
 ;; check Linux distribution
 ;; https://emacs.stackexchange.com/questions/18205/how-can-i-distinguish-between-linux-distributions-in-emacs
 
-;; TODO: combined and improved version by ChatGPT, to be tested...
-
-;; explaination from ChatGPT,
-;; This function `which-linux-release-info` can be called interactively or used
-;; in other functions, passing an argument to indicate which information type
-;; ("distributor" or "release") to retrieve. For example, to get the Linux
-;; distributor, call `(which-linux-release-info "distributor")`. The function
-;; will return the output of running the `lsb_release` command with the
-;; appropriate option based on the information type specified. Note that this
-;; will only work on Linux systems and will not work on other operating systems.
-
 (defun which-linux-release-info (info-type)
   "Get information about the Linux distributor or release.
    Information types: 'distributor', 'release'"
+
+  ;; This function is improved by ChatGPT :)
+  ;; Explanation from ChatGPT,
+
+  ;; This function `which-linux-release-info` can be called interactively or
+  ;; used in other functions, passing an argument to indicate which information
+  ;; type ("distributor" or "release") to retrieve. For example, to get the
+  ;; Linux distributor, call `(which-linux-release-info "distributor")`. The
+  ;; function will return the output of running the `lsb_release` command with
+  ;; the appropriate option based on the information type specified. Note that
+  ;; this will only work on Linux systems and will not work on other operating
+  ;; systems.
   (interactive "MInformation type (distributor/release): ")
   (when (eq system-type 'gnu/linux)
     (let ((command (pcase info-type
-                     ("distributor" "lsb_release -si")
-                     ("release" "lsb_release -sr")
-                     (_ (error "Invalid information type: %s" info-type)))))
+		     ("distributor" "lsb_release -si")
+		     ("release" "lsb_release -sr")
+		     (_ (error "Invalid information type: %s" info-type)))))
       (shell-command-to-string (concat "echo -n $(" command ")")))))
 ;; -- END -- }
 
