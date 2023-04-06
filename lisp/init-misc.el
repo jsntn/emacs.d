@@ -113,7 +113,11 @@ Example usage:
 			    (expand-file-name ".ctags" user-emacs-directory)
 			    (if (string-equal tag-relative 'y) "yes" "never")
 			    (expand-file-name "TAGS" target-dir)))
-	 (command (if sudo (concat "sudo " ctags-cmd) ctags-cmd)))
+	 (command (if sudo
+		      (concat "sudo sh -c '"
+			      ctags-cmd
+			      "'")
+		    ctags-cmd)))
     (start-process-shell-command "create TAGS" nil command)))
 
 (defun my/find-tags-file ()
@@ -124,17 +128,17 @@ not found. Returns nil if the buffer is not visiting a file"
     (defun find-tags-file-r (path)
       "find the tags file from the parent directories"
       (let* ((parent (file-name-directory path))
-             (possible-tags-file (concat parent "TAGS")))
-        (cond
-         ((file-exists-p possible-tags-file) 
-          (throw 'found-it possible-tags-file))
-         ((string= "/TAGS" possible-tags-file) 
-          (error "no tags file found"))
-         (t (find-tags-file-r (directory-file-name parent))))))
+	     (possible-tags-file (concat parent "TAGS")))
+	(cond
+	 ((file-exists-p possible-tags-file)
+	  (throw 'found-it possible-tags-file))
+	 ((string= "/TAGS" possible-tags-file)
+	  (error "no tags file found"))
+	 (t (find-tags-file-r (directory-file-name parent))))))
 
     (if (buffer-file-name)
-        (catch 'found-it
-          (find-tags-file-r (buffer-file-name)))
+	(catch 'found-it
+	  (find-tags-file-r (buffer-file-name)))
       (error "buffer is not visiting a file"))))
 
 (defun my/file ()
