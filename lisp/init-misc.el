@@ -80,7 +80,6 @@ to HTML files."
   (add-to-list 'org-export-filter-paragraph-functions 'eh-org-clean-space)
   )
 
-;; TODO: the updated version by ChatGPT, to be tested...
 (defun my/create-TAGS (&optional sudo dir-name tag-relative)
   "Create a TAGS file with absolute or relative paths recorded inside. With a
 prefix argument SUDO, run the command with sudo privilege. With a prefix
