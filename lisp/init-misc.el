@@ -54,6 +54,22 @@ database using `my-get-heading-from-org-id-db` function."
             (setq description (my-get-heading-from-org-id-db org-id)))
         (org-insert-link nil (concat "id:" org-id) description)))))
 
+(defun my-parse-link-id (link)
+  "Parse the ID from an org-mode link of the form `id:xxxxxxxxxxxx'."
+  (when (string-match "id:\\(.+\\)" link)
+    (match-string 1 link)))
+
+(defun my/org-link-goto-at-point ()
+  "Check if link at point is a file link or an ID link, and jump to
+the appropriate location."
+  (interactive)
+  (if-let ((link (org-element-property :raw-link (org-element-context))))
+      (cond ((string-prefix-p "file:" link)
+             (org-open-at-point))
+            ((string-prefix-p "id:" link)
+	     (org-id-goto (my-parse-link-id link))))
+    (message "No link at point.")))
+
 ;; via https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
 (defun my/reload-dir-locals-for-current-buffer ()
   "reload dir locals for the current buffer"
