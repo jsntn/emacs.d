@@ -25,6 +25,35 @@
 ;; to prevent kill and yank commands from accessing the clipboard
 (setq x-select-enable-clipboard nil)
 
+(defun my/copy-org-id-at-point ()
+  "Copy the ID property of the heading at point to the kill-ring."
+  (interactive)
+  (let ((id (org-entry-get nil "ID")))
+    (when id
+      (kill-new id)
+      (message "Copied ID: %s" id))))
+
+(defun my-get-heading-from-org-id-db (org-id)
+  "Retrieve the heading title associated with an Org ID from the
+current buffer's Org mode database."
+  (org-with-point-at (org-id-find org-id 'marker)
+    (org-get-heading)))
+
+(defun my/insert-org-id-from-kill-ring ()
+  "Insert a link to an Org ID from the kill-ring with a user-defined description.
+The user is prompted to enter a description for the link.
+
+If description is empty, retrieve the heading from the org-id
+database using `my-get-heading-from-org-id-db` function."
+  (interactive)
+  (let ((id (current-kill 0)))
+    (when id
+      (let* ((org-id (replace-regexp-in-string "^id:" "" id))
+             (description (read-string "Description: " nil 'my-history)))
+        (if (string-empty-p description)
+            (setq description (my-get-heading-from-org-id-db org-id)))
+        (org-insert-link nil (concat "id:" org-id) description)))))
+
 ;; via https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
 (defun my/reload-dir-locals-for-current-buffer ()
   "reload dir locals for the current buffer"
