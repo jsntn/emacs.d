@@ -3,6 +3,12 @@
 ;;; Code:
 
 
+(defun my/eww-open-local-file ()
+  "Open the local file at point in EWW."
+  (interactive)
+  (let ((file (thing-at-point 'filename)))
+    (eww-open-file file)))
+
 (defun my/org-repeated-deadline-schedule (type &optional arg time repeater)
   "Create repeated deadlines or scheduled tasks.
   TYPE is either 'deadline or 'schedule.
