@@ -182,6 +182,7 @@
  "r" 'revert-buffer
  "t" 'my/set-tags-table-list ; <<m-ftf>>
  "w" 'my/windows-split-toggle
+ "l" 'my/org-link-goto-at-point
  ;; for workgroups2
  "c" 'wg-create-workgroup
  "k" 'wg-kill-workgroup
