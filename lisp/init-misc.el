@@ -172,6 +172,7 @@ Example usage:
       C-u M-x my/create-TAGS RET /path/to/directory RET RET"
 
   ;; This function is improved by ChatGPT :)
+  ;; TODO: to be tested - the update(last commit) from Claude :)
   (interactive "P\nDEnter the directory to create TAGS file: \nMCreate TAGS file with relative paths (y/n):")
   
   (let* ((target-dir (if (string= "" dir-name) 
