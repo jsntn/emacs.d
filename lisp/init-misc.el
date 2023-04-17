@@ -172,22 +172,26 @@ Example usage:
       C-u M-x my/create-TAGS RET /path/to/directory RET RET"
 
   ;; This function is improved by ChatGPT :)
-  (interactive "P\nDEnter the directory to create TAGS file: \nMCreate TAGS file with relative paths (y/n): ")
-  (let* ((target-dir (if (string= "" dir-name)
-			 default-directory
-		       (expand-file-name dir-name)))
-	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s -f %s *"
-			    target-dir
-			    (expand-file-name ".ctags" user-emacs-directory)
-			    (if (string-equal tag-relative 'y) "yes" "never")
-			    (expand-file-name "TAGS" target-dir)))
-	 (command (if sudo
-		      (concat "sudo sh -c '"
-			      ctags-cmd
-			      "'")
-		    ctags-cmd)))
-    (start-process-shell-command "create TAGS" nil command)))
-
+  (interactive "P\nDEnter the directory to create TAGS file: \nMCreate TAGS file with relative paths (y/n):")
+  
+  (let* ((target-dir (if (string= "" dir-name) 
+                         default-directory
+                       (expand-file-name dir-name)))
+         (tags-path (if (string= tag-relative 'y) 
+                        nil
+                      (read-file-name "Enter the path for TAGS file: ")))
+         (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s -f %s *"
+                            target-dir
+                            (expand-file-name ".ctags" user-emacs-directory)
+                            (if (string-equal tag-relative 'y) "yes" "never")
+                            (or tags-path (expand-file-name "TAGS" target-dir)))))
+         (command (if sudo 
+                      (concat "sudo sh -c '" 
+                              ctags-cmd 
+                              "'")
+                    ctags-cmd)))
+     (start-process-shell-command "create TAGS" nil command)))
+ 
 (defun my/find-tags-file ()
   "recursively searches each parent directory for a file named
 'TAGS' and returns the path to that file or nil if a tags file is
