@@ -504,6 +504,7 @@ You need to install it manually. Continue?")
 	  ("via" :foreground "#5F87FF" :background "black" :box t)
 	  ("Via" :foreground "#5F87FF" :background "black" :box t)
 	  ("VIA" :foreground "#5F87FF" :background "black" :box t)
+	  ("Jason" :foreground "white" :background "#38761d" :box t)
 	)
       )
   ;; global-hl-todo-mode doesn't seem to work
