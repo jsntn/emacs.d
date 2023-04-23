@@ -681,6 +681,7 @@ You need to install it manually. Continue?")
   (rg . ripgrep)
   :config
   (org-roam-db-autosync-mode)
+  (setq org-roam-database-connector 'sqlite3)
   (setq org-roam-mode-sections
 	(list #'org-roam-backlinks-section
 	      #'org-roam-reflinks-section
