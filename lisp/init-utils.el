@@ -12,8 +12,9 @@
 (defun my/org-repeated-deadline-schedule (type &optional arg time repeater)
   "Create repeated deadlines or scheduled tasks.
   TYPE is either 'deadline or 'schedule.
-  With universal argument, prompt for REPEATER string.
-  Otherwise, use org-time-stamp-formats.
+
+  With prefix argument(C-u), the existing deadline/schedule will
+  be removed.
 
   Repeater string should be in the format of `+1m' (exactly 1 month),
   `.+1m' (1 month from last completion) or `++1m' (at least 1 month from
