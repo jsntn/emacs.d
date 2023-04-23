@@ -289,6 +289,8 @@ You need to install it manually. Continue?")
 
 (use-package elpa-mirror)
 
+(use-package emacsql-sqlite3) ;; for org-roam
+
 ;; (use-package elpy
 ;;   :config
 ;;   (elpy-enable)
