@@ -205,11 +205,11 @@
 
 ;; how to truncate the long task name in the agenda custom view?
 ;; https://stackoverflow.com/a/16285673/4274775
-(defun my/org-agenda-mode-hook ()
+(defun my-org-agenda-mode-hook ()
   (interactive)
   (setq truncate-lines t))
 (add-hook 'org-agenda-mode-hook
-          'my/org-agenda-mode-hook)
+          'my-org-agenda-mode-hook)
 
 (add-hook 'org-agenda-mode-hook (lambda ()
 

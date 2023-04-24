@@ -76,8 +76,8 @@
    '(annotate-highlight ((t (:underline "white"))))
    '(annotate-highlight-secondary ((t (:underline "white"))))
    )
-  ;; { START: my/annotate-mode-hook
-  (defun my/set-default-annotation-file (annotate-mode-status)
+  ;; { START: my-annotate-mode-hook
+  (defun my-set-default-annotation-file (annotate-mode-status)
     "set my default annotation-file, which is used in case the
 `.annotations' in the directory of the current buffer does not
 exist."
@@ -89,11 +89,11 @@ exist."
     (message "annotate-mode is %s, and the annotate-file is set to %s.annotations"
 	     annotate-mode-status user-emacs-directory)
     )
-  (defun my/annotate-mode-hook ()
+  (defun my-annotate-mode-hook ()
     "my annotate-mode hook to check if `.annotations' exists in the
 directory of the current buffer then use it as the
 `annotate-file', otherwise call the
-`my/set-default-annotate-file'."
+`my-set-default-annotate-file'."
     (interactive)
     (if (bound-and-true-p annotate-mode); if annotate-mode is on
 	(if (file-exists-p ".annotations") ; if .annotations file exists
@@ -101,12 +101,12 @@ directory of the current buffer then use it as the
 		   (annotate-load-annotations)
 		   (message "annotate-mode is on, and the annotate-file is %s.annotations"
 			    (file-name-directory (buffer-file-name))))
-	  (my/set-default-annotation-file 'on) ; if .annotations file does not exist
+	  (my-set-default-annotation-file 'on) ; if .annotations file does not exist
 	  )
-      (my/set-default-annotation-file 'off) ; if annotate-mode is off
+      (my-set-default-annotation-file 'off) ; if annotate-mode is off
       ))
-  (add-hook 'annotate-mode-hook 'my/annotate-mode-hook)
-  ;; END: my/annotate-mode-hook }
+  (add-hook 'annotate-mode-hook 'my-annotate-mode-hook)
+  ;; END: my-annotate-mode-hook }
   )
 
 (use-package auto-capitalize
