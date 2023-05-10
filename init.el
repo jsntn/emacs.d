@@ -42,12 +42,6 @@
 				  ; "local-var" containing personal variables
 
 (require 'use-package) ; use-package initialization
-;; enable the use-package extension to ensure system binaries exist alongside package declarations
-(use-package use-package-ensure-system-package
-  :ensure t ; install the package if not available
-  :config
-  (setq system-packages-use-sudo t)
-  )
 
 (require 'local-packages nil 'noerror) ; allow users to provide an optional
 				       ; "local-packages" containing local
@@ -87,6 +81,13 @@
 
 (setq use-package-always-ensure t) ; to install the package if it is not
 				   ; installed
+
+;; enable the use-package extension to ensure system binaries exist alongside package declarations
+(use-package use-package-ensure-system-package
+  :ensure t ; install the package if not available
+  :config
+  (setq system-packages-use-sudo t)
+  )
 
 (require 'init-packages) ; package management by using use-package
 
