@@ -7,8 +7,11 @@
   :ensure-system-package aspell)
 
 (unless (executable-find "aspell")
-  (yes-or-no-p "Please be informed the Aspell is used in this configuration file, but the Aspell executable file is not found.
-You need to install it manually. Continue?")
+(if noninteractive
+  (message "Please be informed the Aspell is used in this configuration file, but the Aspell executable file is not found.
+You need to install it manually.")
+(yes-or-no-p "Please be informed the Aspell is used in this configuration file, but the Aspell executable file is not found.
+You need to install it manually. Continue?"))
   )
 
 (when (executable-find "aspell")

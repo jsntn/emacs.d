@@ -3,6 +3,7 @@
 ;;; Code:
 
 
+(unless noninteractive
 (when (not (file-directory-p org-directory))
   (yes-or-no-p "The org-directory is not defined, will set it to .emacs.d folder to avoid 'No such file org directory' warning. Continue?")
   ;; [[./init-org.el::od-1]]
@@ -14,6 +15,7 @@
   ;; [[./init-org.el::omd]]
   (setq org-mobile-directory (symbol-value 'user-emacs-directory))
   )
+) 
 
 (setq org-startup-indented t) ; enable org-indent mode
 
