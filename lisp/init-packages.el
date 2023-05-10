@@ -961,9 +961,11 @@ You need to install it manually. Continue?")
     (yes-or-no-p "term-keys is used to handle keyboard input involving any combination of keys and modifiers in emacs through supported terminal emulator(Alacritty is recommended on Windows), refer to term-keys README for configuration. Continue?")
     )
 
-  (if (boundp 'term-keys-reminder)
-      (when (symbol-value 'term-keys-reminder) (term-keys-reminder-messages))
-    (term-keys-reminder-messages)
+  (unless noninteractive
+    (if (boundp 'term-keys-reminder)
+	(when (symbol-value 'term-keys-reminder) (term-keys-reminder-messages))
+      (term-keys-reminder-messages)
+      )
     )
 
   )
