@@ -3,6 +3,8 @@ echo "Attempting startup..."
 ${EMACS:=emacs} -nw --batch \
                 --eval '(progn
                         (defvar url-show-status)
+                        	(make-directory \"./org-roam\")
+                        	(defvar org-roam-directory (file-truename \"./org-roam\"))
                         (let ((debug-on-error t)
                               (url-show-status nil)
                               (user-emacs-directory default-directory)
