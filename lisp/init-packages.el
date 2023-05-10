@@ -309,6 +309,7 @@ You need to install it manually. Continue?")
   (unless (display-graphic-p)
     (setq evil-want-C-i-jump nil)
     )
+  :after undo-tree
   :config
   (evil-set-undo-system 'undo-tree) ; https://github.com/emacs-evil/evil/issues/1372#issuecomment-712611291
   (global-undo-tree-mode)
