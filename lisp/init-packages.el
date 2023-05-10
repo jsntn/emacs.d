@@ -289,7 +289,8 @@ You need to install it manually. Continue?")
 
 (use-package elpa-mirror)
 
-(use-package emacsql-sqlite3) ;; for org-roam
+(use-package emacsql-sqlite3 ; for org-roam
+  :straight (:host github :repo "cireu/emacsql-sqlite3"))
 
 ;; (use-package elpy
 ;;   :config
