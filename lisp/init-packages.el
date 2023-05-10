@@ -902,13 +902,15 @@ You need to install it manually. Continue?")
     ;; https://emacs.stackexchange.com/questions/24298/can-i-eval-a-value-in-quote
     )
   )
-(unless (executable-find "prettier")
-  (yes-or-no-p "Please be informed the Prettier is used in this configuration file, but the Prettier executable file is not found.
+(unless noninteractive
+  (unless (executable-find "prettier")
+    (yes-or-no-p "Please be informed the Prettier is used in this configuration file, but the Prettier executable file is not found.
 You need to install it manually. Continue?")
-  )
-(unless (executable-find "shfmt")
-  (yes-or-no-p "Please be informed the shfmt is used in this configuration file, but the shfmt executable file is not found.
+    )
+  (unless (executable-find "shfmt")
+    (yes-or-no-p "Please be informed the shfmt is used in this configuration file, but the shfmt executable file is not found.
 You need to install it manually. Continue?")
+    )
   )
 ;; END: reformatter config
 
