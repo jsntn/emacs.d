@@ -125,13 +125,13 @@
     (set-face-attribute 'org-headline-done nil
 			:foreground "white")))
 
+(unless noninteractive
 (unless (display-graphic-p)
   (yes-or-no-p "Please be informed that on Terminal Emacs, the strike-through might not work on the `org-fontify-done-headline' and `org-modern-horizontal-rule' in this configuration. Continue?")
   ;; see,
   ;; https://stackoverflow.com/questions/24185102/emacs-console-mode-org-mode-strike-through-is-not-displayed-as-expected
   ;; https://emacs.stackexchange.com/questions/43722/emacsclient-nw-and-strikethrough-text-in-org-mode
-  )
-
+  ))
 
 ;; ===============================================================
 ;; Org agenda settings ｜ <<org-agenda-settings>>
