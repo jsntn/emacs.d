@@ -4,10 +4,10 @@
 
 
 (unless (executable-find "shellcheck")
-(if noninteractive
-  (message "Please be informed the ShellCheck is used in this configuration, but the ShellCheck executable file is not found.
+  (if noninteractive
+      (message "Please be informed the ShellCheck is used in this configuration, but the ShellCheck executable file is not found.
 You need to install it manually.")
-(yes-or-no-p "Please be informed the ShellCheck is used in this configuration, but the ShellCheck executable file is not found.
+    (yes-or-no-p "Please be informed the ShellCheck is used in this configuration, but the ShellCheck executable file is not found.
 You need to install it manually. Continue?"))
   )
 
