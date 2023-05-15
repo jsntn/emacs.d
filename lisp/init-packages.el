@@ -693,12 +693,6 @@ You need to install it manually. Continue?")
   :config
   (org-roam-db-autosync-mode)
   (setq org-roam-database-connector 'sqlite3)
-  (setq org-roam-mode-sections
-	(list #'org-roam-backlinks-section
-	      #'org-roam-reflinks-section
-	      ;; ripgrep (rg) is used for unlinked references below - (executable-find "rg")
-	      #'org-roam-unlinked-references-section
-	      ))
   )
 
 (my-check-for-executable "ripgrep (rg)" "rg")
