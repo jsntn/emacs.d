@@ -5,6 +5,7 @@
 
 ;;; `org-crypt` configurations
 (use-package org
+  :if window-system ; for graphical Emacs
   ;; ignore org-mode from upstream and use a manually installed version (built-in version)
   :pin manual
   :config
