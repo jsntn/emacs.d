@@ -690,6 +690,7 @@ You need to install it manually. Continue?")
   )
 
 (use-package org-roam
+  :if window-system ; for graphical Emacs
   :after emacsql-sqlite3
   :config
   (org-roam-db-autosync-mode)
@@ -706,6 +707,7 @@ You need to install it manually. Continue?")
 ;; END: Org-roam }
 
 (use-package org-roam-ui
+  :if window-system ; for graphical Emacs
   :after org-roam
   :config
   (setq org-roam-ui-sync-theme t
