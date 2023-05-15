@@ -3,13 +3,7 @@
 ;;; Code:
 
 
-(unless (executable-find "shellcheck")
-  (if noninteractive
-      (message "Please be informed the ShellCheck is used in this configuration, but the ShellCheck executable file is not found.
-You need to install it manually.")
-    (yes-or-no-p "Please be informed the ShellCheck is used in this configuration, but the ShellCheck executable file is not found.
-You need to install it manually. Continue?"))
-  )
+(my-check-for-executable "ShellCheck" "shellcheck") ; flycheck
 
 (defun my/shell-mode-config ()
   (setq flycheck-select-checker "sh-shellcheck"))

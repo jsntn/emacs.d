@@ -31,6 +31,19 @@
       (shell-command-to-string (concat "echo -n $(" command ")")))))
 ;; -- END -- }
 
+(defun my-check-for-executable (executable-name executable-file &optional message)
+  "Check if the given EXECUTABLE-FILE is available. If it's not found, prompt the user with the optional MESSAGE
+  (or a default message) to install it."
+  (let* ((default-message (format "Please be informed that %s is used in this configuration, but the %s executable file is not found. You need to install it manually." 
+                                  executable-name executable-file))
+         (msg (or message default-message))
+         (noninteractive-msg msg)
+         (interactive-msg (concat msg " Continue?")))
+    (unless (executable-find executable-file)
+      (if noninteractive
+          (message noninteractive-msg)
+        (yes-or-no-p interactive-msg)))))
+
 ;; a utility package to collect various Icon Fonts and propertize them within Emacs.
 (use-package all-the-icons
   :config
@@ -371,6 +384,7 @@ You need to install it manually. Continue?")
   (setq helm-dash-browser-func 'eww)
   (setq dash-docs-enable-debugging nil)
   (setq helm-dash-docsets-path (expand-file-name ".docsets" user-emacs-directory))
+  (my-check-for-executable "sqlite3" "sqlite3") ; sqlite3 is required for `helm-dash'
   )
 
 ;; automatically detects the programming language in a buffer or string
@@ -534,6 +548,8 @@ You need to install it manually. Continue?")
   )
 
 (use-package lsp-pyright
+  :config
+  (my-check-for-executable "pyright" "pyright")
   :hook (python-mode . (lambda ()
 			 (require 'lsp-pyright)
 			 (lsp)))) ; or lsp-deferred
@@ -685,10 +701,7 @@ You need to install it manually. Continue?")
 	      ))
   )
 
-(unless (executable-find "rg")
-  (yes-or-no-p "Please be informed the ripgrep (rg) is used by Org-roam in this configuration file, but the rg executable file is not found.
-You need to install it manually. Continue?")
-  )
+(my-check-for-executable "ripgrep (rg)" "rg")
 ;; END: Org-roam }
 
 (use-package org-roam-ui
@@ -890,16 +903,8 @@ You need to install it manually. Continue?")
     ;; https://emacs.stackexchange.com/questions/24298/can-i-eval-a-value-in-quote
     )
   )
-(unless noninteractive
-  (unless (executable-find "prettier")
-    (yes-or-no-p "Please be informed the Prettier is used in this configuration file, but the Prettier executable file is not found.
-You need to install it manually. Continue?")
-    )
-  (unless (executable-find "shfmt")
-    (yes-or-no-p "Please be informed the shfmt is used in this configuration file, but the shfmt executable file is not found.
-You need to install it manually. Continue?")
-    )
-  )
+(my-check-for-executable "Prettier" "prettier")
+(my-check-for-executable "shfmt" "shfmt")
 ;; END: reformatter config
 
 (use-package savehist
