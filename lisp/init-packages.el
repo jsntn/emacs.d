@@ -353,11 +353,7 @@ You need to install it manually. Continue?")
 
 (use-package expand-region)
 
-(use-package flycheck
-  :ensure-system-package
-  ((shellcheck . shellcheck)
-   (js-yaml    . "sudo npm install -g js-yaml"))
-  )
+(use-package flycheck)
 
 (use-package general)
 
@@ -371,7 +367,6 @@ You need to install it manually. Continue?")
 
 ;; uses Dash docsets inside emacs to browse documentation
 (use-package helm-dash
-  :ensure-system-package sqlite3
   :config
   (setq helm-dash-browser-func 'eww)
   (setq dash-docs-enable-debugging nil)
@@ -539,8 +534,6 @@ You need to install it manually. Continue?")
   )
 
 (use-package lsp-pyright
-  :ensure-system-package
-  (pyright . "sudo npm install -g pyright")
   :hook (python-mode . (lambda ()
 			 (require 'lsp-pyright)
 			 (lsp)))) ; or lsp-deferred
@@ -681,8 +674,6 @@ You need to install it manually. Continue?")
   )
 
 (use-package org-roam
-  :ensure-system-package
-  (rg . ripgrep)
   :config
   (org-roam-db-autosync-mode)
   (setq org-roam-database-connector 'sqlite3)
@@ -886,9 +877,6 @@ You need to install it manually. Continue?")
     )
   )
 (use-package reformatter
-  :ensure-system-package
-  ((prettier . "sudo npm install -g prettier")
-   (shfmt    . shfmt))
   :config
   (reformatter-define css-yaml-format
     :program "prettier"
