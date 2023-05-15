@@ -4,7 +4,11 @@
 
 
 ;;; `org-crypt` configurations
-(require 'org-crypt)
+(use-package org
+  ;; ignore org-mode from upstream and use a manually installed version (built-in version)
+  :pin manual
+  (require 'org-crypt)) ; require org-crypt from built-in org
+
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance '("crypt"))
 
