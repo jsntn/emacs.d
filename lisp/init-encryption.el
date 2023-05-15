@@ -7,6 +7,7 @@
 (use-package org
   ;; ignore org-mode from upstream and use a manually installed version (built-in version)
   :pin manual
+  :config
   (require 'org-crypt)) ; require org-crypt from built-in org
 
 (org-crypt-use-before-save-magic)
