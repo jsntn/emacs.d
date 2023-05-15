@@ -8,6 +8,8 @@ ${EMACS:=emacs} -nw --batch \
                               (user-emacs-directory default-directory)
                               (user-init-file (expand-file-name "init.el"))
                               (load-path (delq default-directory load-path)))
+                           (org-version)
                            (load-file user-init-file)
+                           (org-version)
                            (run-hooks (quote after-init-hook))))'
 echo "Startup successful"
