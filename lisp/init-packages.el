@@ -657,14 +657,8 @@ You need to install it manually. Continue?")
   )
 
 (use-package orglink
-  :quelpa
-  (orglink
-  :fetcher github
-  :repo "tarsius/orglink"
-  :commit "168d46a33476c4c8ce56818faa6183421b16d211")
   :config
-  (global-orglink-mode)
-  )
+  (global-orglink-mode))
 
 (use-package org-drill
   :config

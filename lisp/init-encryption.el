@@ -4,7 +4,7 @@
 
 
 ;;; `org-crypt` configurations
-;; (require 'org-crypt) ; require org-crypt
+(require 'org-crypt) ; require org-crypt
 
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance '("crypt"))
