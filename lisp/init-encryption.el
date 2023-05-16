@@ -5,9 +5,7 @@
 
 ;;; `org-crypt` configurations
 (use-package org
-  :if window-system ; for graphical Emacs
-  ;; ignore org-mode from upstream and use a manually installed version (built-in version)
-  :pin manual
+  :straight (:type built-in) ; use the Org shipped with Emacs
   :config
   (require 'org-crypt)) ; require org-crypt from built-in org
 
