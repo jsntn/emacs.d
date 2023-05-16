@@ -60,6 +60,15 @@
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			 ("melpa" . "https://melpa.org/packages/")))
 
+;; temporary solution and experimental to pin package version
+;; see,
+;; https://github.com/radian-software/straight.el/blob/039e5c9a9b5c00749602afb41341e9e77ba09429/README.md#how-do-i-pin-package-versions-or-use-only-tagged-releases
+;; tell straight.el about the profiles we are going to be using.
+(setq straight-profiles
+      '((nil . "default.el")
+        ;; Packages which are pinned to a specific commit.
+        (pinned . "pinned.el")))
+
 ;; install straight.el
 ;; https://github.com/radian-software/straight.el#getting-started
 (defvar bootstrap-version)
@@ -75,19 +84,16 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;; temporary solution and experimental to pin package version
+(autoload #'straight-x-pull-all "straight-x")
+(autoload #'straight-x-freeze-versions "straight-x")
+
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
 
 (setq use-package-always-ensure t) ; to install the package if it is not
 				   ; installed
-
-;; enable the use-package extension to ensure system binaries exist alongside package declarations
-(use-package use-package-ensure-system-package
-  :ensure t ; install the package if not available
-  :config
-  (setq system-packages-use-sudo t)
-  )
 
 (require 'init-packages) ; package management by using use-package
 
