@@ -7,7 +7,11 @@
 
 
 (defcustom my-install-deps
-  '((shellcheck
+  '((aspell
+     :darwin-command "brew install aspell"
+     :message "aspell is needed in this configuration file, check/install it manually."
+     :enabled t)
+    (shellcheck
      :darwin-command "brew install shellcheck"
      :message "shellcheck is needed in this configuration file, check/install it manually."
      :enabled t)
