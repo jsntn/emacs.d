@@ -25,6 +25,14 @@
 ;; to prevent kill and yank commands from accessing the clipboard
 (setq x-select-enable-clipboard nil)
 
+(defun my/list-packages-and-versions ()
+  (interactive)
+  (package-initialize)
+  (let ((pkgs (mapcar 'car package-alist)))
+    (dolist (pkg pkgs)
+      (message "%s - %s" 
+      pkg (package-desc-version (cadr (assq pkg package-alist)))))))
+
 (defun my/copy-org-id-at-point ()
   "Copy the ID property of the heading at point to the kill-ring."
   (interactive)
