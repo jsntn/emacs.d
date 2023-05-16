@@ -689,8 +689,6 @@ You need to install it manually. Continue?")
     )
   )
 
-(message "%s" (org-version))
-
 (use-package org-roam
   :if window-system ; for graphical Emacs
   :after emacsql-sqlite3

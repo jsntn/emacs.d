@@ -89,6 +89,8 @@
   (setq system-packages-use-sudo t)
   )
 
+(message "%s" (org-version))
+
 (require 'init-packages) ; package management by using use-package
 
 
