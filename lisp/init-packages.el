@@ -133,8 +133,6 @@ directory of the current buffer then use it as the
   :hook (org-mode .  auto-capitalize-mode)
   )
 
-(message "%s" (org-version))
-
 (use-package benchmark-init
   :config
   ;; To disable collection of benchmark data after init is done.
@@ -218,8 +216,6 @@ In that case, insert the number."
   ;; END: company-candidates from abo-abo }
   )
 
-(message "%s" (org-version))
-
 (use-package company-ctags
   :config
   (with-eval-after-load 'company
@@ -230,8 +226,6 @@ In that case, insert the number."
 (use-package company-english-helper
   :straight (:host github :repo "manateelazycat/company-english-helper")
   )
-
-(message "%s" (org-version))
 
 (use-package counsel)
 
@@ -310,8 +304,6 @@ You need to install it manually. Continue?")
 
 (use-package emacsql-sqlite3 ; for org-roam
   :straight (:host github :repo "cireu/emacsql-sqlite3"))
-
-(message "%s" (org-version))
 
 ;; (use-package elpy
 ;;   :config
@@ -606,6 +598,8 @@ You need to install it manually. Continue?")
    )
   )
 
+(message "%s" (org-version))
+
 (use-package org-super-agenda ; <<org-super-agenda>>
   :after org-agenda
   :config
@@ -670,6 +664,8 @@ You need to install it manually. Continue?")
   :config
   (global-orglink-mode)
   )
+
+(message "%s" (org-version))
 
 (use-package org-drill
   :config
