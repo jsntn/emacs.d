@@ -565,8 +565,6 @@ You need to install it manually. Continue?")
   (setq neo-window-fixed-size nil)
   )
 
-(message "%s" (org-version))
-
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
@@ -597,8 +595,6 @@ You need to install it manually. Continue?")
    ;; https://github.com/minad/org-modern/blob/main/org-modern.el
    )
   )
-
-(message "%s" (org-version))
 
 (use-package org-super-agenda ; <<org-super-agenda>>
   :after org-agenda
@@ -665,14 +661,10 @@ You need to install it manually. Continue?")
   (global-orglink-mode)
   )
 
-(message "%s" (org-version))
-
 (use-package org-drill
   :config
   (setq org-drill-leech-method "warn")
   )
-
-(message "%s" (org-version))
 
 (use-package ox-hugo
   :after ox
