@@ -60,15 +60,6 @@
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			 ("melpa" . "https://melpa.org/packages/")))
 
-;; temporary solution and experimental to pin package version
-;; see,
-;; https://github.com/radian-software/straight.el/blob/039e5c9a9b5c00749602afb41341e9e77ba09429/README.md#how-do-i-pin-package-versions-or-use-only-tagged-releases
-;; tell straight.el about the profiles we are going to be using.
-(setq straight-profiles
-      '((nil . "default.el")
-        ;; Packages which are pinned to a specific commit.
-        (pinned . "pinned.el")))
-
 ;; install straight.el
 ;; https://github.com/radian-software/straight.el#getting-started
 (defvar bootstrap-version)
@@ -84,9 +75,18 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; temporary solution and experimental to pin package version
-(autoload #'straight-x-pull-all "straight-x")
-(autoload #'straight-x-freeze-versions "straight-x")
+;; bootstrap quelpa
+(unless (package-installed-p 'quelpa)
+  (with-temp-buffer
+    (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
+    (eval-buffer)
+    (quelpa-self-upgrade)))
+
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://github.com/quelpa/quelpa-use-package.git"))
+(require 'quelpa-use-package)
 
 (package-initialize)
 (unless package-archive-contents
