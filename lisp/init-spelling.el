@@ -3,16 +3,9 @@
 ;;; Code:
 
 
-(use-package ispell
-  :ensure-system-package aspell)
+(use-package ispell)
 
-(unless (executable-find "aspell")
-  (if noninteractive
-      (message "Please be informed the Aspell is used in this configuration file, but the Aspell executable file is not found.
-You need to install it manually.")
-    (yes-or-no-p "Please be informed the Aspell is used in this configuration file, but the Aspell executable file is not found.
-You need to install it manually. Continue?"))
-  )
+(my-check-for-executable "Aspell" "aspell")
 
 (when (executable-find "aspell")
   (setq ispell-program-name "aspell")
