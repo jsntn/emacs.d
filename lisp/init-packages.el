@@ -34,7 +34,7 @@
 (defun my-check-for-executable (executable-name executable-file &optional message)
   "Check if the given EXECUTABLE-FILE is available. If it's not found, prompt the user with the optional MESSAGE
   (or a default message) to install it."
-  (let* ((default-message (format "Please be informed that %s is used in this configuration, but the %s executable file is not found. You need to install it manually." 
+  (let* ((default-message (format "Please be informed that %s is used in this configuration, but the %s executable file is not found. You need to install it manually."
                                   executable-name executable-file))
          (msg (or message default-message))
          (noninteractive-msg msg)
