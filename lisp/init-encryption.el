@@ -4,14 +4,7 @@
 
 
 ;;; `org-crypt` configurations
-(let ((straight-current-profile 'pinned))
-  (straight-use-package 'org)
-  (straight-use-package 'org-contrib)
-  ;; pin org-mode version
-  (add-to-list 'straight-x-pinned-packages
-	       '("org" . "d34f551faf5d2b50c2bbb0fcaaaab05cdf93a001"))
-  (require 'org-crypt) ; require org-crypt
-  )
+;; (require 'org-crypt) ; require org-crypt
 
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance '("crypt"))
