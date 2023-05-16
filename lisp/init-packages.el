@@ -656,13 +656,10 @@ You need to install it manually. Continue?")
 	  ))
   )
 
-(let ((straight-current-profile 'pinned))
-  (straight-use-package
-   '(orglink :type git :host github :repo "tarsius/orglink"))
+(use-package orglink
+  :config
   (global-orglink-mode)
-  ;; pin version
-  (add-to-list 'straight-x-pinned-packages
-	       '("orglink" . "168d46a33476c4c8ce56818faa6183421b16d211")))
+  )
 
 (use-package org-drill
   :config

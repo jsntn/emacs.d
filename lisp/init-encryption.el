@@ -4,10 +4,14 @@
 
 
 ;;; `org-crypt` configurations
-(use-package org
-  :straight (:type built-in) ; use the Org shipped with Emacs
-  :config
-  (require 'org-crypt)) ; require org-crypt from built-in org
+(let ((straight-current-profile 'pinned))
+  (straight-use-package 'org)
+  (straight-use-package 'org-contrib)
+  ;; pin org-mode version
+  (add-to-list 'straight-x-pinned-packages
+               '("org" . "d34f551faf5d2b50c2bbb0fcaaaab05cdf93a001")))
+
+(require 'org-crypt) ; require org-crypt
 
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance '("crypt"))
