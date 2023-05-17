@@ -30,8 +30,8 @@
   (package-initialize)
   (let ((pkgs (mapcar 'car package-alist)))
     (dolist (pkg pkgs)
-      (message "%s - %s" 
-      pkg (package-desc-version (cadr (assq pkg package-alist)))))))
+      (message "%s - %s"
+	       pkg (package-desc-version (cadr (assq pkg package-alist)))))))
 
 (defun my/copy-org-id-at-point ()
   "Copy the ID property of the heading at point to the kill-ring."
