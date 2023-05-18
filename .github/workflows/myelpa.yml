@@ -7,7 +7,7 @@ on:
     - '**.md'
 
 env:
-  ELPA: local
+  ELPA: "local"
  
 jobs:
   build:
@@ -41,4 +41,4 @@ jobs:
         chmod +x ./test-startup.sh
         ./test-startup.sh
       env:
-        ELPA=${{ env.ELPA }} 
+        ELPA: ${{ env.ELPA }} 
