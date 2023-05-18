@@ -85,13 +85,13 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
-(setq use-package-always-ensure t) ; to install the package if it is not
-				   ; installed
-
 (when (string-equal (getenv "ELPA") "online")
 ;; https://github.com/radian-software/straight.el/blob/039e5c9a9b5c00749602afb41341e9e77ba09429/README.md#the-wrong-version-of-my-package-was-loaded
-(straight-use-package 'org)
+(package-install 'org)
 (message "%s" (org-version)))
+
+(setq use-package-always-ensure t) ; to install the package if it is not
+				   ; installed
 	
 (require 'init-packages) ; package management by using use-package
 
