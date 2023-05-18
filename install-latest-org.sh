@@ -1,4 +1,4 @@
-#! /bin/sh -x -u -e
+#!/bin/sh -e
 #
 # Install the latest version of Org on GitHub Actions
 # Reference https://orgmode.org/manual/Installation.html
