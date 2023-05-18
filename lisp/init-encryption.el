@@ -3,7 +3,9 @@
 ;;; Code:
 
 
-;;; `org-crypt` configurations
+;; https://www.reddit.com/r/emacs/comments/10mk42s/issue_with_org_and_straight/
+(straight-use-package 'org)
+;; `org-crypt` configurations
 (require 'org-crypt) ; require org-crypt
 
 (org-crypt-use-before-save-magic)

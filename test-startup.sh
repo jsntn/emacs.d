@@ -4,8 +4,6 @@ ${EMACS:=emacs} -nw --batch \
                 --debug-init \
                 --eval '(progn
                         (defvar url-show-status)
-                        (setq eval-expression-print-level 10)
-                        (setq eval-expression-print-length 100)
                         (let ((debug-on-error t)
                               (url-show-status nil)
                               (user-emacs-directory default-directory)
