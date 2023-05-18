@@ -21,6 +21,11 @@ jobs:
       with:
         version: ${{ matrix.emacs_version }}
 
+    - name: Install Org-mode
+      run: |
+        sudo apt-get update
+        sudo apt-get install org-mode 
+
     - uses: actions/checkout@v3
       with:
         submodules: recursive
