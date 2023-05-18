@@ -3,8 +3,10 @@
 ;;; Code:
 
 
-;; https://www.reddit.com/r/emacs/comments/10mk42s/issue_with_org_and_straight/
-(straight-use-package 'org)
+;; reference: https://www.reddit.com/r/emacs/comments/10mk42s/issue_with_org_and_straight/
+(message "%s" (org-version))
+(use-package org :straight (:type built-in))
+(message "%s" (org-version))
 ;; `org-crypt` configurations
 (require 'org-crypt) ; require org-crypt
 
