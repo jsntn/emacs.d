@@ -25,6 +25,14 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Clone myelpa
+      uses: actions/checkout@v3
+      with:
+        repository: jsntn/myelpa
+        token: ${{ secrets.ACCESS_TOKEN }}
+        ref: master
+        path: myelpa
+
     - name: Check startup
       run: |
         chmod +x ./test-startup.sh

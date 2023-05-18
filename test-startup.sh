@@ -1,7 +1,6 @@
 #!/bin/sh -e
 echo "Attempting startup..."
 ${EMACS:=emacs} -nw --batch \
-                --debug-init \
                 --eval '(progn
                         (defvar url-show-status)
                         (let ((debug-on-error t)
