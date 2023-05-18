@@ -86,15 +86,9 @@
   (package-refresh-contents))
 
 (when (string-equal (getenv "ELPA") "online")
-;; https://github.com/jwiegley/use-package/issues/955
-;; https://github.com/jwiegley/use-package/issues/319
-(message "Built-in Org version: %s" (org-version))
-(defun my-ignore-builtin (pkg)
-  (assq-delete-all pkg package--builtins)
-  (assq-delete-all pkg package--builtin-versions))
-(my-ignore-builtin 'org) ; remove the records of Org from variable
-(use-package org)
-(message "New Org version: %s" (org-version)))
+;; use the latest version of Org
+(add-to-list 'load-path (concat (getenv "GITHUB_WORKSPACE") "/src/org-mode/lisp"))
+(message "Org version: %s" (org-version)))
 
 (setq use-package-always-ensure t) ; to install the package if it is not
 				   ; installed
