@@ -314,11 +314,13 @@ You need to install it manually. Continue?")
 ;;     (add-hook 'elpy-mode-hook 'flycheck-mode))
 ;;   )
 
+;; evil-collection assumes evil-want-keybinding is set to nil and
+;; evil-want-integration is set to t before loading evil and evil-collection.
+(setq evil-want-integration t)
+(setq evil-want-keybinding nil)
+
 (use-package evil
   :init
-  (setq evil-want-integration t) ; this is optional since it's already set to t
-				 ; by default.
-  (setq evil-want-keybinding nil)
   (unless (display-graphic-p)
     (setq evil-want-C-i-jump nil)
     )
