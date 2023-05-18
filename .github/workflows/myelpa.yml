@@ -40,6 +40,5 @@ jobs:
       run: |
         chmod +x ./test-startup.sh
         ./test-startup.sh
-      with:
-        env: |
-          ELPA=${{ env.ELPA }} 
+      env:
+        ELPA=${{ env.ELPA }} 
