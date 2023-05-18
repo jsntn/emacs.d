@@ -57,8 +57,14 @@
 ;; =============================================================================
 
 (require 'package)
+
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			 ("melpa" . "https://melpa.org/packages/")))
+
+(when (string-equal (getenv "ELPA") "local")
+;; when running on GitHub w/ local elpa Actions config, overwrite above `package-archives'
+(defvar myelpa-url (concat (getenv "GITHUB_WORKSPACE") "/myelpa/"))
+(setq package-archives `(("myelpa" . ,myelpa-url))))
 
 ;; install straight.el
 ;; https://github.com/radian-software/straight.el#getting-started
@@ -82,6 +88,11 @@
 (setq use-package-always-ensure t) ; to install the package if it is not
 				   ; installed
 
+(when (string-equal (getenv "ELPA") "online")
+;; https://github.com/radian-software/straight.el/blob/039e5c9a9b5c00749602afb41341e9e77ba09429/README.md#the-wrong-version-of-my-package-was-loaded
+(straight-use-package 'org)
+(message "%s" (org-version)))
+	
 (require 'init-packages) ; package management by using use-package
 
 
