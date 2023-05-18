@@ -87,7 +87,7 @@
 
 (when (string-equal (getenv "ELPA") "online")
 ;; https://github.com/radian-software/straight.el/blob/039e5c9a9b5c00749602afb41341e9e77ba09429/README.md#the-wrong-version-of-my-package-was-loaded
-(package-install 'org)
+(package-install 'org t)
 (message "%s" (org-version)))
 
 (setq use-package-always-ensure t) ; to install the package if it is not
