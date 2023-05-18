@@ -86,9 +86,15 @@
   (package-refresh-contents))
 
 (when (string-equal (getenv "ELPA") "online")
-;; https://github.com/radian-software/straight.el/blob/039e5c9a9b5c00749602afb41341e9e77ba09429/README.md#the-wrong-version-of-my-package-was-loaded
-(package-install 'org t)
-(message "%s" (org-version)))
+;; https://github.com/jwiegley/use-package/issues/955
+;; https://github.com/jwiegley/use-package/issues/319
+(message "Built-in Org version: %s" (org-version))
+(defun my-ignore-builtin (pkg)
+  (assq-delete-all pkg package--builtins)
+  (assq-delete-all pkg package--builtin-versions))
+(my-ignore-builtin 'org) ; remove the records of Org from variable
+(use-package org)
+(message "New Org version: %s" (org-version)))
 
 (setq use-package-always-ensure t) ; to install the package if it is not
 				   ; installed
