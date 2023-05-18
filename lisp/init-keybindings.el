@@ -54,14 +54,6 @@
  )
 
 (general-define-key
- :keymaps 'ibuffer-mode-map
- "g" 'evil-goto-first-line
- "G" 'evil-goto-line
- "j" 'evil-next-line
- "k" 'evil-previous-line
- )
-
-(general-define-key
  ;; keybindings for evil normal and visual mode
  :states '(normal visual)
  "ff" 'evil-scroll-page-down ; <<page down>>
