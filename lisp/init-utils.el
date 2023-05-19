@@ -33,7 +33,7 @@
 	     `(,(concat "<%Y-%m-%d %a " repeater ">") .
 	       ,(concat "<%Y-%m-%d %a %H:%M " repeater ">"))
 	   org-time-stamp-formats)))
-    (case type
+    (cl-case type
       (deadline (org-deadline arg time))
       (schedule (org-schedule arg time)))))
 
