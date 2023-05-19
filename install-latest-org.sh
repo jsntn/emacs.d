@@ -15,7 +15,7 @@ if [ ! -d ${WHERE}/org-mode ]; then
 else
 
     # get updates, if any
-    
+
     cd ${WHERE}/org-mode
     git pull
 fi

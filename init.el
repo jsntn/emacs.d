@@ -62,9 +62,9 @@
 			 ("melpa" . "https://melpa.org/packages/")))
 
 (when (string-equal (getenv "ELPA") "local")
-;; when running on GitHub w/ local elpa Actions config, overwrite above `package-archives'
-(defvar myelpa-url (concat (getenv "GITHUB_WORKSPACE") "/myelpa/"))
-(setq package-archives `(("myelpa" . ,myelpa-url))))
+  ;; when running on GitHub w/ local elpa Actions config, overwrite above `package-archives'
+  (defvar myelpa-url (concat (getenv "GITHUB_WORKSPACE") "/myelpa/"))
+  (setq package-archives `(("myelpa" . ,myelpa-url))))
 
 ;; install straight.el
 ;; https://github.com/radian-software/straight.el#getting-started
@@ -86,13 +86,13 @@
   (package-refresh-contents))
 
 (when (string-equal (getenv "ELPA") "online")
-;; use the latest version of Org
-(add-to-list 'load-path (concat (getenv "GITHUB_WORKSPACE") "/src/org-mode/lisp"))
-(message "Org version: %s" (org-version)))
+  ;; use the latest version of Org
+  (add-to-list 'load-path (concat (getenv "GITHUB_WORKSPACE") "/src/org-mode/lisp"))
+  (message "Org version: %s" (org-version)))
 
 (setq use-package-always-ensure t) ; to install the package if it is not
 				   ; installed
-	
+
 (require 'init-packages) ; package management by using use-package
 
 
