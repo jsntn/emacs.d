@@ -42,6 +42,7 @@
 				  ; "local-var" containing personal variables
 
 (require 'use-package) ; use-package initialization
+(setq use-package-always-ensure t) ; install the package if it is not installed
 
 (require 'local-packages nil 'noerror) ; allow users to provide an optional
 				       ; "local-packages" containing local
@@ -81,17 +82,19 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
+
+ 
 
 (when (string-equal (getenv "ELPA") "online")
   ;; use the latest version of Org
   (add-to-list 'load-path (concat (getenv "GITHUB_WORKSPACE") "/src/org-mode/lisp"))
   (message "Org version: %s" (org-version)))
 
-(setq use-package-always-ensure t) ; to install the package if it is not
-				   ; installed
+
 
 (require 'init-packages) ; package management by using use-package
 
