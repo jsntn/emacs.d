@@ -28,15 +28,15 @@
      :message "ripgrep is needed in this configuration file, check/install it manually."
      :enabled t)
     (js-yaml
-     :command "sudo npm install -g js-yaml"
+     :linux-command "sudo npm install -g js-yaml"
      :message nil ;; No message needed for js-yaml
      :enabled t)
     (pyright
-     :command "sudo npm install -g pyright"
+     :linux-command "sudo npm install -g pyright"
      :message nil ;; No message needed for pyright
      :enabled t)
     (prettier
-     :command "sudo npm install -g prettier"
+     :linux-command "sudo npm install -g prettier"
      :message nil ;; No message needed for prettier
      :enabled t)))
 
