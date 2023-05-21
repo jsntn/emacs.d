@@ -31,6 +31,7 @@
       (shell-command-to-string (concat "echo -n $(" command ")")))))
 ;; -- END -- }
 
+
 (defun my-check-for-executable (executable-name executable-file &optional message)
   "Check if the given EXECUTABLE-FILE is available. If it's not found, prompt the user with the optional MESSAGE
   (or a default message) to install it."
@@ -38,11 +39,13 @@
                                   executable-name executable-file))
          (msg (or message default-message))
          (noninteractive-msg msg)
-         (interactive-msg (concat msg " Continue?")))
+         (prompt-msg (concat msg " Press ENTER to continue.")))
     (unless (executable-find executable-file)
       (if noninteractive
           (message noninteractive-msg)
-        (yes-or-no-p interactive-msg)))))
+        (unless (string= (read-string prompt-msg) "")
+          (message "Continuing..."))))))
+
 
 ;; a utility package to collect various Icon Fonts and propertize them within Emacs.
 (use-package all-the-icons
