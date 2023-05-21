@@ -56,10 +56,7 @@
 ;;   )
 
 (when (display-graphic-p)
-  (unless (member "Symbola" (font-family-list))
-    (yes-or-no-p "Symbola font is not installed, however, it is recommended to install for proper emoji display. Continue?")
-    )
-  )
+  (my-check-for-font "Symbola" "Symbola font is not installed, however, it is recommended to install for proper emoji display. Press ENTER to continue."))
 
 ;; the default split-screen direction
 ;; https://stackoverflow.com/a/7998271

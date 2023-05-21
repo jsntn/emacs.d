@@ -38,6 +38,7 @@
 
 (require 'init-portable) ; portable Emacs settings
 (require 'init-load-path) ; load-path settings
+(require 'init-pre) ; pre-startup settings
 (require 'local-var nil 'noerror) ; allow users to provide an optional
 				  ; "local-var" containing personal variables
 

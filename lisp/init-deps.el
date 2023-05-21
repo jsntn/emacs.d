@@ -1,8 +1,5 @@
-;;; init-deps.el --- Org-mode settings -*- lexical-binding: t -*-
+;;; init-deps.el --- dependencies management -*- lexical-binding: t -*-
 ;;; Commentary:
-
-;; Dependencies management
-
 ;;; Code:
 
 
