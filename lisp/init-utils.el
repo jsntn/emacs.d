@@ -10,16 +10,22 @@
          (random-file (nth (random (length org-files)) org-files)))
     (find-file random-file) ; open the random org file
     (org-mode)
+    (org-overview)
     (goto-char (point-min))
     (org-next-visible-heading 1) ; move to the first visible heading
     ;; parse the buffer and collect all headline elements into `headings` list, see,
-    (let* ((headings (org-element-map (org-element-parse-buffer) 'headline 'identity))
-	   ;; generate a random index within the length of `headings`, see,
-           (random-index (random (length headings)))
-	   ;; select a random heading from `headings` using the random index, see,
-           (random-heading (nth random-index headings)))
-      ;; move the cursor to the beginning of the randomly selected heading. see,
-      (goto-char (org-element-property :begin random-heading)))))
+    (let* ((headings (org-element-map (org-element-parse-buffer) 'headline 'identity)))
+      (if headings
+	  (progn
+	    ;; generate a random index within the length of `headings`, see,
+	    (let* ((random-index (random (length headings)))
+		   ;; select a random heading from `headings` using the random index, see,
+		   (random-heading (nth random-index headings)))
+	      ;; move the cursor to the beginning of the randomly selected heading. see,
+	      (goto-char (org-element-property :begin random-heading))
+	      (org-show-subtree))) ; expand the selected heading
+	(goto-char (point-min))))) ; if no headings are found, move the cursor to the beginning of the buffer
+  )
 
 
 (defun my/eww-open-local-file ()
