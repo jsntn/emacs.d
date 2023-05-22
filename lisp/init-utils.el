@@ -3,6 +3,25 @@
 ;;; Code:
 
 
+(defun my/random-org-item ()
+  "Go to a random org heading from all org files in `org-directory`."
+  (interactive)
+  (let* ((org-files (directory-files-recursively org-directory "\\.org$"))
+         (random-file (nth (random (length org-files)) org-files)))
+    (find-file random-file) ; open the random org file
+    (org-mode)
+    (goto-char (point-min))
+    (org-next-visible-heading 1) ; move to the first visible heading
+    ;; parse the buffer and collect all headline elements into `headings` list, see,
+    (let* ((headings (org-element-map (org-element-parse-buffer) 'headline 'identity))
+	   ;; generate a random index within the length of `headings`, see,
+           (random-index (random (length headings)))
+	   ;; select a random heading from `headings` using the random index, see,
+           (random-heading (nth random-index headings)))
+      ;; move the cursor to the beginning of the randomly selected heading. see,
+      (goto-char (org-element-property :begin random-heading)))))
+
+
 (defun my/eww-open-local-file ()
   "Open the local file at point in EWW."
   (interactive)
