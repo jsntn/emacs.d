@@ -88,7 +88,7 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
- 
+
 
 (when (string-equal (getenv "ELPA") "online")
   ;; use the latest version of Org
