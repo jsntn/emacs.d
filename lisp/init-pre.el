@@ -35,25 +35,29 @@
 
 
 (defun my-check-for-executable (executable-name executable-file &optional message)
-  "Check if the given EXECUTABLE-FILE is available. If it's not found, prompt the user with the optional MESSAGE
-  (or a default message) to install it."
-  (let* ((default-message (format "Please be informed that %s is used in this configuration, but the %s executable file is not found. You need to install it manually."
-                                  executable-name executable-file))
-         (msg (or message default-message))
-         (noninteractive-msg msg)
-         (prompt-msg (concat msg " Press ENTER to continue.")))
+  "Check if the given EXECUTABLE-FILE is available. If it's not found,
+prompt the user with the optional MESSAGE (or a default message) to install it."
+  (let* ((default-message
+	   (format "Please be informed that %s is used in this configuration, \
+but the %s executable file is not found. You need to install it manually."
+		   executable-name executable-file))
+	 (msg (or message default-message))
+	 (noninteractive-msg msg)
+	 (prompt-msg (concat msg " Press ENTER to continue.")))
     (unless (executable-find executable-file)
       (if noninteractive
-          (message noninteractive-msg)
-        (unless (string= (read-string prompt-msg) "")
-          (message "Continuing..."))))))
+	  (message noninteractive-msg)
+	(unless (string= (read-string prompt-msg) "")
+	  (message "Continuing..."))))))
 
 
 
 (defun my-check-for-font (font-name &optional message)
   "Check if the given FONT-NAME is available. If it's not found, prompt the user with the optional MESSAGE
   to continue."
-  (let* ((default-message (format "The '%s' font is recommended for this configuration. Press ENTER to continue." font-name))
+  (let* ((default-message
+	   (format "The '%s' font is recommended for this configuration. \
+Press ENTER to continue." font-name))
 	 (prompt-msg (or message default-message)))
     (unless (member font-name (font-family-list))
       (unless (string= (read-string prompt-msg) "")
