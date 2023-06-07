@@ -6,7 +6,7 @@
 (when (not (file-directory-p org-directory))
   (if noninteractive
       (message "The org-directory is not defined, will set it to .emacs.d folder to avoid 'No such file org directory' warning.")
-    (yes-or-no-p "The org-directory is not defined, will set it to .emacs.d folder to avoid 'No such file org directory' warning. Continue?"))
+    (read-string "The org-directory is not defined, will set it to .emacs.d folder to avoid 'No such file org directory' warning. Press ENTER to continue."))
   ;; [[./init-org.el::od-1]]
   ;; [[./init-org.el::od-2]]
   (setq org-directory (symbol-value 'user-emacs-directory))
@@ -14,7 +14,7 @@
 (when (not (boundp 'org-mobile-directory))
   (if noninteractive
       (message "The org-mobile-directory is not defined, will set it to .emacs.d folder to avoid void-variable error.")
-    (yes-or-no-p "The org-mobile-directory is not defined, will set it to .emacs.d folder to avoid void-variable error. Continue?"))
+    (read-string "The org-mobile-directory is not defined, will set it to .emacs.d folder to avoid void-variable error. Press ENTER to continue."))
   ;; [[./init-org.el::omd]]
   (setq org-mobile-directory (symbol-value 'user-emacs-directory))
   )
@@ -129,7 +129,7 @@
 
 (unless noninteractive
   (unless (display-graphic-p)
-    (yes-or-no-p "Please be informed that on Terminal Emacs, the strike-through might not work on the `org-fontify-done-headline' and `org-modern-horizontal-rule' in this configuration. Continue?")
+    (read-string "Please be informed that on Terminal Emacs, the strike-through might not work on the `org-fontify-done-headline' and `org-modern-horizontal-rule' in this configuration. Press ENTER to continue.")
     ;; see,
     ;; https://stackoverflow.com/questions/24185102/emacs-console-mode-org-mode-strike-through-is-not-displayed-as-expected
     ;; https://emacs.stackexchange.com/questions/43722/emacsclient-nw-and-strikethrough-text-in-org-mode
