@@ -108,7 +108,6 @@
 (require 'init-encryption) ; encryption settings
 (require 'init-font) ; font settings
 (require 'init-ibuffer) ; IBuffer mode settings
-(require 'init-keybindings) ; keybindings with general.el
 (require 'init-org) ; Org-mode settings
 (require 'init-plantuml) ; PlantUML settings
 (require 'init-python) ; Python settings
@@ -124,6 +123,9 @@
 (require 'local-config nil 'noerror) ; allow users to provide an optional
 				     ; "local-config" containing personal
 				     ; settings
+
+;; move the keybindings to the end of the other settings
+(require 'init-keybindings) ; keybindings with general.el
 
 
 ;; =============================================================================

@@ -172,6 +172,7 @@
  "f" 'ace-jump-char-mode ;; <<ajm-2>>
  "'" 'imenu-list-smart-toggle
  "r" 'revert-buffer
+ "R" 'my/revert-all-file-buffers
  "t" 'my/set-tags-table-list ; <<m-ftf>>
  "w" 'my/windows-split-toggle
  "l" 'my/org-link-goto-at-point
