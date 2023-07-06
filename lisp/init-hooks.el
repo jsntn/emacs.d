@@ -45,6 +45,15 @@
 		))
   (add-hook hook 'hl-todo-mode))
 
+
+(dolist (hook '(
+		find-file-hook
+		after-save-hook
+		switch-buffer-hook
+		))
+  (add-hook hook 'my/readonly-files))
+
+
 (dolist (my-org-mode-hook-settings '(
 		toc-org-mode
 		my/modify-org-done-face

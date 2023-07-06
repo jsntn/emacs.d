@@ -305,6 +305,36 @@ Version 2023-05-06"
   (skip-chars-backward " \t")
   (insert "+"))
 
+(defun my/readonly-files ()
+  "Check for a '.readonly' file in the directory of the current
+buffer, and set the read-only status of any listed buffers. The
+'.readonly' file should contain a list of buffer names, one per
+line, that should be set to read-only.  Any buffers not listed in
+the file will remain unaffected.
+Version 2023-05-04
+
+This function is intended to be used as a hook to automatically
+set the read-only status of buffers when they are opened or
+saved, based on the contents of the '.readonly' file. To use this
+function as a hook, add it to the appropriate hook list, such as
+'find-file-hook', 'after-save-hook' or 'switch-buffer-hook'."
+  ;; (add-hook 'find-file-hook 'my/readonly-files)
+  ;; (add-hook 'after-save-hook 'my/readonly-files)
+  ;; (add-hook 'switch-buffer-hook 'my/readonly-files)
+  (interactive)
+  (let ((readonly-file (concat (file-name-directory (buffer-file-name)) ".readonly")))
+    (when (file-exists-p readonly-file)
+      (let ((readonly-bufs (split-string (with-temp-buffer
+					   (insert-file-contents readonly-file)
+					   (buffer-string))
+					 "\n" t)))
+        (message "read-only files list: %s" readonly-bufs)
+	(dolist (buf readonly-bufs)
+          (message "%s is read-only now" buf)
+	  (let ((buf (find-buffer-visiting buf)))
+	    (when buf
+	      (with-current-buffer buf
+		(toggle-read-only t)))))))))
 
 (defun my/revert-all-file-buffers ()
   "Refresh all open file buffers without confirmation.
