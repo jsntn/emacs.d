@@ -25,6 +25,184 @@
 ;; to prevent kill and yank commands from accessing the clipboard
 (setq x-select-enable-clipboard nil)
 
+(defun my/review-random-function ()
+  "Review a random function defined in my Emacs configuration."
+  (interactive)
+  (let* ((config-functions '())
+         (config-files (directory-files-recursively user-emacs-directory "\\.el$")))
+    (dolist (file config-files)
+      (with-temp-buffer
+        (insert-file-contents file)
+        (goto-char (point-min))
+        (while (re-search-forward "(defun \\([^ ]+\\)" nil t)
+          (push (match-string 1) config-functions))))
+    (let* ((command (nth (random (length config-functions)) config-functions)))
+      (describe-function (intern command)))))
+
+(defun my/review-random-my-function ()
+  "Review a random function that starts with 'my/' in my Emacs configuration."
+  (interactive)
+  (let* ((config-functions '())
+         (config-files (directory-files-recursively user-emacs-directory "\\.el$")))
+    (dolist (file config-files)
+      (with-temp-buffer
+        (insert-file-contents file)
+        (goto-char (point-min))
+        (while (re-search-forward "(defun my/\\([^ ]+\\)" nil t)
+          (push (match-string 1) config-functions))))
+    (let* ((command (nth (random (length config-functions)) config-functions)))
+      (describe-function (intern (concat "my/" command))))))
+
+
+;; {{ START: my/open-link-at-point-as-gpg
+(defun my/securely-delete-file (&optional filename)
+  "Securely delete the specified file interactively or by providing FILENAME.
+If secure deletion failed, then continue with the normal deletion."
+  (interactive (list (when current-prefix-arg
+		       (read-file-name "Choose file to securely delete: "))))
+  (if filename
+      (progn
+	(message "Securely deleting %s..." (shell-quote-argument filename))
+	(cond
+	 ((eq system-type 'windows-nt)
+	  ;; https://learn.microsoft.com/en-us/sysinternals/downloads/sdelete
+	  (my-check-for-executable "SDelete" "sdelete")
+	  (shell-command (concat "sdelete -p 3 " (shell-quote-argument filename))))
+	 ((eq system-type 'gnu/linux)
+	  (my-check-for-executable "shred" "shred")
+	  (shell-command (concat "shred -v -z -u -n 10 " (shell-quote-argument filename))))
+	 ((eq system-type 'darwin)
+	  (my-check-for-executable "shred" "gshred")
+	  (shell-command (concat "gshred -v -z -u -n 10 " (shell-quote-argument filename)))))
+	(when (file-exists-p (shell-quote-argument filename))
+	  (message "Securely deleting %s failed, and continue with the normal deletion." (shell-quote-argument filename))
+	  (delete-file filename)))
+    (user-error "No file specified for secure deletion.")))
+
+(defun my/open-link-at-point-as-gpg ()
+  "Open the link at point using Emacs epa in a temporary buffer,
+and the decrypted file will be securely deleted after opening in buffer."
+  (interactive)
+  (require 'epa)
+  (let* ((link-info (org-element-context))
+         (path (org-element-property :path link-info))
+         (abs-path (if (string-prefix-p "file:" path)
+                       (file-truename (replace-regexp-in-string ":" "" path))
+                     (file-truename path)))
+         (decrypted-file (concat abs-path ".clear")))
+    (if (file-exists-p abs-path)
+        (progn
+          (epa-decrypt-file abs-path decrypted-file)
+          (find-file decrypted-file)
+          (when (file-exists-p decrypted-file)
+	    (my/securely-delete-file decrypted-file)))
+      (message "File does not exist: %s" abs-path))))
+;; END: my/open-link-at-point-as-gpg }}
+
+
+;; {{ START: my/check-orphaned-org-ids-in-directory
+(require 'org-element) ; this should be here before `org-add-link-type'
+(require 'cl-lib)
+
+;; From ChatGPT,
+;; The message "Created id link." is printed by the `org-add-link-type` function
+;; each time it is called.
+;; Since you have the line `(org-add-link-type "id" #'my-org-id-link-follow)` in
+;; your code, this function is called every time you load or reload your Emacs
+;; configuration. It registers a new link type called `"id"` that is handled by
+;; the `my-org-id-link-follow` function.
+
+;; register new link type called "id"
+(org-add-link-type "id" #'my-org-id-link-follow)
+
+(defun my-org-id-link-follow (id)
+  "Follow an `id' link."
+  (message "Link ID: %s" id))
+
+(defun my-org-id-links-in-buffer ()
+  "Return a list of Org ID links in the current buffer."
+  (let (org-id-links) ; creates a local variable called `org-id-links` with an
+		      ; initial value of `nil` that is only visible within the
+		      ; `let` block
+    (org-element-map (org-element-parse-buffer) 'link
+      (lambda (link)
+        (when (string= (org-element-property :type link) "id")
+          (push (org-element-property :path link) org-id-links)
+          )))
+    org-id-links))
+
+(defun my-list-org-id-links-in-directory (directory)
+  "Search all .org files in DIRECTORY for Org ID links, and return a list of unique IDs found."
+  (interactive "DDirectory: ")
+  (let (org-ids)
+    (dolist (file (directory-files-recursively directory "\\.org$") org-ids)
+      (with-temp-buffer
+        (insert-file-contents file)
+        (setq org-ids (append org-ids (my-org-id-links-in-buffer)))
+        ))
+    (delete-dups org-ids)
+    ))
+
+(defun my-list-org-ids-in-directory (directory)
+  "List all org-ids in org-files in the given DIRECTORY and return them as a list."
+  (interactive "DDirectory: ")
+  (let ((org-files (directory-files-recursively directory "\\.org$"))
+	(org-ids '()))
+    (dolist (file org-files)
+      (with-temp-buffer
+	(insert-file-contents file)
+	(org-mode)
+	(org-element-map (org-element-parse-buffer) 'headline
+	  (lambda (headline)
+	    (when-let ((id (org-element-property :ID headline)))
+	      (push id org-ids))))
+	(goto-char (point-min))
+	(while (re-search-forward "^:ID:\\s-+\\(\\S-+\\)" nil t)
+	  (push (match-string 1) org-ids))))
+    org-ids))
+
+(defun my/check-orphaned-org-ids-in-directory (dir)
+  "Find the difference between org-ids obtained by `my-list-org-ids-in-directory'
+and org-ids obtained by `my-list-org-id-links-in-directory'.
+DIRECTORY is the directory where the org files are located."
+  (interactive "DDirectory: ")
+  (let ((org-ids (my-list-org-ids-in-directory dir))
+        (id-links (my-list-org-id-links-in-directory dir)))
+    (let ((not-linked (cl-set-difference org-ids id-links :test #'string=))
+          (invalid-links (cl-set-difference id-links org-ids :test #'string=)))
+      (message "%d not-linked org-ids: %s"
+               (length not-linked)
+               (format "%s" not-linked))
+      (message "%d invalid org-id links: %s"
+               (length invalid-links)
+               (format "%s" invalid-links)))))
+;; END: my/check-orphaned-org-ids-in-directory }}
+
+
+(defun my/org-list-entries-without-id-property ()
+  "List all entries in the current buffer that don't have an ID property."
+  (interactive)
+  (with-output-to-temp-buffer "*Org Entries Without ID*"
+    (let ((results nil))
+      (org-map-entries
+       (lambda ()
+	 (unless (org-id-get)
+	   (push (format "** LINE #%d:\n%s"
+			 (line-number-at-pos)
+			 (buffer-substring-no-properties
+			  (line-beginning-position)
+			  (line-end-position)))
+		 results)))
+       nil nil t)
+      (princ (concat "#+TITLE: Org Entries Without ID\n\n"))
+      (princ (concat "#+OPTIONS: toc:nil\n\n"))
+      (princ (concat "* Entries without ID\n\n"))
+      (dolist (result (nreverse results))
+	(princ (concat result "\n\n")))))
+  (with-current-buffer "*Org Entries Without ID*"
+    (org-mode)))
+
+
 (defun my/list-packages-and-versions ()
   (interactive)
   (package-initialize)
@@ -62,6 +240,28 @@ database using `my-get-heading-from-org-id-db` function."
             (setq description (my-get-heading-from-org-id-db org-id)))
         (org-insert-link nil (concat "id:" org-id) description)))))
 
+
+(defun my/link-selected-text-with-org-id-from-kill-ring ()
+  "Create an Org-mode link using the selected text and an Org ID from the kill ring.
+Version 2023-04-28
+
+The selected text is replaced with,
+[[id:<Org ID unique identifier>][<selected text>]].
+
+Usage: Select the text that you want to link to an Org ID, then
+run `M-x my/link-selected-text-with-org-id-from-kill-ring`. The
+function will take the Org ID from the kill ring, and create an
+Org-mode link with the selected text and the Org ID. The link
+will be inserted at the cursor position, replacing the selected
+text."
+  (interactive)
+  (let* ((org-id (substring-no-properties (current-kill 0)))
+         (text (buffer-substring-no-properties (region-beginning) (region-end)))
+         (link (concat "[[id:" org-id "][" text "]]")))
+    (delete-region (region-beginning) (region-end))
+    (insert link)))
+
+
 (defun my-parse-link-id (link)
   "Parse the ID from an org-mode link of the form `id:xxxxxxxxxxxx'."
   (when (string-match "id:\\(.+\\)" link)
@@ -77,6 +277,34 @@ the appropriate location."
             ((string-prefix-p "id:" link)
 	     (org-id-goto (my-parse-link-id link))))
     (message "No link at point.")))
+
+
+(defun my/switch-opened-org-files-to-org-mode ()
+  "Switch all open buffers that end with .org to org-mode,
+skipping buffers that are already in org-mode.
+Version 2023-05-06"
+  ;; See, https://stackoverflow.com/a/76187210/4274775
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (when (and (buffer-file-name)
+                 (string= (file-name-extension (buffer-file-name)) "org")
+                 (not (eq major-mode 'org-mode)))
+        (org-mode)
+        (message "Switched %s to org-mode." (buffer-name))))))
+
+(defun my/strikethrough-current-line ()
+  "Strikethrough the current line using +<striked text>+"
+  (interactive)
+  (back-to-indentation)
+  (insert "+")
+  (move-end-of-line nil)
+  ;;  skips over any consecutive space or tab characters immediately before the
+  ;;  end of the line, effectively moving the cursor to the last non-blank
+  ;;  character on the line, rather than after any trailing whitespace. see,
+  (skip-chars-backward " \t")
+  (insert "+"))
+
 
 (defun my/revert-all-file-buffers ()
   "Refresh all open file buffers without confirmation.
