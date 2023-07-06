@@ -117,13 +117,14 @@
 (require 'init-utils) ; utils configuration
 (require 'init-yaml) ; YAML settings
 
-(require 'init-hooks) ; hooks settings
 (require 'init-misc) ; miscellaneous settings
 
 (require 'local-config nil 'noerror) ; allow users to provide an optional
 				     ; "local-config" containing personal
 				     ; settings
 
+;; move the hooks to the end of the main settings
+(require 'init-hooks) ; hooks settings
 ;; move the keybindings to the end of the other settings
 (require 'init-keybindings) ; keybindings with general.el
 
