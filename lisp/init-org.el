@@ -80,7 +80,7 @@
 			       ("DONE" . (:foreground "white" :background "#2E8B57"))
 			       ("WAIT" . (:foreground "white" :background "#F9BC41"))
 			       ("IN-PROGRESS" . (:foreground "white" :background "#3498DB"))
-			       ("TODO" . (:foreground "white" :background "#CD5C5C"))
+			       ("TODO" . (:foreground "white" :background "#5F87FF"))
 			       ("REPORT" (:foreground "#C0C0C0" :background "#308014" :box t))
 			       ("BUG" (:foreground "#E6DB74" :background "black" :box t))
 			       ("KNOWNCAUSE" (:foreground "#9C91E4" :background "black" :box t))
