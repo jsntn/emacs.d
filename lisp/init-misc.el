@@ -443,33 +443,34 @@ Example usage:
   (let* ((target-dir (if (string= "" dir-name)
 			 default-directory
 		       (expand-file-name dir-name)))
+	 (tag-relative-value (if (string-equal tag-relative 'y) "yes" "never"))
 
 	 ;; if the tags file has relative path then make tags-path nil
 	 ;; if absolute path, then prompt for entering the path
-	 (default-tags-with-abs-path (expand-file-name "TAGS_ABS-PATH" target-dir))
 	 (tags-path (if (string= tag-relative 'y)
 			nil
 		      (read-file-name
 		       "Enter the path to the tags file (with absolute path:) "
-		       nil nil nil default-tags-with-abs-path)))
+		       nil nil nil (expand-file-name "TAGS_ABS-PATH" target-dir))))
 
 	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s -f %s *"
 			    target-dir
 			    (expand-file-name ".ctags" user-emacs-directory)
-			    (if (string-equal tag-relative 'y) "yes" "never")
+			    tag-relative-value
 
 			    ;; if tags-path is non-nil, it will use that value
 			    ;; as the result. if tags-path is nil, it will
 			    ;; evaluate the expression (expand-file-name "tags"
 			    ;; target-dir) and use the result of that evaluation
 			    ;; as the final result.
-			    (or tags-path (expand-file-name "TAGS" target-dir)))))
-    (let ((command (if sudo
+			    (or tags-path (expand-file-name "TAGS" target-dir))))
+         (command (if sudo
 		       (concat "sudo sh -c '"
 			       ctags-cmd
 			       "'")
 		     ctags-cmd)))
-      (start-process-shell-command "create TAGS" nil command))))
+
+    (start-process-shell-command "create TAGS" nil command)))
 
 (defun my/find-tags-file ()
   "recursively searches each parent directory for a file named
