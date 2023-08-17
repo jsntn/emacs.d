@@ -429,21 +429,27 @@ wildcard is included in the `ctags` command to create TAGS for all files in the
 directory.
 
 Example usage:
-  - To create a TAGS file for the current directory:
-      M-x my/create-TAGS RET RET
+  - To create a TAGS (with absolute paths) file for the current directory:
+    M-x my/create-TAGS RET /path/to/current/directory RET RET
   - To create a TAGS file for a specific directory with relative paths recorded:
-      M-x my/create-TAGS RET /path/to/directory RET y RET
+    M-x my/create-TAGS RET /path/to/directory RET y RET
   - To create a TAGS file for a specific directory with absolute paths recorded,
     using sudo privilege:
-      C-u M-x my/create-TAGS RET /path/to/directory RET RET"
+    C-u M-x my/create-TAGS RET /path/to/directory RET RET
+
+Version: 2023-03-17
+Updated: 2023-08-17"
 
   ;; This function is improved by ChatGPT and Claude :)
-  (interactive "P\nDEnter the directory to create TAGS file: \nMCreate TAGS file with relative paths (y/n): ")
+  (interactive "P\nDEnter the directory to create TAGS file: \nMCreate TAGS file with relative paths (y/n) (Note: omit input indicates absolute paths): ")
 
   (let* ((target-dir (if (string= "" dir-name)
 			 default-directory
 		       (expand-file-name dir-name)))
+
 	 (tag-relative-value (if (string-equal tag-relative 'y) "yes" "never"))
+	 ;; yes   - relative path
+	 ;; never - absolute path
 
 	 ;; if the tags file has relative path then make tags-path nil
 	 ;; if absolute path, then prompt for entering the path
