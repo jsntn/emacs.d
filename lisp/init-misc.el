@@ -454,7 +454,10 @@ Example usage:
 		       nil nil nil (expand-file-name "TAGS_ABS-PATH" target-dir))))
 
 	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s -f %s *"
-			    target-dir
+			    (if (eq system-type 'windows-nt)
+				;; fix changing dir across different drives issue on Windows
+				(concat "/d" target-dir)
+			      target-dir)
 			    (expand-file-name ".ctags" user-emacs-directory)
 			    tag-relative-value
 
