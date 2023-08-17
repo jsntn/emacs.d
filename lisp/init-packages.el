@@ -207,15 +207,16 @@ The installation result can be checked later manually with ctags command. Contin
   ;; `counsel-etags-scan-code' to create tags file
   ;; `counsel-etags-find-tag-at-point' to navigate.  This command will also
   ;; run `counsel-etags-scan-code' AUTOMATICALLY if tags file does not exist.
-  ;; it also calls `counsel-etags-fallback-grep-function' if not tag is found.
+  ;; it also calls `counsel-etags-fallback-grep-function' if no tag is found.
 
   ;; keybinding -> [[./init-keybindings.el::ftap]]
 
-  ;; :init
-  ;; (add-hook 'prog-mode-hook
-  ;; 	    (lambda ()
-  ;; 	      (add-hook 'after-save-hook
-  ;; 			'counsel-etags-virtual-update-tags 'append 'local)))
+  ;; update the TAGS file automatically on file saves
+  :init
+  (add-hook 'prog-mode-hook
+	    (lambda ()
+	      (add-hook 'after-save-hook
+			'counsel-etags-virtual-update-tags 'append 'local)))
 
   :config
   (setq counsel-etags-update-interval 60)
@@ -225,6 +226,7 @@ The installation result can be checked later manually with ctags command. Contin
   (setq counsel-etags-update-tags-backend
 	(lambda (src-dir)
 	  (shell-command
+	   ;; relative path is used by default by ctags
 	   ;; relative path is more portable and uses less memory (this package
 	   ;; reads the tags file's content into memory)
 	   ;; https://github.com/redguardtoo/counsel-etags/pull/88
