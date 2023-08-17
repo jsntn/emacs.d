@@ -438,18 +438,31 @@ Example usage:
       C-u M-x my/create-TAGS RET /path/to/directory RET RET"
 
   ;; This function is improved by ChatGPT and Claude :)
-  (interactive "P\nDEnter the directory to create TAGS file: \nMCreate TAGS file with relative paths (y/n):")
+  (interactive "P\nDEnter the directory to create TAGS file: \nMCreate TAGS file with relative paths (y/n): ")
 
   (let* ((target-dir (if (string= "" dir-name)
 			 default-directory
 		       (expand-file-name dir-name)))
+
+	 ;; if the tags file has relative path then make tags-path nil
+	 ;; if absolute path, then prompt for entering the path
+	 (default-tags-with-abs-path (expand-file-name "TAGS_ABS-PATH" target-dir))
 	 (tags-path (if (string= tag-relative 'y)
 			nil
-		      (read-file-name "Enter the path for TAGS file: ")))
+		      (read-file-name
+		       "Enter the path to the tags file (with absolute path:) "
+		       nil nil nil default-tags-with-abs-path)))
+
 	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s -f %s *"
 			    target-dir
 			    (expand-file-name ".ctags" user-emacs-directory)
 			    (if (string-equal tag-relative 'y) "yes" "never")
+
+			    ;; if tags-path is non-nil, it will use that value
+			    ;; as the result. if tags-path is nil, it will
+			    ;; evaluate the expression (expand-file-name "tags"
+			    ;; target-dir) and use the result of that evaluation
+			    ;; as the final result.
 			    (or tags-path (expand-file-name "TAGS" target-dir)))))
     (let ((command (if sudo
 		       (concat "sudo sh -c '"
@@ -504,8 +517,9 @@ Otherwise, set `my-tags-file` to the value returned by `my/find-tags-file`.
 (defun my-set-extra-tags-files (my-tags-table-list)
   (setq counsel-etags-extra-tags-files my-tags-table-list)
   (setq company-ctags-extra-tags-files my-tags-table-list)
-  (message "tags-table list for counsel-etags/company-ctags:\n%s"
-	   my-tags-table-list)
+  (message "tags-table list for counsel-etags/company-ctags:\n%s\n\nNote:
+files in counsel-etags-extra-tags-files should have symbols with
+absolute path only."  my-tags-table-list)
   )
 
 (defun my/insert-into-my-tags-table-list(&optional select)
@@ -553,8 +567,9 @@ to/from 'counsel-etags-extra-tags-files' and
 (defun my/tags-table-list ()
   "check and display my tags-table list through message."
   (interactive)
-  (message "tags-table list for counsel-etags/company-ctags:\n%s"
-	   my-tags-table-list)
+  (message "tags-table list for counsel-etags/company-ctags:\n%s\n\nNote:
+files in counsel-etags-extra-tags-files should have symbols with
+absolute path only."  my-tags-table-list)
   )
 ;; END: config for counsel-etags and company-ctags }
 
