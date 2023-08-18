@@ -416,7 +416,7 @@ to HTML files."
   )
 
 (defun my/create-TAGS (dir-name tag-relative tags-filename &optional sudo process-name)
-  "Create a TAGS file with absolute or relative paths recorded inside. With a
+  "Create a TAGS file with absolute or relative symbols recorded inside. With a
 prefix argument SUDO, run the command with sudo privilege.
 
 When called interactively, prompt the user for the directory name to create the
@@ -428,11 +428,11 @@ indicates 'never'. The `*` wildcard is included in the `ctags`
 command to create TAGS for all files in the directory.
 
 Example usage:
-  - To create a TAGS (with absolute paths) file for the current directory:
+  - To create a TAGS (with absolute symbols) file for the current directory:
     M-x my/create-TAGS RET /path/to/current/directory RET RET
-  - To create a TAGS file for a specific directory with relative paths recorded:
+  - To create a TAGS file for a specific directory with relative symbols recorded:
     M-x my/create-TAGS RET /path/to/directory RET y RET
-  - To create a TAGS file for a specific directory with absolute paths recorded,
+  - To create a TAGS file for a specific directory with absolute symbols recorded,
     using sudo privilege:
     C-u M-x my/create-TAGS RET /path/to/directory RET RET
 
@@ -441,12 +441,12 @@ Updated: 2023-08-17"
 
   ;; This function is improved by ChatGPT and Claude :)
   (interactive
-   (let ((tag-relative (completing-read "Create TAGS file with relative paths? (y/n)\n(Note: omit input indicates absolute paths) "
+   (let ((tag-relative (completing-read "Create TAGS file with relative symbols? (y/n)\n(Note: omit input indicates absolute symbols) "
 			    '("y" "n"))))
      (list (read-directory-name "Enter the directory to create TAGS file: ")
 	   tag-relative
 	   (read-string "Enter the desired tags filename: "
-			(if (string-equal tag-relative "y") "TAGS" "TAGS_ABS-PATH"))
+			(if (string-equal tag-relative "y") "TAGS" "TAGS_ABS"))
 	   current-prefix-arg ; if universal argument (sudo)
 	   nil)))
 
@@ -455,11 +455,9 @@ Updated: 2023-08-17"
 		       (expand-file-name dir-name)))
 
 	 (tag-relative-value (if (string-equal tag-relative 'y) "yes" "never"))
-	 ;; yes   - relative path
-	 ;; never - absolute path
+	 ;; yes   - relative symbols
+	 ;; never - absolute symbols
 
-	 ;; if the tags file has relative path then make tags-path nil
-	 ;; if absolute path, then prompt for entering the path
 	 (tags-path (expand-file-name tags-filename target-dir))
 
 	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s -f %s *"
