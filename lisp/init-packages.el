@@ -211,12 +211,13 @@ The installation result can be checked later manually with ctags command. Contin
 
   ;; keybinding -> [[./init-keybindings.el::ftap]]
 
+  ;; 2023/08/18 disable this due to high CPU usage on big project TAGS creation
   ;; update the TAGS file automatically on file saves
-  :init
-  (add-hook 'prog-mode-hook
-	    (lambda ()
-	      (add-hook 'after-save-hook
-			'counsel-etags-virtual-update-tags 'append 'local)))
+  ;; :init
+  ;; (add-hook 'prog-mode-hook
+  ;; 	    (lambda ()
+  ;; 	      (add-hook 'after-save-hook
+  ;; 			'counsel-etags-virtual-update-tags 'append 'local)))
 
   :config
   (setq counsel-etags-update-interval 60)
