@@ -415,7 +415,8 @@ to HTML files."
   (add-to-list 'org-export-filter-paragraph-functions 'eh-org-clean-space)
   )
 
-(defun my/create-TAGS (dir-name tag-relative tags-filename &optional sudo process-name)
+;; TODO: append needs to be tested...
+(defun my/create-TAGS (dir-name tag-relative tags-filename &optional append sudo process-name)
   "Create a TAGS file with absolute or relative symbols recorded inside. With a
 prefix argument SUDO, run the command with sudo privilege.
 
@@ -447,6 +448,7 @@ Updated: 2023-08-17"
 	   tag-relative
 	   (read-string "Enter the desired tags filename: "
 			(if (string-equal tag-relative "y") "TAGS" "TAGS_ABS"))
+       nil	
 	   current-prefix-arg ; if universal argument (sudo)
 	   nil)))
 
@@ -457,16 +459,19 @@ Updated: 2023-08-17"
 	 (tag-relative-value (if (string-equal tag-relative 'y) "yes" "never"))
 	 ;; yes   - relative symbols
 	 ;; never - absolute symbols
+	 
+	 (append-or-not (if append "-A" ""))
 
 	 (tags-path (expand-file-name tags-filename target-dir))
 
-	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s -f %s *"
+	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s %s -f %s *"
 			    (if (eq system-type 'windows-nt)
 				;; fix changing dir across different drives issue on Windows
 				(concat "/d" target-dir)
 			      target-dir)
-			    (expand-file-name ".ctags" user-emacs-directory)
+			    (expand-file-name ".ctags" user-emacs-directory)			    
 			    tag-relative-value
+			    append-or-not
 
 			    ;; if tags-path is non-nil, it will use that value
 			    ;; as the result. if tags-path is nil, it will
