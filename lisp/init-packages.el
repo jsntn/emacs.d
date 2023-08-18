@@ -219,20 +219,20 @@ The installation result can be checked later manually with ctags command. Contin
   ;; 	      (add-hook 'after-save-hook
   ;; 			'counsel-etags-virtual-update-tags 'append 'local)))
 
-  :config
-  (setq counsel-etags-update-interval 60)
-  (push "build" counsel-etags-ignore-directories)
+  ;; :config
+  ;; (setq counsel-etags-update-interval 60)
+  ;; (push "build" counsel-etags-ignore-directories)
 
   ;; create TAGS with the absolute recorded file paths
-  (setq counsel-etags-update-tags-backend
-	(lambda (src-dir)
-	  (shell-command
-	   ;; relative path is used by default by ctags
-	   ;; relative path is more portable and uses less memory (this package
-	   ;; reads the tags file's content into memory)
-	   ;; https://github.com/redguardtoo/counsel-etags/pull/88
-           (format "ctags --options=%s -e -R"
-		   (expand-file-name ".ctags" user-emacs-directory)))))
+  ;; (setq counsel-etags-update-tags-backend
+  ;; 	(lambda (src-dir)
+  ;; 	  (shell-command
+  ;; 	   ;; relative path is used by default by ctags
+  ;; 	   ;; relative path is more portable and uses less memory (this package
+  ;; 	   ;; reads the tags file's content into memory)
+  ;; 	   ;; https://github.com/redguardtoo/counsel-etags/pull/88
+  ;;          (format "ctags --options=%s -e -R"
+  ;; 		   (expand-file-name ".ctags" user-emacs-directory)))))
   ;; my config -> [[./init-misc.el::config-ce-cc]]
   )
 (when (or (eq system-type 'darwin) (eq system-type 'windows-nt))
