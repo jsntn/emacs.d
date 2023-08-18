@@ -415,18 +415,17 @@ to HTML files."
   (add-to-list 'org-export-filter-paragraph-functions 'eh-org-clean-space)
   )
 
-(defun my/create-TAGS (&optional sudo dir-name tag-relative)
+(defun my/create-TAGS (dir-name tag-relative tags-filename &optional sudo process-name)
   "Create a TAGS file with absolute or relative paths recorded inside. With a
-prefix argument SUDO, run the command with sudo privilege. With a prefix
-argument TAG-RELATIVE, create the TAGS file with relative paths recorded inside.
+prefix argument SUDO, run the command with sudo privilege.
 
 When called interactively, prompt the user for the directory name to create the
 TAGS file. If no input is given, use the current working directory.
 
-The `ctags` command is executed with the `--tag-relative` option set to `yes` if
-the `tag-relative` prefix argument is set to 'y', or 'never' otherwise. The `*`
-wildcard is included in the `ctags` command to create TAGS for all files in the
-directory.
+The `ctags` command is executed with the `--tag-relative` option
+set to `yes` if the `tag-relative` is set to 'y', or 'n'
+indicates 'never'. The `*` wildcard is included in the `ctags`
+command to create TAGS for all files in the directory.
 
 Example usage:
   - To create a TAGS (with absolute paths) file for the current directory:
@@ -441,7 +440,15 @@ Version: 2023-03-17
 Updated: 2023-08-17"
 
   ;; This function is improved by ChatGPT and Claude :)
-  (interactive "P\nDEnter the directory to create TAGS file: \nMCreate TAGS file with relative paths (y/n) (Note: omit input indicates absolute paths): ")
+  (interactive
+   (let ((tag-relative (completing-read "Create TAGS file with relative paths? (y/n)\n(Note: omit input indicates absolute paths) "
+			    '("y" "n"))))
+     (list (read-directory-name "Enter the directory to create TAGS file: ")
+	   tag-relative
+	   (read-string "Enter the desired tags filename: "
+			(if (string-equal tag-relative "y") "TAGS" "TAGS_ABS-PATH"))
+	   current-prefix-arg ; if universal argument (sudo)
+	   nil)))
 
   (let* ((target-dir (if (string= "" dir-name)
 			 default-directory
@@ -453,11 +460,7 @@ Updated: 2023-08-17"
 
 	 ;; if the tags file has relative path then make tags-path nil
 	 ;; if absolute path, then prompt for entering the path
-	 (tags-path (if (string= tag-relative 'y)
-			nil
-		      (read-file-name
-		       "Enter the path to the tags file (with absolute path:) "
-		       nil nil nil (expand-file-name "TAGS_ABS-PATH" target-dir))))
+	 (tags-path (expand-file-name tags-filename target-dir))
 
 	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s -f %s *"
 			    (if (eq system-type 'windows-nt)
@@ -472,14 +475,14 @@ Updated: 2023-08-17"
 			    ;; evaluate the expression (expand-file-name "tags"
 			    ;; target-dir) and use the result of that evaluation
 			    ;; as the final result.
-			    (or tags-path (expand-file-name "TAGS" target-dir))))
+			    tags-path))
          (command (if sudo
 		       (concat "sudo sh -c '"
 			       ctags-cmd
 			       "'")
 		     ctags-cmd)))
 
-    (start-process-shell-command "create TAGS" nil command)))
+    (start-process-shell-command (or process-name "create TAGS") nil command)))
 
 (defun my/find-tags-file ()
   "recursively searches each parent directory for a file named
