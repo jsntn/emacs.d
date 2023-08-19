@@ -448,7 +448,7 @@ Updated: 2023-08-17"
 	   tag-relative
 	   (read-string "Enter the desired tags filename: "
 			(if (string-equal tag-relative "y") "TAGS" "TAGS_ABS"))
-       nil	
+       nil
 	   current-prefix-arg ; if universal argument (sudo)
 	   nil)))
 
@@ -459,7 +459,7 @@ Updated: 2023-08-17"
 	 (tag-relative-value (if (string-equal tag-relative 'y) "yes" "never"))
 	 ;; yes   - relative symbols
 	 ;; never - absolute symbols
-	 
+
 	 (append-or-not (if append "-A" ""))
 
 	 (tags-path (expand-file-name tags-filename target-dir))
@@ -469,7 +469,7 @@ Updated: 2023-08-17"
 				;; fix changing dir across different drives issue on Windows
 				(concat "/d" target-dir)
 			      target-dir)
-			    (expand-file-name ".ctags" user-emacs-directory)			    
+			    (expand-file-name ".ctags" user-emacs-directory)
 			    tag-relative-value
 			    append-or-not
 
