@@ -460,7 +460,7 @@ Updated: 2023-08-17"
 	 ;; yes   - relative symbols
 	 ;; never - absolute symbols
 
-	 (append-or-not (if append "-A" ""))
+	 (append-or-not (if append "--append=yes" ""))
 
 	 (tags-path (expand-file-name tags-filename target-dir))
 
