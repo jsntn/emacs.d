@@ -485,7 +485,8 @@ Updated: 2023-08-17"
 			       "'")
 		     ctags-cmd)))
 
-    (start-process-shell-command (or process-name "create TAGS") nil command)))
+    (start-process-shell-command (or process-name "create TAGS") nil command)
+    (message "Creating TAGS...")))
 
 (defun my/find-tags-file ()
   "recursively searches each parent directory for a file named
