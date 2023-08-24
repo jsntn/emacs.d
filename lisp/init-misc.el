@@ -488,38 +488,57 @@ Updated: 2023-08-17"
     (start-process-shell-command (or process-name "create TAGS") nil command)
     (message "Creating TAGS...")))
 
-;; TODO: to be tested...
-(defvar my/tags-file-name "TAGS"
+(defvar my/default-tags-file-name "TAGS"
   "The default name of the tags file to search for.")
 
-(defun my/find-tags-file (&optional ask (tags-file-name my/tags-file-name))
-  "Recursively searches each parent directory for a file named
-'TAGS' and returns the path to that file or nil if a tags file is
-not found. Returns nil if the buffer is not visiting a file.
+(defun my/find-tags-file (&optional ask tags-file-name)
+  "Recursively search for a 'TAGS' file in parent directories and return its path.
 
 Optional arguments:
-  ASK (default nil) - If t, prompt for entering the tags file name.
-  TAGS-FILE-NAME (default 'TAGS') - The name of the tags file to search for.
-  
+  ASK (default nil): If t, prompt for entering a custom tags file
+  name.
+  TAGS-FILE-NAME (default 'TAGS'): The name of the tags file to
+  search for.
+
+This function searches for a 'TAGS' file by recursively examining
+parent directories starting from the directory of the currently
+visited file (if any). If a 'TAGS' file is found, its full path
+is returned. If no 'TAGS' file is found, or if the current buffer
+is not visiting a file, it returns nil.
+
+Usage examples:
+  (my/find-tags-file)                  ; Search for default 'TAGS' file in parent
+                                         directories
+  (my/find-tags-file t)                ; Prompt for a custom tags file name
+  (my/find-tags-file nil \"TAGS_ABS\") ; Search for a 'TAGS_ABS' file
+  (my/find-tags-file nil \"TAGS\")     ; Search for the default 'TAGS' file
+
 Version: 2023-08-23"
   (progn
-    (defun find-tags-file-r (path tags-file)
+    (unless tags-file-name
+      (setq tags-file-name my/default-tags-file-name))
+    (defun find-tags-file-r (path tags-file prev-parent)
       "Find the tags file from the parent directories"
       (let* ((parent (file-name-directory path))
-             (possible-tags-file (concat parent tags-file)))
-        (cond
-         ((file-exists-p possible-tags-file)
-          (throw 'found-it possible-tags-file))
-         ((string= (concat "/" tags-file) possible-tags-file)
-          (error "No tags file found"))
-         (t (find-tags-file-r (directory-file-name parent) tags-file)))))
+	     (possible-tags-file (concat parent tags-file)))
+	(message "Found tags file: %s" possible-tags-file)
+	(cond
+	 ((file-exists-p possible-tags-file)
+	  (throw 'found-it possible-tags-file)
+	  (message "Found tags file: %s" possible-tags-file))
+	 ((equal parent prev-parent)
+	  (error "No tags file found")) ; stop if no progress is made
+	 (t (message "Checking %s" possible-tags-file)
+	    (find-tags-file-r (directory-file-name parent) tags-file parent)))))
 
     (if (buffer-file-name)
-        (catch 'found-it
-          (if ask
-              (let ((tags-file-name-input (read-from-minibuffer "Enter tags file name: " tags-file-name)))
-                (find-tags-file-r (buffer-file-name) tags-file-name-input))
-            (find-tags-file-r (buffer-file-name) tags-file-name)))
+	(catch 'found-it
+	  (if ask
+	      (let ((tags-file-name-input
+		     (read-from-minibuffer
+		      "Enter tags file name: " tags-file-name)))
+		(find-tags-file-r (buffer-file-name) tags-file-name-input nil))
+	    (find-tags-file-r (buffer-file-name) tags-file-name nil)))
       (error "Buffer is not visiting a file"))))
 
 (defun my/file ()
@@ -546,7 +565,7 @@ Updated: 2023-08-20"
 	  (setq my-tags-file tags-file)
 	(progn (my/file)
 	       (setq my-tags-file my-file-value)))
-    (setq my-tags-file (my/find-tags-file)))
+    (setq my-tags-file (my/find-tags-file t)))
   )
 
 (defun my-set-extra-tags-files (my-tags-table-list)
