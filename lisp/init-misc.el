@@ -489,34 +489,37 @@ Updated: 2023-08-17"
     (message "Creating TAGS...")))
 
 ;; TODO: to be tested...
-(defun my/find-tags-file (&optional ask (tag-file-name "TAGS"))
+(defvar my/tags-file-name "TAGS"
+  "The default name of the tags file to search for.")
+
+(defun my/find-tags-file (&optional ask (tags-file-name my/tags-file-name))
   "Recursively searches each parent directory for a file named
 'TAGS' and returns the path to that file or nil if a tags file is
 not found. Returns nil if the buffer is not visiting a file.
 
 Optional arguments:
   ASK (default nil) - If t, prompt for entering the tags file name.
-  TAG-FILE-NAME (default 'TAGS') - The name of the tags file to search for.
+  TAGS-FILE-NAME (default 'TAGS') - The name of the tags file to search for.
   
 Version: 2023-08-23"
   (progn
-    (defun find-tags-file-r (path tag-file)
+    (defun find-tags-file-r (path tags-file)
       "Find the tags file from the parent directories"
       (let* ((parent (file-name-directory path))
-             (possible-tags-file (concat parent tag-file)))
+             (possible-tags-file (concat parent tags-file)))
         (cond
          ((file-exists-p possible-tags-file)
           (throw 'found-it possible-tags-file))
-         ((string= (concat "/" tag-file) possible-tags-file)
+         ((string= (concat "/" tags-file) possible-tags-file)
           (error "No tags file found"))
-         (t (find-tags-file-r (directory-file-name parent) tag-file)))))
+         (t (find-tags-file-r (directory-file-name parent) tags-file)))))
 
     (if (buffer-file-name)
         (catch 'found-it
           (if ask
-              (let ((tag-file-name-input (read-from-minibuffer "Enter tags file name: " tag-file-name)))
-                (find-tags-file-r (buffer-file-name) tag-file-name-input))
-            (find-tags-file-r (buffer-file-name) tag-file-name)))
+              (let ((tags-file-name-input (read-from-minibuffer "Enter tags file name: " tags-file-name)))
+                (find-tags-file-r (buffer-file-name) tags-file-name-input))
+            (find-tags-file-r (buffer-file-name) tags-file-name)))
       (error "Buffer is not visiting a file"))))
 
 (defun my/file ()
