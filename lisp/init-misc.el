@@ -464,6 +464,8 @@ Updated: 2023-08-17"
 
 	 (tags-path (expand-file-name tags-filename target-dir))
 
+	 (command-process-name (or process-name "create TAGS"))
+
 	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s %s -f %s *"
 			    (if (eq system-type 'windows-nt)
 				;; fix changing dir across different drives issue on Windows
@@ -485,8 +487,12 @@ Updated: 2023-08-17"
 			       "'")
 		     ctags-cmd)))
 
-    (start-process-shell-command (or process-name "create TAGS") nil command)
-    (message "Creating TAGS...")))
+    (if (get-process command-process-name)
+	(message "Process (%s) already running..." command-process-name)
+      (progn
+	(start-process-shell-command command-process-name nil command)
+	(message "Creating TAGS...")))
+    ))
 
 (defvar my/default-tags-file-name "TAGS"
   "The default name of the tags file to search for.")
