@@ -3,6 +3,8 @@
 ;;; Code:
 
 
+;; the my/xxx utils
+
 (defun my/random-org-item ()
   "Go to a random org heading from all org files in `org-directory`."
   (interactive)
@@ -130,6 +132,32 @@
   (goto-char (point-min))
   (while (search-forward "\r" nil t) (replace-match "")))
 
+
+(defun my/generate-current-time-string (&optional universal-arg silent)
+  "Generate a string representing the current date and time in specific format.
+(e.g., 230725192607 for July 25th, 2023 at 19:26:07).
+
+When UNIVERSAL-ARG (C-u) is provided, copy the time string to the kill ring.
+
+Usage:
+M-x my/generate-current-time-string
+C-u M-x my/generate-current-time-string
+
+Version 2023-07-25"
+  (interactive "P")
+  (let* ((now (current-time))
+	 (time-string (concat (substring (format-time-string "%Y" now) -2)
+			      (format-time-string "%m%d%H%M%S" now))))
+    (unless silent
+      (insert time-string))
+    (when universal-arg
+      (kill-new time-string)
+      (message "%s is copied." time-string))
+    (message "Current time string generated: %s" time-string)
+    time-string))
+
+
+ 
 
 (provide 'init-utils)
 
