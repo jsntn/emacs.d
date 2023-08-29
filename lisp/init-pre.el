@@ -65,6 +65,24 @@ Press ENTER to continue." font-name))
 
 
 
+(defun my-async-shell-command-with-unique-buffer-name (command)
+  "Execute an asynchronous shell command and display its output in a unique buffer.
+
+This function prompts the user for a shell command and then executes it
+asynchronously. The output of the command is displayed in a buffer with a
+unique name, incorporating the provided command and a timestamp. The buffer
+name is of the form '*Async Command - COMMAND - TIMESTAMP*', where COMMAND is
+the entered shell command and TIMESTAMP is the current date and time in the
+format 'YYYY-MM-DD HH:MM:SS:NNN'.
+
+Version: 2023-08-16"
+  (interactive "sShell command: ")
+  (let ((buffer-name
+         (concat "*Async Command - " command " - "
+                 (format-time-string "%Y-%m-%d %H:%M:%S:%3N") "*")))
+    (async-shell-command command buffer-name)))
+
+
 
 (provide 'init-pre)
 
