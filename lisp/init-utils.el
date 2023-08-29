@@ -3,7 +3,7 @@
 ;;; Code:
 
 
-;; the my/xxx utils
+;; the my/xxx utils config - yet to be placed in dedicated init-xxx.el files
 
 (defun my/random-org-item ()
   "Go to a random org heading from all org files in `org-directory`."
