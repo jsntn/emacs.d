@@ -39,6 +39,7 @@
 (require 'init-portable) ; portable Emacs settings
 (require 'init-load-path) ; load-path settings
 (require 'init-pre) ; pre-startup settings
+(require 'init-utils) ; utils configuration
 (require 'local-var nil 'noerror) ; allow users to provide an optional
 				  ; "local-var" containing personal variables
 
@@ -114,7 +115,7 @@
 (require 'init-sessions) ; session settings
 (require 'init-shell) ; Shell settings
 (require 'init-spelling) ; spelling settings
-(require 'init-utils) ; utils configuration
+
 (require 'init-yaml) ; YAML settings
 
 (require 'init-misc) ; miscellaneous settings
