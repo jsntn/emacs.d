@@ -3,7 +3,7 @@
 ;;; Code:
 
 
-;; pre settings: needed by other config
+;; pre settings: needed by other configurations
 
 ;; { -- START --
 ;; check Linux distribution

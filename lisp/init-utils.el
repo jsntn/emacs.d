@@ -184,7 +184,7 @@ Version 2023-07-25"
           (push (match-string 1) config-functions))))
     (let* ((command (nth (random (length config-functions)) config-functions)))
       (describe-function (intern (concat "my/" command))))))
- 
+
 
 
 ;; {{ START: my/open-link-at-point-as-gpg
@@ -497,7 +497,7 @@ will be killed."
 	    (message "Killed non-existing/unreadable file buffer: %s" filename))))))
   (message "Finished reverting buffers containing unmodified files."))
 
- 
+
 
 (provide 'init-utils)
 
