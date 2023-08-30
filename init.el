@@ -39,8 +39,11 @@
 (require 'init-portable) ; portable Emacs settings
 (require 'init-load-path) ; load-path settings
 (require 'init-pre) ; pre-startup settings
+
 (require 'init-messages) ; *Messages* buffer settings
 (require 'init-utils) ; utils configuration
+(require 'init-timer-utils) ; timer utils
+
 (require 'local-var nil 'noerror) ; allow users to provide an optional
 				  ; "local-var" containing personal variables
 
@@ -110,6 +113,8 @@
 (require 'init-display) ; display settings
 (require 'init-encryption) ; encryption settings
 (require 'init-font) ; font settings
+(require 'init-gpg) ; GPG settings
+
 (require 'init-ibuffer) ; IBuffer mode settings
 
 (require 'init-org) ; Org-mode settings
@@ -119,6 +124,7 @@
 (require 'init-shell) ; Shell settings
 (require 'init-spelling) ; spelling settings
 
+(require 'init-uuid) ; UUID settings
 (require 'init-yaml) ; YAML settings
 
 (require 'init-misc) ; miscellaneous settings
