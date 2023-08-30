@@ -306,6 +306,22 @@ absolute path only."  my-tags-table-list)
   )
 ;; END: config for counsel-etags and company-ctags }
 
+(defun my/sync-tags-table-list ()
+  "sync `tags-table-list' with `my-tags-table-list'.
+
+Read more,
+https://www.gnu.org/software/emacs/manual/html_node/emacs/Select-Tags-Table.html
+
+Some commands for checking the values:
+  (symbol-value 'tags-table-list)
+  (symbol-value 'tags-file-name)
+
+Version: 2023-08-30"
+  (interactive)
+  (setq tags-table-list my-tags-table-list)
+  (message "tags-table-list is set to %s" tags-table-list))
+
+
 
 (provide 'init-misc)
 
