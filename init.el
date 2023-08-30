@@ -39,6 +39,7 @@
 (require 'init-portable) ; portable Emacs settings
 (require 'init-load-path) ; load-path settings
 (require 'init-pre) ; pre-startup settings
+(require 'init-messages) ; *Messages* buffer settings
 (require 'init-utils) ; utils configuration
 (require 'local-var nil 'noerror) ; allow users to provide an optional
 				  ; "local-var" containing personal variables
@@ -105,10 +106,12 @@
 ;; require settings
 ;; =============================================================================
 
+(require 'init-dict) ; dict settings
 (require 'init-display) ; display settings
 (require 'init-encryption) ; encryption settings
 (require 'init-font) ; font settings
 (require 'init-ibuffer) ; IBuffer mode settings
+
 (require 'init-org) ; Org-mode settings
 (require 'init-plantuml) ; PlantUML settings
 (require 'init-python) ; Python settings
