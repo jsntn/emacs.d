@@ -125,6 +125,7 @@
 (require 'init-spelling) ; spelling settings
 
 (require 'init-uuid) ; UUID settings
+(require 'init-veracrypt) ; VeraCrypt/TrueCrypt settings
 (require 'init-yaml) ; YAML settings
 
 (require 'init-misc) ; miscellaneous settings
