@@ -164,24 +164,39 @@ Version: 2023-08-19"
 Version: 2023-09-04"
   ;; Define the task name format
   (let ((task-name-format
-	 (format "%s_%%02d-%%02d" (symbol-name base-task-function))))
-    ;; Loop through hours and minutes to schedule tasks
-    (dotimes (hour-counter (- end-hour start-hour))
-      (let ((current-hour (+ start-hour hour-counter)))
-        (dolist (minute specific-minutes)
-          ;; Construct the full task name with hour and minute
-          (let ((task-name (format task-name-format current-hour minute)))
-            ;; Cancel existing timer with the same task name
-            (my-cancel-existing-timer (intern task-name))
-            ;; Define the new task function using defalias
-            (defalias (intern task-name)
-              `(lambda ()
-                 ,(format "Scheduled task: %s" (symbol-name base-task-function))
-                 (funcall ',base-task-function)))
-            ;; Schedule the new task
-            (run-at-time (format "%02d:%02d" current-hour minute)
-                         (* 60 60 24)
-                         (intern task-name))))))))
+         (format "%s_%%02d-%%02d" (symbol-name base-task-function))))
+    ;; Get the current time in minutes since midnight
+    (let* ((current-time (current-time))
+           (current-hour (nth 2 current-time))
+           (current-minute (nth 1 current-time))
+           (current-time-in-minutes (+ (* current-hour 60) current-minute)))
+      ;; Loop through hours and minutes to schedule tasks
+      (dotimes (hour-counter (- end-hour start-hour))
+        (let ((current-hour (+ start-hour hour-counter)))
+          (dolist (minute specific-minutes)
+            ;; Calculate the scheduled task time in minutes since midnight
+            (let ((scheduled-time-in-minutes (+ (* current-hour 60) minute)))
+              ;; Construct the full task name with hour and minute
+              (let ((task-name (format task-name-format current-hour minute)))
+                ;; Cancel existing timer with the same task name
+                (my-cancel-existing-timer (intern task-name))
+                ;; Check if the scheduled time is ahead of the current time
+                (if (<= scheduled-time-in-minutes current-time-in-minutes)
+                    ;; If the scheduled time is before or equal to the current time, set my-first-emacs-startup to t
+                    (setq passed-time t)
+                  ;; Otherwise, set my-first-emacs-startup to nil
+                  (setq passed-time nil))
+                ;; Define the new task function using defalias
+                (defalias (intern task-name)
+                  `(lambda ()
+                     (unless passed-time
+                       ,(format "Scheduled task: %s" (symbol-name base-task-function))
+                       (funcall ',base-task-function))
+                       (setq passed-time nil)))
+                ;; Schedule the new task
+                (run-at-time (format "%02d:%02d" current-hour minute)
+                             (* 60 60 24)
+                             (intern task-name)))))))))))
 
 
 
