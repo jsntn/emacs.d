@@ -136,6 +136,58 @@ Version: 2023-08-19"
 		     task-function)))
 
 
+(defun my-schedule-task-at-specific-min-between-hour
+    (start-hour end-hour specific-minutes base-task-function)
+  "Schedule tasks to run at specific minutes between two hours.
+
+  This function schedules tasks with different specific minutes between the given
+  start and end hours. The task names will have the format 'base-task-function_hour-min'.
+
+  Args:
+      start-hour (integer): The starting hour (0 to 23) of the time range.
+      end-hour (integer): The ending hour (0 to 23) of the time range.
+      specific-minutes (list): A list of specific minutes (0 to 59) at which the tasks should run.
+      base-task-function (function): The base function to be executed when the tasks are scheduled.
+
+  Returns:
+      None: The tasks are scheduled to run using the 'run-at-time' function.
+
+  Note:
+      The 'run-at-time' function is used to schedule the tasks, and it may not guarantee
+      exact timing due to various factors such as system load and other scheduled tasks.
+
+      Example:
+      (my-schedule-task-at-specific-min-between-hour 10 17 '(0 15 30 45) 'my-task-function)
+      This will schedule tasks to execute 'my-task-function' at minutes 0, 15, 30, and 45
+      between 10:00 AM and 5:00 PM.
+
+Version: 2023-09-04"
+  ;; Define the task name format
+  (let ((task-name-format
+	 (format "%s_%%02d-%%02d" (symbol-name base-task-function))))
+    ;; Loop through hours and minutes to schedule tasks
+    (dotimes (hour-counter (- end-hour start-hour))
+      (let ((current-hour (+ start-hour hour-counter)))
+        (dolist (minute specific-minutes)
+          ;; Construct the full task name with hour and minute
+          (let ((task-name (format task-name-format current-hour minute)))
+            ;; Cancel existing timer with the same task name
+            (my-cancel-existing-timer (intern task-name))
+            ;; Define the new task function using defalias
+            (defalias (intern task-name)
+              `(lambda ()
+                 ,(format "Scheduled task: %s" (symbol-name base-task-function))
+                 (funcall ',base-task-function)))
+            ;; Schedule the new task
+            (run-at-time (format "%02d:%02d" current-hour minute)
+                         (* 60 60 24)
+                         (intern task-name))))))))
+
+
+
+
+
+
 
 
 
