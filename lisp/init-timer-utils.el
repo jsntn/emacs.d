@@ -13,6 +13,43 @@ Version: 2023-08-15"
       (cancel-timer timer)
       (setq timer-list (delq timer timer-list)))))
 
+
+(defun my-calculate-tomorrow-date ()
+  "Calculate tomorrow's date and return it as a list of (day month year).
+
+Version: 2023-09-05"
+  (interactive)
+  (let* ((current-time (decode-time (current-time)))
+	 (current-day (nth 3 current-time))
+	 (current-month (nth 4 current-time))
+	 (current-year (nth 5 current-time))
+	 (tomorrow-day (1+ current-day))
+	 (tomorrow-month (if (> tomorrow-day
+		 (calendar-last-day-of-month current-month current-year))
+			     (1+ current-month)
+			   current-month))
+	 (tomorrow-year (if (> tomorrow-month 12)
+			    (1+ current-year)
+			  current-year)))
+    (setq tomorrow-day (if (> tomorrow-day
+			      (calendar-last-day-of-month current-month current-year))
+			   1
+			 tomorrow-day))
+    ;; (message "Tomorrow's date is: %d-%02d-%02d" tomorrow-year tomorrow-month tomorrow-day)
+    (list tomorrow-day tomorrow-month tomorrow-year)))
+
+(defun my-current-time-in-minutes ()
+  "Return the current time in minutes since midnight.
+
+Version: 2023-09-05"
+  (let* ((current-time (decode-time (current-time)))
+	 (current-hour (nth 2 current-time))
+	 (current-minute (nth 1 current-time))
+	 (current-time-in-minutes (+ (* current-hour 60) current-minute)))
+    current-time-in-minutes))
+
+
+
 (defun my-schedule-task-every-day (hour minute task-function)
   "Schedule a task to run every day at a specific time.
 
@@ -38,10 +75,23 @@ Version: 2023-08-15"
 Version: 2023-08-15"
   (my-cancel-existing-timer task-function)
 
-  (setq task-function-timer
-        (run-at-time (format "%02d:%02d" hour minute)
-                     (* 60 60 24)
-                     task-function)))
+  (let* ((current-time-in-minutes (my-current-time-in-minutes))
+	 (scheduled-time-in-minutes (+ (* hour 60) minute)))
+    (if (<= scheduled-time-in-minutes current-time-in-minutes)
+	;; If the scheduled time is before or equal to the current time, set schedule for tomorrow
+	(let* ((tomorrow-date (my-calculate-tomorrow-date))
+	       (tomorrow-time
+		(encode-time 0 minute hour
+			     (car tomorrow-date)
+			     (cadr tomorrow-date)
+			     (caddr tomorrow-date))))
+	  (run-at-time tomorrow-time
+		       (* 60 60 24)
+		       (intern task-name)))
+      (setq task-function-timer
+	    (run-at-time (format "%02d:%02d" hour minute)
+			 (* 60 60 24)
+			 task-function)))))
 
 
 
@@ -138,29 +188,6 @@ Version: 2023-08-19"
 
 
 
-(defun my-calculate-tomorrow-date ()
-  "Calculate tomorrow's date and return it as a list of (day month year).
-
-Version: 2023-09-05"
-  (interactive)
-  (let* ((current-time (decode-time (current-time)))
-	 (current-day (nth 3 current-time))
-	 (current-month (nth 4 current-time))
-	 (current-year (nth 5 current-time))
-	 (tomorrow-day (1+ current-day))
-	 (tomorrow-month (if (> tomorrow-day
-		 (calendar-last-day-of-month current-month current-year))
-			     (1+ current-month)
-			   current-month))
-	 (tomorrow-year (if (> tomorrow-month 12)
-			    (1+ current-year)
-			  current-year)))
-    (setq tomorrow-day (if (> tomorrow-day
-			      (calendar-last-day-of-month current-month current-year))
-			   1
-			 tomorrow-day))
-    ;; (message "Tomorrow's date is: %d-%02d-%02d" tomorrow-year tomorrow-month tomorrow-day)
-    (list tomorrow-day tomorrow-month tomorrow-year)))
 
 
 (defun my-schedule-task-at-specific-min-between-hour
