@@ -182,9 +182,9 @@ Version: 2023-09-04"
                 (my-cancel-existing-timer (intern task-name))
                 ;; Check if the scheduled time is ahead of the current time
                 (if (<= scheduled-time-in-minutes current-time-in-minutes)
-                    ;; If the scheduled time is before or equal to the current time, set my-first-emacs-startup to t
+                    ;; If the scheduled time is before or equal to the current time, set passed-time to t
                     (setq passed-time t)
-                  ;; Otherwise, set my-first-emacs-startup to nil
+                  ;; Otherwise, set passed-time to nil
                   (setq passed-time nil))
                 ;; Define the new task function using defalias
                 (defalias (intern task-name)
