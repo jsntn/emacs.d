@@ -87,7 +87,7 @@ Version: 2023-08-15"
 			     (caddr tomorrow-date))))
 	  (run-at-time tomorrow-time
 		       (* 60 60 24)
-		       (intern task-name)))
+		       (intern task-function)))
       (setq task-function-timer
 	    (run-at-time (format "%02d:%02d" hour minute)
 			 (* 60 60 24)
