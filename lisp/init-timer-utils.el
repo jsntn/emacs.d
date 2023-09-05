@@ -136,6 +136,33 @@ Version: 2023-08-19"
 		     task-function)))
 
 
+
+
+(defun my-calculate-tomorrow-date ()
+  "Calculate tomorrow's date and return it as a list of (day month year).
+
+Version: 2023-09-05"
+  (interactive)
+  (let* ((current-time (decode-time (current-time)))
+	 (current-day (nth 3 current-time))
+	 (current-month (nth 4 current-time))
+	 (current-year (nth 5 current-time))
+	 (tomorrow-day (1+ current-day))
+	 (tomorrow-month (if (> tomorrow-day
+		 (calendar-last-day-of-month current-month current-year))
+			     (1+ current-month)
+			   current-month))
+	 (tomorrow-year (if (> tomorrow-month 12)
+			    (1+ current-year)
+			  current-year)))
+    (setq tomorrow-day (if (> tomorrow-day
+			      (calendar-last-day-of-month current-month current-year))
+			   1
+			 tomorrow-day))
+    ;; (message "Tomorrow's date is: %d-%02d-%02d" tomorrow-year tomorrow-month tomorrow-day)
+    (list tomorrow-day tomorrow-month tomorrow-year)))
+
+
 (defun my-schedule-task-at-specific-min-between-hour
     (start-hour end-hour specific-minutes base-task-function)
   "Schedule tasks to run at specific minutes between two hours.
@@ -161,12 +188,13 @@ Version: 2023-08-19"
       This will schedule tasks to execute 'my-task-function' at minutes 0, 15, 30, and 45
       between 10:00 AM and 5:00 PM.
 
-Version: 2023-09-04"
+Version: 2023-09-04
+Updated: 2023-09-05"
   ;; Define the task name format
   (let ((task-name-format
 	 (format "%s_%%02d-%%02d" (symbol-name base-task-function))))
     ;; Get the current time in minutes since midnight
-    (let* ((current-time (current-time))
+    (let* ((current-time (decode-time (current-time)))
 	   (current-hour (nth 2 current-time))
 	   (current-minute (nth 1 current-time))
 	   (current-time-in-minutes (+ (* current-hour 60) current-minute)))
@@ -181,22 +209,27 @@ Version: 2023-09-04"
 		;; Cancel existing timer with the same task name
 		(my-cancel-existing-timer (intern task-name))
 		;; Check if the scheduled time is ahead of the current time
-		(if (<= scheduled-time-in-minutes current-time-in-minutes)
-		    ;; If the scheduled time is before or equal to the current time, set passed-time to t
-		    (setq passed-time t)
-		  ;; Otherwise, set passed-time to nil
-		  (setq passed-time nil))
 		;; Define the new task function using defalias
 		(defalias (intern task-name)
 		  `(lambda ()
-		     (unless passed-time
-		       ,(format "Scheduled task: %s" (symbol-name base-task-function))
-		       (funcall ',base-task-function))
-		     (setq passed-time nil)))
-		;; Schedule the new task
-		(run-at-time (format "%02d:%02d" current-hour minute)
-			     (* 60 60 24)
-			     (intern task-name))))))))))
+		     ,(format "Scheduled task: %s" (symbol-name base-task-function))
+		     (funcall ',base-task-function)))
+		(if (<= scheduled-time-in-minutes current-time-in-minutes)
+		    ;; If the scheduled time is before or equal to the current time, set schedule for tomorrow
+		    (let* ((tomorrow-date (my-calculate-tomorrow-date))
+			   (tomorrow-time
+			    (encode-time 0 minute current-hour
+					 (car tomorrow-date)
+					 (cadr tomorrow-date)
+					 (caddr tomorrow-date))))
+		      (run-at-time tomorrow-time
+				   (* 60 60 24)
+				   (intern task-name)))
+		  ;; Schedule the new task
+		  (run-at-time (format "%02d:%02d" current-hour minute)
+			       (* 60 60 24)
+			       (intern task-name)))))))))))
+
 
 
 
