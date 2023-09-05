@@ -221,10 +221,7 @@ Updated: 2023-09-05"
   (let ((task-name-format
 	 (format "%s_%%02d-%%02d" (symbol-name base-task-function))))
     ;; Get the current time in minutes since midnight
-    (let* ((current-time (decode-time (current-time)))
-	   (current-hour (nth 2 current-time))
-	   (current-minute (nth 1 current-time))
-	   (current-time-in-minutes (+ (* current-hour 60) current-minute)))
+    (let* ((current-time-in-minutes (my-current-time-in-minutes)))
       ;; Loop through hours and minutes to schedule tasks
       (dotimes (hour-counter (- end-hour start-hour))
 	(let ((current-hour (+ start-hour hour-counter)))
