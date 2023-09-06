@@ -26,6 +26,8 @@
 
 (setq org-log-done 'note) ; record a note along with the timestamp
 
+(setq org-log-into-drawer t) ; log into LOGBOOK drawer
+
 (setq org-src-fontify-natively t) ; highlight the code in Org-mode
 
 ;; { START: temp WA to fix bug #52587
