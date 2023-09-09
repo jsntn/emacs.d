@@ -34,6 +34,7 @@
 ;; 2023/08/29 enable this and this needs further investigation...
 ;; FIXME: to be fixed (GitHub Actions Pipeline). See error below,
 ;; Debugger entered--Lisp error: (void-function set-fontset-font)
+(if (functionp 'set-fontset-font)
 (progn
   ;; set font for emoji (if before emacs 28, should come after setting
   ;; symbols. emacs 28 now has 'emoji . before, emoji is part of 'symbol)
@@ -55,6 +56,7 @@
     ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
     ((member "Symbola" (font-family-list)) "Symbola"))) ; http://xahlee.info/comp/unicode_font_download.html
   )
+(message "set-fontset-font is not available in current %s" emacs-version))
 
 (when (display-graphic-p)
   (my-check-for-font "Symbola" "Symbola font is not installed, however, it is recommended to install for proper emoji display. Press ENTER to continue."))
