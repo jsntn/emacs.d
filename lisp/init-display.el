@@ -35,28 +35,28 @@
 ;; FIXME: to be fixed (GitHub Actions Pipeline). See error below,
 ;; Debugger entered--Lisp error: (void-function set-fontset-font)
 (if (functionp 'set-fontset-font)
-(progn
-  ;; set font for emoji (if before emacs 28, should come after setting
-  ;; symbols. emacs 28 now has 'emoji . before, emoji is part of 'symbol)
-  ;; http://xahlee.info/emacs/emacs/emacs_set_font_emoji.html
-  (set-fontset-font
-   t
-   (if (version< emacs-version "28.1")
-       '(#x1f300 . #x1fad0)
-     'emoji
-     )
-   (cond
-    ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
-    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
-    ;; 2022-10-31 NotoColorEmoji uses the CBDT/CBLC color font format, which is
-    ;; supported by Android and Chrome/Chromium OS. Windows supports it starting
-    ;; with Windows 10 Anniversary Update in Chrome and Edge.
-    ;; Via https://github.com/googlefonts/noto-emoji/blob/f826707b28355f6cd1593f504427ca2b1f6c4c19/README.md#using-notocoloremoji
-    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
-    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-    ((member "Symbola" (font-family-list)) "Symbola"))) ; http://xahlee.info/comp/unicode_font_download.html
-  )
-(message "set-fontset-font is not available in current %s" emacs-version))
+    (progn
+      ;; set font for emoji (if before emacs 28, should come after setting
+      ;; symbols. emacs 28 now has 'emoji . before, emoji is part of 'symbol)
+      ;; http://xahlee.info/emacs/emacs/emacs_set_font_emoji.html
+      (set-fontset-font
+       t
+       (if (version< emacs-version "28.1")
+	   '(#x1f300 . #x1fad0)
+	 'emoji
+	 )
+       (cond
+	((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
+	((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+	;; 2022-10-31 NotoColorEmoji uses the CBDT/CBLC color font format, which is
+	;; supported by Android and Chrome/Chromium OS. Windows supports it starting
+	;; with Windows 10 Anniversary Update in Chrome and Edge.
+	;; Via https://github.com/googlefonts/noto-emoji/blob/f826707b28355f6cd1593f504427ca2b1f6c4c19/README.md#using-notocoloremoji
+	((member "Noto Emoji" (font-family-list)) "Noto Emoji")
+	((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
+	((member "Symbola" (font-family-list)) "Symbola"))) ; http://xahlee.info/comp/unicode_font_download.html
+      )
+  (message "set-fontset-font is not available in current %s" emacs-version))
 
 (when (display-graphic-p)
   (my-check-for-font "Symbola" "Symbola font is not installed, however, it is recommended to install for proper emoji display. Press ENTER to continue."))
