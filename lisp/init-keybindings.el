@@ -58,7 +58,7 @@
  :states '(normal visual)
  "ff" 'evil-scroll-page-down ; <<page down>>
  "bb" 'evil-scroll-page-up ; <<page-up>>
- "be" 'ibuffer
+ "br" 'ibuffer
  "SPC" 'my/toggle-hideshow-block
  "C-]" 'counsel-etags-find-tag-at-point ; <<ftap>>
  ;; ...
