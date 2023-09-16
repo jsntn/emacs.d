@@ -498,6 +498,21 @@ will be killed."
   (message "Finished reverting buffers containing unmodified files."))
 
 
+(defun my/copy-current-buffer-to-another-buffer (target-buffer)
+  "Copy the content of the current buffer to another buffer.
+If the target buffer does not exist, it will be created.
+If the target buffer exists, the content will be appended.
+
+Version: 2023-08-31"
+  (interactive "BTarget Buffer: ")
+  (let ((source-buffer (current-buffer))
+        (existing-buffer (get-buffer-create target-buffer)))
+    (with-current-buffer existing-buffer
+      (goto-char (point-max)) ; move to the end of the existing buffer
+      (insert-buffer-substring source-buffer)
+      (pop-to-buffer existing-buffer)))) 
+
+
 
 (provide 'init-utils)
 
