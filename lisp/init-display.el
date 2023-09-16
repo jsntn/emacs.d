@@ -3,6 +3,26 @@
 ;;; Code:
 
 
+
+;; { -- START: display time in mode line --
+;; reference:
+;; ... https://www.reddit.com/r/emacs/comments/6ftm3x/share_your_modeline_customization/dil4x5z/?utm_source=reddit&utm_medium=web2x&context=3
+;; ... http://emacs.1067599.n8.nabble.com/Week-number-td89988.html
+(setq display-time-string-forms
+      '((propertize
+	 ;; %W and %V
+	 ;; http://emacs.1067599.n8.nabble.com/Week-number-tp89988p89991.html
+	 (format-time-string "[%V] %H:%M:%S" now) ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Time-Parsing.html
+	 ;; 'face 'modeline-display-time
+	 'help-echo (format-time-string "[%V] %H:%M:%S" now))))
+(display-time-mode 1)
+(defun my-update-time ()
+  "Update the time string in the mode line every second."
+  (display-time-mode 1))
+(run-with-timer 0 1 'my-update-time)
+;; -- END: display time in mode line -- }
+
+
 (add-hook 'emacs-lisp-mode-hook 'show-paren-mode) ; highlight matching
 						  ; parenthesis
 (global-hl-line-mode 1) ; highlight current line
