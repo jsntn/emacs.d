@@ -512,6 +512,24 @@ Version: 2023-08-31"
       (insert-buffer-substring source-buffer)
       (pop-to-buffer existing-buffer)))) 
 
+  
+(defun my/kill-buffers-by-pattern (pattern)
+  "Kill buffers whose names match the specified pattern.
+
+This function interactively prompts the user for a pattern and then searches
+through the list of all buffers. Buffers whose names match the given pattern
+are killed, effectively closing them. The pattern is a regular expression that
+is compared against buffer names using 'string-match-p'.
+
+Version: 2023-08-16"
+  (interactive "sEnter a pattern: ")
+  (dolist (buffer (buffer-list))
+    (let ((buffer-name (buffer-name buffer)))
+      (message "Processing buffer: %s" buffer-name)
+      (when (string-match-p pattern buffer-name)
+        (kill-buffer buffer)
+        (message "Killed buffer '%s'" buffer-name)))))
+
 
 
 (provide 'init-utils)
