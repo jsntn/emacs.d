@@ -337,6 +337,8 @@ You need to install it manually. Continue?")
 
 (use-package git-messenger)
 
+(use-package git-timemachine)
+
 (use-package helm)
 
 ;; { -- START --
