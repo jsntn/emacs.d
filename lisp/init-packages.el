@@ -176,13 +176,6 @@ In that case, insert the number."
   ;; END: company-candidates from abo-abo }
   )
 
-(use-package company-ctags
-  :config
-  (with-eval-after-load 'company
-    (company-ctags-auto-setup))
-  ;; my config -> [[./init-misc.el::config-ce-cc]]
-  )
-
 (use-package company-english-helper
   :straight (:host github :repo "manateelazycat/company-english-helper")
   )
