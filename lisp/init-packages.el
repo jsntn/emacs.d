@@ -162,6 +162,8 @@ You need to install it manually. Continue?")
   (setq company-show-numbers t)
   ;; show suggestions after entering 3 character.
   (setq company-minimum-prefix-length 3)
+  (setq company-dabbrev-downcase nil)
+  (setq company-dabbrev-ignore-case t)
   ;; when the list of suggestions is shown, and you go through the list of
   ;; suggestions and reach the end of the list, the end of the list of
   ;; suggestions does not wrap around to the top of the list again. This is a
@@ -172,15 +174,33 @@ You need to install it manually. Continue?")
   (company-tng-configure-default)
 
   (setq company-backends '(
-			   company-capf
-			   company-tabnine
-			   company-dabbrev
-			   company-keywords
-			   company-semantic
-			   company-files
-			   company-ispell
-			   company-yasnippet
+			   (company-capf company-tabnine company-keywords :separate)
+               (company-dabbrev company-ispell :separate)
+               company-files
 			   ))
+
+
+              ;; add yasnippet support for all company backends.
+              (defvar company-mode/enable-yas t
+                "Enable yasnippet for all backends.")
+
+              (defun company-mode/backend-with-yas (backend)
+                (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+                    backend
+                  (append (if (consp backend) backend (list backend))
+                          '(:with company-yasnippet))))
+
+              (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+
+              ;; add `company-elisp' backend for elisp.
+              (add-hook 'emacs-lisp-mode-hook
+                        #'(lambda ()
+                            (require 'company-elisp)
+                            (push 'company-elisp company-backends)))
+;; via https://github.com/manateelazycat/lazycat-emacs/blob/8f3dee8a6fe724ec52cd2b17155cfc2cefc8066b/site-lisp/config/init-company-mode.el 
+
+
+
 
   ;; { START: company-candidates from abo-abo
   ;; if candidate list was ("var0" "var1" "var2"), then entering 1 means:
