@@ -112,6 +112,32 @@ directory of the current buffer then use it as the
     )
   )
 
+;; { START: citre
+(unless (executable-find "ctags")
+  (when (eq system-type 'darwin)
+    (shell-command "brew install universal-ctags"))
+  (when (string= (which-linux-release-info "distributor") "Ubuntu")
+    (call-process "/bin/bash"
+		  (expand-file-name "scripts/ctags.sh" user-emacs-directory)))
+  (yes-or-no-p "Please be informed the ctags is started to install in the background...
+The installation result can be checked later manually with ctags command. Continue?")
+  )
+
+(use-package citre
+  ;; ctags should be installed first, the Universal Ctags is recommended,
+  ;; https://github.com/universal-ctags/ctags
+  :defer t
+  :init
+  ;; This is needed in `:init' block for lazy load to work.
+  (require 'citre-config))
+
+(when (or (eq system-type 'darwin) (eq system-type 'windows-nt))
+  (unless (executable-find "ctags")
+    (yes-or-no-p "Please be informed the ctags is used in this configuration file, but the executable file is not found.
+You need to install it manually. Continue?")
+    ))
+;; END: citre }
+
 (use-package cnfonts
   :if window-system ; only load this package when in graphical Emacs
   :config
@@ -119,6 +145,12 @@ directory of the current buffer then use it as the
   (setq cnfonts-profiles
 	'("program" "org-mode" "read-book"))
   (setq cnfonts-use-system-type t) ; save profile config across different system-type
+  )
+
+(use-package company-tabnine
+  :config
+  (setq company-tabnine-binaries-folder (expand-file-name ".TabNine/" user-emacs-directory))
+  ;; (add-to-list 'company-backends #'company-tabnine)
   )
 
 (use-package company
@@ -138,6 +170,17 @@ directory of the current buffer then use it as the
   ;; use tab key to cycle through suggestions.
   ;; ('tng' means 'tab and go')
   (company-tng-configure-default)
+
+  (setq company-backends '(
+			   company-capf
+			   company-tabnine
+			   company-dabbrev
+			   company-keywords
+			   company-semantic
+			   company-files
+			   company-ispell
+			   company-yasnippet
+			   ))
 
   ;; { START: company-candidates from abo-abo
   ;; if candidate list was ("var0" "var1" "var2"), then entering 1 means:
@@ -181,59 +224,6 @@ In that case, insert the number."
   )
 
 (use-package counsel)
-
-;; { START: counsel-etags
-(unless (executable-find "ctags")
-  (when (eq system-type 'darwin)
-    (shell-command "brew install universal-ctags"))
-  (when (string= (which-linux-release-info "distributor") "Ubuntu")
-    (call-process "/bin/bash"
-		  (expand-file-name "scripts/ctags.sh" user-emacs-directory)))
-  (yes-or-no-p "Please be informed the ctags is started to install in the background...
-The installation result can be checked later manually with ctags command. Continue?")
-  )
-(use-package counsel-etags
-  ;; ctags should be installed first, the Universal Ctags is recommended,
-  ;; https://github.com/universal-ctags/ctags
-  ;; with Exuberant Ctags or Universal Ctags, this package works out of box.
-  ;; instructions,
-  ;; `counsel-etags-scan-code' to create tags file
-  ;; `counsel-etags-find-tag-at-point' to navigate.  This command will also
-  ;; run `counsel-etags-scan-code' AUTOMATICALLY if tags file does not exist.
-  ;; it also calls `counsel-etags-fallback-grep-function' if no tag is found.
-
-  ;; keybinding -> [[./init-keybindings.el::ftap]]
-
-  ;; 2023/08/18 disable this due to high CPU usage on big project TAGS creation
-  ;; update the TAGS file automatically on file saves
-  ;; :init
-  ;; (add-hook 'prog-mode-hook
-  ;; 	    (lambda ()
-  ;; 	      (add-hook 'after-save-hook
-  ;; 			'counsel-etags-virtual-update-tags 'append 'local)))
-
-  ;; :config
-  ;; (setq counsel-etags-update-interval 60)
-  ;; (push "build" counsel-etags-ignore-directories)
-
-  ;; create TAGS with the absolute recorded file paths
-  ;; (setq counsel-etags-update-tags-backend
-  ;; 	(lambda (src-dir)
-  ;; 	  (shell-command
-  ;; 	   ;; relative path is used by default by ctags
-  ;; 	   ;; relative path is more portable and uses less memory (this package
-  ;; 	   ;; reads the tags file's content into memory)
-  ;; 	   ;; https://github.com/redguardtoo/counsel-etags/pull/88
-  ;;          (format "ctags --options=%s -e -R"
-  ;; 		   (expand-file-name ".ctags" user-emacs-directory)))))
-  ;; my config -> [[./init-misc.el::config-ce-cc]]
-  )
-(when (or (eq system-type 'darwin) (eq system-type 'windows-nt))
-  (unless (executable-find "ctags")
-    (yes-or-no-p "Please be informed the ctags is used in this configuration file, but the executable file is not found.
-You need to install it manually. Continue?")
-    ))
-;; END: counsel-etags }
 
 (use-package doom-themes
   :config

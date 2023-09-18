@@ -60,7 +60,7 @@
  "bb" 'evil-scroll-page-up ; <<page-up>>
  "br" 'ibuffer
  "SPC" 'my/toggle-hideshow-block
- "C-]" 'counsel-etags-find-tag-at-point ; <<ftap>>
+ "C-]" 'citre-jump
  ;; ...
  )
 
@@ -105,6 +105,8 @@
  "b" 'counsel-bookmark
  "c" 'org-capture
  "f" 'ace-jump-char-mode ;; <<ajm-1>>
+ "]" 'citre-peek
+ "[" 'citre-jump-back
  ;; ...
  )
 
