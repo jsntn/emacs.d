@@ -28,7 +28,7 @@
 (global-hl-line-mode 1) ; highlight current line
 
 (setq display-line-numbers-width-start t)
-(global-display-line-numbers-mode 1)
+(global-linum-mode t)
 (setq column-number-mode t) ; turn on column numbers
 
 ;; wrap lines at 80 characters
