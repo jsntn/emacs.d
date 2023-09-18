@@ -7,6 +7,22 @@
 ;; https://github.com/noctuid/general.el
 
 
+;; C-x Keybindings:
+;; Commands starting with C-x are often used for operations related to files,
+;; buffers, windows, and frames.
+;; For example, C-x C-f is used to open a file, C-x C-s is used to save a
+;; buffer, and C-x 2 is used to split the current window into two vertical
+;; windows.
+
+;; C-c Keybindings:
+;; Commands starting with C-c are typically user-defined or related to major and
+;; minor modes specific to a particular programming language or context.
+;; Users and mode developers can define their own keybindings under this prefix
+;; to tailor Emacs to their specific needs.
+;; For example, in a programming mode like Python mode, C-c C-r can be bound to
+;; run a Python script.
+
+
 ;; global keybindings
 (general-define-key
  "M-x" 'helm-M-x
@@ -21,6 +37,7 @@
  "C-M-<up>" 'enlarge-window
  "M-i" 'pyim-convert-string-at-point ; <<pyim-csap>>
  "C-;" 'pyim-delete-word-from-personal-buffer
+ "M-," 'citre-jump-back
  ;; ...
  )
 
