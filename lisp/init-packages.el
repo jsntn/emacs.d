@@ -924,6 +924,10 @@ In that case, insert the number."
   (global-undo-tree-mode)
   )
 
+(use-package vertico
+  :config
+  (vertico-mode))
+
 (use-package vlf
   :config
   (require 'vlf-setup)
