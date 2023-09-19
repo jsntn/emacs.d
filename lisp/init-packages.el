@@ -164,6 +164,7 @@ You need to install it manually. Continue?")
   (setq company-minimum-prefix-length 3)
   (setq company-dabbrev-downcase nil)
   (setq company-dabbrev-ignore-case t)
+  (setq company-dabbrev-other-buffers nil)
   ;; when the list of suggestions is shown, and you go through the list of
   ;; suggestions and reach the end of the list, the end of the list of
   ;; suggestions does not wrap around to the top of the list again. This is a
