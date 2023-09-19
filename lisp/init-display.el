@@ -28,7 +28,11 @@
 (global-hl-line-mode 1) ; highlight current line
 
 (setq display-line-numbers-width-start t)
-(global-linum-mode t)
+
+;; use below to fix slow scrolling issue
+(setq display-line-numbers t)
+;; via https://www.reddit.com/r/orgmode/comments/e7pq7k/linummode_very_slow_for_large_org_files/
+
 (setq column-number-mode t) ; turn on column numbers
 
 ;; wrap lines at 80 characters
