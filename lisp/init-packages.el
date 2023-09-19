@@ -249,6 +249,8 @@ In that case, insert the number."
 
 (use-package counsel)
 
+(use-package delight)
+
 (use-package doom-themes
   :config
   ;; global settings (defaults)
