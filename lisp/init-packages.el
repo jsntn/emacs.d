@@ -263,6 +263,8 @@ In that case, insert the number."
    `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6))))))
   )
 
+(use-package eglot)
+
 ;; M-x elgrep: search a single directory
 ;; C-u M-x elgrep: search the directory recursively
 (use-package elgrep)
@@ -513,6 +515,7 @@ In that case, insert the number."
   )
 
 (use-package lsp-mode
+  :disabled ; use Eglot instead
   :config
   (setq lsp-headerline-breadcrumb-enable nil)
   :hook
