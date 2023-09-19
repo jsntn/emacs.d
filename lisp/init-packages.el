@@ -36,6 +36,7 @@
 
 ;; jump to Chinese character by pinyin with `avy' or `ace-jump-mode'
 (use-package ace-pinyin
+  :delight
   :config
   (setq ace-pinyin-use-avy nil) ; use `ace-jump-mode'
   (ace-pinyin-global-mode +1)
@@ -124,6 +125,7 @@ The installation result can be checked later manually with ctags command. Contin
   )
 
 (use-package citre
+  :delight
   ;; ctags should be installed first, the Universal Ctags is recommended,
   ;; https://github.com/universal-ctags/ctags
   :defer t
@@ -154,6 +156,7 @@ You need to install it manually. Continue?")
   )
 
 (use-package company
+  :delight
   :init
   (global-company-mode)
   :config
@@ -449,6 +452,7 @@ In that case, insert the number."
   )
 
 (use-package highlight-parentheses
+  :delight
   :config
   (add-hook 'prog-mode-hook 'highlight-parentheses-mode)
   (setq highlight-parentheses-colors
@@ -458,6 +462,7 @@ In that case, insert the number."
 ;; automatic and manual symbol highlighting
 ;; cycle through the locations of any symbol at point
 (use-package highlight-symbol
+  :delight
   :config
   (add-hook 'prog-mode-hook 'highlight-symbol-mode)
   (add-hook 'prog-mode-hook 'highlight-symbol-nav-mode)
@@ -632,6 +637,7 @@ In that case, insert the number."
   )
 
 (use-package orglink
+  :delight
   :config
   (global-orglink-mode))
 
@@ -681,6 +687,7 @@ In that case, insert the number."
 ;; END: Org-roam }
 
 (use-package org-roam-ui
+  :delight
   :if window-system ; for graphical Emacs
   :after org-roam
   :config
@@ -898,6 +905,7 @@ In that case, insert the number."
 	      )
 
 (use-package super-save
+  :delight
   :config
   (super-save-mode +1)
   (setq super-save-auto-save-when-idle t)
