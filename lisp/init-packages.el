@@ -175,29 +175,29 @@ You need to install it manually. Continue?")
 
   (setq company-backends '(
 			   (company-capf company-tabnine company-keywords :separate)
-               (company-dabbrev company-ispell :separate)
-               company-files
+			   (company-dabbrev company-ispell :separate)
+			   company-files
 			   ))
 
 
-              ;; add yasnippet support for all company backends.
-              (defvar company-mode/enable-yas t
-                "Enable yasnippet for all backends.")
+  ;; add yasnippet support for all company backends.
+  (defvar company-mode/enable-yas t
+    "Enable yasnippet for all backends.")
 
-              (defun company-mode/backend-with-yas (backend)
-                (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-                    backend
-                  (append (if (consp backend) backend (list backend))
-                          '(:with company-yasnippet))))
+  (defun company-mode/backend-with-yas (backend)
+    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+	backend
+      (append (if (consp backend) backend (list backend))
+	      '(:with company-yasnippet))))
 
-              (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
-              ;; add `company-elisp' backend for elisp.
-              (add-hook 'emacs-lisp-mode-hook
-                        #'(lambda ()
-                            (require 'company-elisp)
-                            (push 'company-elisp company-backends)))
-;; via https://github.com/manateelazycat/lazycat-emacs/blob/8f3dee8a6fe724ec52cd2b17155cfc2cefc8066b/site-lisp/config/init-company-mode.el 
+  ;; add `company-elisp' backend for elisp.
+  ;; (add-hook 'emacs-lisp-mode-hook
+  ;; 	    #'(lambda ()
+  ;; 		(require 'company-elisp)
+  ;; 		(push 'company-elisp company-backends)))
+  ;; via https://github.com/manateelazycat/lazycat-emacs/blob/8f3dee8a6fe724ec52cd2b17155cfc2cefc8066b/site-lisp/config/init-company-mode.el
 
 
 
