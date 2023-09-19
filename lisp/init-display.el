@@ -30,7 +30,7 @@
 (setq display-line-numbers-width-start t)
 
 ;; use below to fix slow scrolling issue
-(setq display-line-numbers t)
+(global-display-line-numbers-mode 1)
 ;; via https://www.reddit.com/r/orgmode/comments/e7pq7k/linummode_very_slow_for_large_org_files/
 
 (setq column-number-mode t) ; turn on column numbers
