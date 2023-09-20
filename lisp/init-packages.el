@@ -256,6 +256,8 @@ In that case, insert the number."
 
 (use-package delight)
 
+(use-package diminish)
+
 (use-package doom-themes
   :config
   ;; global settings (defaults)
