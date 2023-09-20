@@ -32,6 +32,8 @@
 ;; use below to fix slow scrolling issue
 (global-display-line-numbers-mode 1)
 ;; via https://www.reddit.com/r/orgmode/comments/e7pq7k/linummode_very_slow_for_large_org_files/
+;; there is display issue on citre-peek, see,
+;; https://github.com/universal-ctags/citre/issues/161
 
 (setq column-number-mode t) ; turn on column numbers
 
