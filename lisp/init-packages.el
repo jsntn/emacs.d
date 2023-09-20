@@ -252,6 +252,17 @@ In that case, insert the number."
   :straight (:host github :repo "manateelazycat/company-english-helper")
   )
 
+
+;; use this package to fix tooltip alignment issue below,
+;; https://github.com/company-mode/company-mode/issues/1388
+(use-package company-posframe
+  :delight
+  :straight (:type git :host github :repo "tumashu/company-posframe")
+  :config
+  (company-posframe-mode 1)
+  )
+
+ 
 (use-package counsel)
 
 (use-package delight)
