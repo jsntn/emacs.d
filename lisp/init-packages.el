@@ -483,8 +483,20 @@ In that case, insert the number."
   (setq hl-todo-highlight-punctuation ":"
 	hl-todo-keyword-faces
 	`(
+	  ;; align with the org-todo-keyword-faces
 	  ("TODO" :foreground "white" :background "#5F87FF")
 	  ("DONE" :foreground "white" :background "#2E8B57")
+	  ("CANCELED" :foreground "white" :background "#95A5A6")
+	  ("WAIT" :foreground "white" :background "#F9BC41")
+	  ("IN-PROGRESS" :foreground "white" :background "#3498DB")
+	  ("REPORT" :foreground "#C0C0C0" :background "#308014" :box t)
+	  ("BUG" :foreground "#E6DB74" :background "black" :box t)
+	  ("KNOWNCAUSE" :foreground "#9C91E4" :background "black" :box t)
+	  ("IMPROVEMENT" :foreground "#FF9900" :background "black" :box t)
+	  ("ENHANCEMENT" :foreground "#9900ff" :background "black" :box t)
+	  ("FEATURE" :foreground "#38761d" :background "black" :box t)
+	  ("FIXED" :foreground "#4B5556" :strike-through t :box t)
+	  ;; my own highlight keywords
 	  ("FIXME" :foreground "white" :background "red")
 	  ("DEBUG" :foreground "#E6DB74" :background "black" :box t)
 	  ("HACK" :foreground "#9C91E4" :background "black" :box t)
