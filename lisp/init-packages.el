@@ -168,6 +168,7 @@ You need to install it manually. Continue?")
   (setq company-dabbrev-downcase nil)
   (setq company-dabbrev-ignore-case t)
   (setq company-dabbrev-other-buffers nil)
+  (setq company-tooltip-align-annotations t)
   ;; when the list of suggestions is shown, and you go through the list of
   ;; suggestions and reach the end of the list, the end of the list of
   ;; suggestions does not wrap around to the top of the list again. This is a
@@ -178,23 +179,27 @@ You need to install it manually. Continue?")
   (company-tng-configure-default)
 
   (setq company-backends '(
-			   (company-capf company-tabnine company-keywords :separate)
-			   (company-dabbrev company-ispell :separate)
+			   (company-tabnine company-capf company-keywords)
+			   (company-dabbrev company-ispell)
 			   company-files
 			   ))
-
 
   ;; add yasnippet support for all company backends.
   (defvar company-mode/enable-yas t
     "Enable yasnippet for all backends.")
-
   (defun company-mode/backend-with-yas (backend)
     (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
 	backend
       (append (if (consp backend) backend (list backend))
 	      '(:with company-yasnippet))))
-
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+
+  ;; set the backends for org-mode
+  (defun my-company-backends-org-mode-hook ()
+    (setq-local company-backends
+		'((company-tabnine company-dabbrev company-ispell)
+		  company-files)))
+  (add-hook 'org-mode-hook 'my-company-backends-org-mode-hook)
 
   ;; add `company-elisp' backend for elisp.
   ;; (add-hook 'emacs-lisp-mode-hook
