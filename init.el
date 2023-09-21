@@ -120,6 +120,7 @@
 (require 'init-org) ; Org-mode settings
 (require 'init-plantuml) ; PlantUML settings
 (require 'init-python) ; Python settings
+(require 'init-reformatter) ; reformatter settings
 (require 'init-sessions) ; session settings
 (require 'init-shell) ; Shell settings
 (require 'init-spelling) ; spelling settings
