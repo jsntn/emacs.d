@@ -262,7 +262,7 @@ In that case, insert the number."
   (company-posframe-mode 1)
   )
 
- 
+
 (use-package counsel)
 
 (use-package delight)
@@ -551,21 +551,6 @@ In that case, insert the number."
   (setq keyfreq-file-lock (expand-file-name ".emacs.keyfreq.lock" user-emacs-directory))
   )
 
-(use-package lsp-mode
-  :disabled ; use Eglot instead
-  :config
-  (setq lsp-headerline-breadcrumb-enable nil)
-  :hook
-  (lsp-mode . lsp-enable-which-key-integration) ; which-key integration
-  )
-
-
-
-;; TODO: is this still needed?
-(use-package lsp-ui
-  :config
-  (setq lsp-ui-doc-position 'top)
-  )
 
 (use-package neotree
   :config
