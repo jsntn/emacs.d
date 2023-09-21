@@ -566,6 +566,7 @@ In that case, insert the number."
 			 (require 'lsp-pyright)
 			 (lsp)))) ; or lsp-deferred
 
+;; TODO: is this still needed?
 (use-package lsp-ui
   :config
   (setq lsp-ui-doc-position 'top)
