@@ -178,10 +178,16 @@ You need to install it manually. Continue?")
   ;; ('tng' means 'tab and go')
   (company-tng-configure-default)
 
+  (setq company-transformers '(delete-dups
+                               company-sort-by-occurrence))
+
   (setq company-backends '(
-			   (company-tabnine company-capf company-keywords)
-			   (company-dabbrev company-ispell)
-			   company-files
+			   (company-tabnine
+			    company-capf
+			    company-keywords
+			    company-dabbrev
+			    company-ispell
+			    company-files)
 			   ))
 
   ;; add yasnippet support for all company backends.
@@ -196,9 +202,12 @@ You need to install it manually. Continue?")
 
   ;; set the backends for org-mode
   (defun my-company-backends-org-mode-hook ()
-    (setq-local company-backends
-		'((company-tabnine company-dabbrev company-ispell)
-		  company-files)))
+    (setq-local company-backends '(
+          (company-tabnine
+		   company-dabbrev
+		   company-ispell
+		   company-files)
+          )))
   (add-hook 'org-mode-hook 'my-company-backends-org-mode-hook)
 
   ;; add `company-elisp' backend for elisp.
