@@ -182,7 +182,7 @@ You need to install it manually. Continue?")
 			       company-sort-by-occurrence))
 
   (setq company-backends '(
-			   (company-tabnine company-capf company-keywords company-dabbrev company-ispell)
+			   (company-tabnine company-capf company-keywords company-dabbrev)
 			    company-files)
 			   )
 
