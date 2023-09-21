@@ -124,6 +124,7 @@
  "f" 'ace-jump-char-mode ;; <<ajm-1>>
  "]" 'citre-peek
  "[" 'citre-jump-back
+ "C-/" 'company-files
  ;; ...
  )
 
