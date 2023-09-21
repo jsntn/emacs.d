@@ -559,12 +559,7 @@ In that case, insert the number."
   (lsp-mode . lsp-enable-which-key-integration) ; which-key integration
   )
 
-(use-package lsp-pyright
-  :config
-  (my-check-for-executable "pyright" "pyright")
-  :hook (python-mode . (lambda ()
-			 (require 'lsp-pyright)
-			 (lsp)))) ; or lsp-deferred
+
 
 ;; TODO: is this still needed?
 (use-package lsp-ui
@@ -882,23 +877,7 @@ In that case, insert the number."
 	(set-cursor-color "red"))))
   )
 
-(use-package pyvenv
-  :config
-  ;; (pyvenv-mode t)
 
-  ;; set correct Python interpreter
-  (setq pyvenv-post-activate-hooks
-	(list (lambda ()
-		(if (equal system-type 'windows-nt)
-		    (setq python-shell-interpreter (concat pyvenv-virtual-env "Scripts/python"))
-		  (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python"))
-		  )
-		)))
-  (setq pyvenv-post-deactivate-hooks
-	(list (lambda ()
-		(setq python-shell-interpreter "python")
-		)))
-  )
 
 ;; START: reformatter config
 (unless (executable-find "shfmt")
