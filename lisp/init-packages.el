@@ -11,12 +11,6 @@
   ;; reference
   ;; https://github.com/domtronn/all-the-icons.el/issues/120
   (when (display-graphic-p) ; if not in terminal Emacs
-    ;; if on Windows and all-the-icons is not installed
-    (when (equal system-type 'windows-nt)
-      (unless (member "all-the-icons" (font-family-list))
-	(yes-or-no-p "The 'all-the-icons' fonts are recommended for this configuration with lsp-mode package. Continue and install it later?")
-	)
-      )
     ;; if not on Windows and all-the-icons is not installed
     (unless (equal system-type 'windows-nt)
       (unless (member "all-the-icons" (font-family-list))
