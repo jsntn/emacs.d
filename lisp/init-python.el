@@ -3,12 +3,6 @@
 ;;; Code:
 
 
-(use-package lsp-pyright
-  :config
-  (my-check-for-executable "pyright" "pyright")
-  :hook (python-mode . (lambda ()
-			 (require 'lsp-pyright)
-			 (lsp)))) ; or lsp-deferred
 
 
 (use-package pyvenv
@@ -29,7 +23,7 @@
 		)))
   )
 
- 
+
 (defun my/python-mode-config ()
   (setq python-indent-offset 4
 	python-indent 4
