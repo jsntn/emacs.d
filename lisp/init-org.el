@@ -216,6 +216,10 @@
 	      (directory-files-recursively org-directory "\\.org$")) ; <<od-1>>
 ;; (length org-agenda-files)
 
+;; fix issue like below,
+;; Non-existent agenda file /path/to/.#xxx.org.  [R]emove from list or [A]bort?
+(setq org-agenda-skip-unavailable-files t)
+
 ;; how to truncate the long task name in the agenda custom view?
 ;; https://stackoverflow.com/a/16285673/4274775
 (defun my-org-agenda-mode-hook ()
