@@ -4,6 +4,45 @@
 
 
 
+;; { START: hide list of minor modes in mode-line
+;; from https://emacs.stackexchange.com/a/3928/29715
+(defvar my-hidden-minor-modes
+  '(abbrev-mode
+    auto-capitalize-mode
+    auto-fill-function
+    auto-revert-mode
+    dired-async-mode
+    flycheck-mode
+    flyspell-mode
+    ;; haskell-indent-mode
+    ;; haskell-doc-mode
+    ;; inf-haskell-mode
+    org-roam-mode
+    pangu-spacing-mode
+    projectile-mode
+    pyim-isearch-mode
+    ;; smooth-scroll-mode
+    undo-tree-mode
+    which-key-mode
+    evil-collection-unimpaired-mode
+    hs-minor-mode
+    org-remark-global-tracking-mode
+    yas-minor-mode
+    eldoc-mode
+    org-indent-mode
+    ))
+
+(defun my/purge-minor-modes ()
+  (interactive)
+  (dolist (x my-hidden-minor-modes nil)
+    (let ((trg (cdr (assoc x minor-mode-alist))))
+      (when trg
+        (setcar trg "")))))
+
+(add-hook 'after-change-major-mode-hook 'my/purge-minor-modes)
+;; END: hide list of minor modes in mode-line }
+
+
 ;; { -- START: display time in mode line --
 ;; reference:
 ;; ... https://www.reddit.com/r/emacs/comments/6ftm3x/share_your_modeline_customization/dil4x5z/?utm_source=reddit&utm_medium=web2x&context=3
