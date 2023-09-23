@@ -5,6 +5,10 @@
 
 ;; pre settings: needed by other configurations
 
+(defconst *is-mac* (eq system-type 'darwin))
+(defconst *is-win* (eq system-type 'windows-nt))
+(defconst *is-linux* (or (eq system-type 'gnu/linux) (eq system-type 'linux)) )
+
 ;; { -- START --
 ;; check Linux distribution
 ;; https://emacs.stackexchange.com/questions/18205/how-can-i-distinguish-between-linux-distributions-in-emacs

@@ -32,11 +32,6 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 
-(defconst *is-mac* (eq system-type 'darwin))
-(defconst *is-win* (eq system-type 'windows-nt))
-(defconst *is-linux* (or (eq system-type 'gnu/linux) (eq system-type 'linux)) )
-
-
 ;; =============================================================================
 ;; require settings
 ;; =============================================================================
