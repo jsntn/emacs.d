@@ -176,7 +176,7 @@ You need to install it manually. Continue?")
 			       company-sort-by-occurrence))
 
   (setq company-backends '(
-			   (company-tabnine company-capf company-keywords company-dabbrev)
+			   (company-tabnine company-capf company-keywords company-dabbrev-code)
 			    company-files)
 			   )
 
