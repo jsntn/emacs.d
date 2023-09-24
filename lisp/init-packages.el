@@ -176,7 +176,8 @@ You need to install it manually. Continue?")
 			       company-sort-by-occurrence))
 
   (setq company-backends '(
-			   (company-tabnine company-capf company-keywords company-dabbrev-code)
+			   (company-capf company-keywords company-dabbrev-code)
+			   (company-tabnine)
 			    company-files)
 			   )
 
@@ -193,7 +194,8 @@ You need to install it manually. Continue?")
   ;; set the backends for org-mode
   (defun my-company-backends-org-mode-hook ()
     (setq-local company-backends '(
-				   (company-tabnine company-dabbrev company-ispell)
+				   (company-dabbrev company-ispell)
+				   (company-tabnine)
 				    company-files)
 				   ))
   (add-hook 'org-mode-hook 'my-company-backends-org-mode-hook)
