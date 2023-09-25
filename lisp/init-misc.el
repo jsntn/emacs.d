@@ -85,12 +85,12 @@ to HTML files."
   )
 
 ;; TODO: append needs to be tested...
-(defun my/create-TAGS (dir-name tag-relative tags-filename &optional append sudo process-name)
-  "Create a TAGS file with absolute or relative symbols recorded inside. With a
+(defun my/create-tags (dir-name tags-format tag-relative tags-filename &optional append sudo process-name)
+  "Create a tags file with absolute or relative symbols recorded inside. With a
 prefix argument SUDO, run the command with sudo privilege.
 
 When called interactively, prompt the user for the directory name to create the
-TAGS file. If no input is given, use the current working directory.
+tags file. If no input is given, use the current working directory.
 
 The `ctags` command is executed with the `--tag-relative` option
 set to `yes` if the `tag-relative` is set to 'y', or 'n'
@@ -98,32 +98,39 @@ indicates 'never'. The `*` wildcard is included in the `ctags`
 command to create TAGS for all files in the directory.
 
 Example usage:
-  - To create a TAGS (with absolute symbols) file for the current directory:
-    M-x my/create-TAGS RET /path/to/current/directory RET RET
-  - To create a TAGS file for a specific directory with relative symbols recorded:
-    M-x my/create-TAGS RET /path/to/directory RET y RET
-  - To create a TAGS file for a specific directory with absolute symbols recorded,
+  - To create a tags (with absolute symbols) file for the current directory:
+    M-x my/create-tags RET /path/to/current/directory RET RET
+  - To create a tags file for a specific directory with relative symbols recorded:
+    M-x my/create-tags RET /path/to/directory RET y RET
+  - To create a tags file for a specific directory with absolute symbols recorded,
     using sudo privilege:
-    C-u M-x my/create-TAGS RET /path/to/directory RET RET
+    C-u M-x my/create-tags RET /path/to/directory RET RET
 
 Version: 2023-03-17
 Updated: 2023-08-17"
 
   ;; This function is improved by ChatGPT and Claude :)
   (interactive
-   (let ((tag-relative (completing-read "Create TAGS file with relative symbols? (y/n)\n(Note: omit input indicates absolute symbols) "
-			    '("y" "n"))))
-     (list (read-directory-name "Enter the directory to create TAGS file: ")
+   (let ((tags-format (completing-read "ctags or etags format? (ctags/etags)\n(Note: omit input indicates etags format) "
+				       '("ctags" "etags")))
+	 (tag-relative (completing-read "Create tags index file with relative symbols? (y/n)\n(Note: omit input indicates absolute symbols) "
+					'("y" "n"))))
+     (list (read-directory-name "Enter the directory to create tags file: ")
+	   tags-format
 	   tag-relative
 	   (read-string "Enter the desired tags filename: "
-			(if (string-equal tag-relative "y") "TAGS" "TAGS_ABS"))
-       nil
+			(if (string-equal tags-format "etags")
+			    (if (string-equal tag-relative "y") "TAGS" "TAGS_ABS")
+			  (if (string-equal tag-relative "y") "tags" "tags_abs")))
+	   nil
 	   current-prefix-arg ; if universal argument (sudo)
 	   nil)))
 
   (let* ((target-dir (if (string= "" dir-name)
 			 default-directory
 		       (expand-file-name dir-name)))
+
+	 (tags-format-value (if (string-equal tags-format 'ctags) "" "-e"))
 
 	 (tag-relative-value (if (string-equal tag-relative 'y) "yes" "never"))
 	 ;; yes   - relative symbols
@@ -133,14 +140,15 @@ Updated: 2023-08-17"
 
 	 (tags-path (expand-file-name tags-filename target-dir))
 
-	 (command-process-name (or process-name "create TAGS"))
+	 (command-process-name (or process-name "create tags"))
 
-	 (ctags-cmd (format "cd %s && ctags --options=%s -e -R --tag-relative=%s %s -f %s *"
+	 (ctags-cmd (format "cd %s && ctags --options=%s %s -R --tag-relative=%s %s -f %s *"
 			    (if (eq system-type 'windows-nt)
 				;; fix changing dir across different drives issue on Windows
 				(concat "/d" target-dir)
 			      target-dir)
 			    (expand-file-name ".ctags" user-emacs-directory)
+			    tags-format-value
 			    tag-relative-value
 			    append-or-not
 
@@ -160,7 +168,7 @@ Updated: 2023-08-17"
 	(message "Process (%s) already running..." command-process-name)
       (progn
 	(start-process-shell-command command-process-name nil command)
-	(message "Creating TAGS...")))
+	(message "Creating tags...")))
     ))
 
 (defvar my/default-tags-file-name "TAGS"
