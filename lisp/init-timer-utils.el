@@ -232,6 +232,8 @@ Updated: 2023-09-05"
 	      (let ((task-name (format task-name-format current-hour minute)))
 		;; Cancel existing timer with the same task name
 		(my-cancel-existing-timer (intern task-name))
+		;; TODO: should it be as below?
+		;; (my-cancel-existing-timer task-name)
 		;; Check if the scheduled time is ahead of the current time
 		;; Define the new task function using defalias
 		(defalias (intern task-name)
