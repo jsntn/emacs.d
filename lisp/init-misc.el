@@ -95,19 +95,10 @@ tags file. If no input is given, use the current working directory.
 The `ctags` command is executed with the `--tag-relative` option
 set to `yes` if the `tag-relative` is set to 'y', or 'n'
 indicates 'never'. The `*` wildcard is included in the `ctags`
-command to create TAGS for all files in the directory.
-
-Example usage:
-  - To create a tags (with absolute symbols) file for the current directory:
-    M-x my/create-tags RET /path/to/current/directory RET RET
-  - To create a tags file for a specific directory with relative symbols recorded:
-    M-x my/create-tags RET /path/to/directory RET y RET
-  - To create a tags file for a specific directory with absolute symbols recorded,
-    using sudo privilege:
-    C-u M-x my/create-tags RET /path/to/directory RET RET
+command to create tags for all files in the directory.
 
 Version: 2023-03-17
-Updated: 2023-08-17"
+Updated: 2023-08-25"
 
   ;; This function is improved by ChatGPT and Claude :)
   (interactive
