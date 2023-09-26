@@ -53,8 +53,8 @@ Version: 2023-09-24"
     (cl-loop for (os-id . value) in values
 	     when (eq os os-id)
 	     do (set var (if (stringp value)
-	                        value
-                          (eval value))))))
+			     value
+			   (eval value))))))
 
 
 (defun my-check-for-executable (executable-name executable-file &optional message)
