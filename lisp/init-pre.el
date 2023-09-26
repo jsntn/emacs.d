@@ -39,6 +39,22 @@
 
 
 
+(defun my/set-var (var &rest values)
+  "Set VAR based on the operating system using a list of
+VALUES. VALUES should be a list of pairs where the car is the
+operating system identifier ('win', 'mac', 'linux') and the cdr
+is the value associated with that operating system.
+
+Version: 2023-09-24"
+  (let* ((os (cond ((eq system-type 'windows-nt) 'win)
+		   ((eq system-type 'gnu/linux) 'linux)
+		   ((eq system-type 'darwin) 'mac)
+		   (t (error "Unsupported operating system")))))
+    (cl-loop for (os-id . value) in values
+	     when (eq os os-id)
+	     do (set var value))))
+
+
 (defun my-check-for-executable (executable-name executable-file &optional message)
   "Check if the given EXECUTABLE-FILE is available. If it's not found,
 prompt the user with the optional MESSAGE (or a default message) to install it."
