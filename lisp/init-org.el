@@ -3,10 +3,8 @@
 ;;; Code:
 
 
-(unless (boundp 'org-directory)
-  (defvar org-directory "")
-  )
-(when (not (file-directory-p org-directory))
+
+(when (not (boundp org-directory))
   (if noninteractive
       (message "The org-directory is not defined, will set it to .emacs.d folder to avoid 'No such file org directory' warning.")
     (read-string "The org-directory is not defined, will set it to .emacs.d folder to avoid 'No such file org directory' warning. Press ENTER to continue."))
@@ -15,9 +13,7 @@
   (setq org-directory (symbol-value 'user-emacs-directory))
   )
 
-(unless (boundp 'org-mobile-directory)
-  (defvar org-mobile-directory "")
-  )
+
 (when (not (boundp 'org-mobile-directory))
   (if noninteractive
       (message "The org-mobile-directory is not defined, will set it to .emacs.d folder to avoid void-variable error.")
