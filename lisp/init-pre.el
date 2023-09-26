@@ -55,6 +55,7 @@ Version: 2023-09-24"
 	     do (set var (if (functionp value)
                             (funcall value)
                           value)))))
+	     do (set var (eval value)))))
 
 
 (defun my-check-for-executable (executable-name executable-file &optional message)
