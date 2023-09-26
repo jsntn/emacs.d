@@ -224,6 +224,21 @@
 (add-hook 'org-agenda-mode-hook
           'my-org-agenda-mode-hook)
 
+
+
+;; TODO: to be tested...
+(defun my-normalized-paths-list (file-paths-list)
+  "Normalize a list of file paths and remove duplicates."
+  (let ((normalized-paths (mapcar (lambda (path) (expand-file-name path)) file-paths-list)))
+        (unique-paths-list (delete-duplicates normalized-paths :test 'string=)))
+    unique-paths-list))
+
+;; Example usage:
+;; (setq org-agenda-files-list '("~/abc.org" "/users/jason/abc.org" "~/xyz.org"))
+;; (setq normalized-list (my-normalized-path-list org-agenda-files-list))
+
+
+
 (add-hook 'org-agenda-mode-hook (lambda ()
 
 				  ;; https://orgmode.org/list/loom.20111014T204701-149@post.gmane.org/
@@ -235,6 +250,10 @@
 					(delete-dups
 					 (append org-agenda-files
 						 (directory-files-recursively org-mobile-directory "\\.org$")))) ; <<omd>>
+
+
+(setq org-agenda-files (my-normalized-paths-list org-agenda-files))
+
 
 				  ;; { -- START --
 				  ;; <<4osa-start>> | the link anchor to the end: [[./init-org.el::4osa-end]]
