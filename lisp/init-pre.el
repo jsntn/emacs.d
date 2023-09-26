@@ -52,7 +52,7 @@ Version: 2023-09-24"
 		   (t (error "Unsupported operating system")))))
     (cl-loop for (os-id . value) in values
 	     when (eq os os-id)
-	     do (set var value))))
+	     do (set var (eval value)))))
 
 
 (defun my-check-for-executable (executable-name executable-file &optional message)
