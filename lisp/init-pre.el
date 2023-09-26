@@ -52,9 +52,9 @@ Version: 2023-09-24"
 		   (t (error "Unsupported operating system")))))
     (cl-loop for (os-id . value) in values
 	     when (eq os os-id)
-	     do (set var (if (functionp value)
-                            (funcall value)
-                          value)))))
+	     do (set var (if (stringp value)
+	                        value
+                          (eval value))))))
 	     do (set var (eval value)))))
 
 
