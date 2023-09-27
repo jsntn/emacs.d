@@ -7,8 +7,8 @@
 (when (or (not (boundp 'org-directory))
 	  (not (file-directory-p org-directory)))
   (if noninteractive
-      (message "The org-directory is not defined, will set it to .emacs.d folder to avoid 'No such file org directory' warning.")
-    (read-string "The org-directory is not defined, will set it to .emacs.d folder to avoid 'No such file org directory' warning. Press ENTER to continue."))
+      (message "The org-directory is not available, will set it to .emacs.d folder to avoid 'No such file org directory' warning.")
+    (read-string "The org-directory is not available, will set it to .emacs.d folder to avoid 'No such file org directory' warning. Press ENTER to continue."))
   ;; [[./init-org.el::od-1]]
   ;; [[./init-org.el::od-2]]
   (setq org-directory (symbol-value 'user-emacs-directory))
@@ -18,8 +18,8 @@
 (when (or (not (boundp 'org-mobile-directory))
 	  (not (file-directory-p org-mobile-directory)))
   (if noninteractive
-      (message "The org-mobile-directory is not defined, will set it to .emacs.d folder to avoid void-variable error.")
-    (read-string "The org-mobile-directory is not defined, will set it to .emacs.d folder to avoid void-variable error. Press ENTER to continue."))
+      (message "The org-mobile-directory is not available, will set it to .emacs.d folder to avoid void-variable error.")
+    (read-string "The org-mobile-directory is not available, will set it to .emacs.d folder to avoid void-variable error. Press ENTER to continue."))
   ;; [[./init-org.el::omd]]
   (setq org-mobile-directory (symbol-value 'user-emacs-directory))
   )
