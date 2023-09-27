@@ -38,6 +38,16 @@
 ;; -- END -- }
 
 
+(defun my/set-windows-paths (custom-paths-list)
+  "Set the PATH and exec-path in sync for Windows-NT system type
+based on the given list of paths.
+
+Version: 2023-09-27"
+  (when (eq system-type 'windows-nt)
+    (let ((xPaths custom-paths-list))
+      (setenv "PATH" (mapconcat 'identity xPaths ";"))
+      (setq exec-path (append xPaths (list "." exec-directory))))))
+
 
 (defun my/set-var (var &rest values)
   "Set VAR based on the operating system using a list of
