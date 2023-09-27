@@ -226,16 +226,15 @@
 
 
 
-;; TODO: to be tested...
 (defun my-normalized-paths-list (file-paths-list)
-  "Normalize a list of file paths and remove duplicates."
-  (let ((normalized-paths (mapcar (lambda (path) (expand-file-name path)) file-paths-list)))
-        (unique-paths-list (delete-duplicates normalized-paths :test 'string=)))
-    unique-paths-list))
+  "Normalize a list of file paths and remove duplicates.
 
+Version: 2023/09/27"
+  (let ((normalized-paths (mapcar (lambda (path) (expand-file-name path)) file-paths-list)))
+    (delete-duplicates normalized-paths :test 'string=)))
 ;; Example usage:
-;; (setq org-agenda-files-list '("~/abc.org" "/users/jason/abc.org" "~/xyz.org"))
-;; (setq normalized-list (my-normalized-path-list org-agenda-files-list))
+;; (setq org-agenda-files-list '("~/abc.org" "/Users/jason/abc.org" "~/xyz.org"))
+;; (setq normalized-list (my-normalized-paths-list org-agenda-files-list))
 
 
 
@@ -251,8 +250,9 @@
 					 (append org-agenda-files
 						 (directory-files-recursively org-mobile-directory "\\.org$")))) ; <<omd>>
 
-
-(setq org-agenda-files (my-normalized-paths-list org-agenda-files))
+				  ;; remove the duplicates like below,
+				  ;; ("~/abc.org" "/Users/jason/abc.org")
+				  (setq org-agenda-files (my-normalized-paths-list org-agenda-files))
 
 
 				  ;; { -- START --
