@@ -177,9 +177,10 @@ You need to install it manually. Continue?")
 
   (setq company-backends '(
 			   (company-capf company-keywords company-dabbrev-code)
-			   (company-tabnine)
-			    company-files)
-			   )
+			   ;; commented below to speed up the completion
+			   ;; (company-tabnine)
+			   company-files)
+	)
 
   ;; add yasnippet support for all company backends.
   (defvar company-mode/enable-yas t
@@ -195,9 +196,10 @@ You need to install it manually. Continue?")
   (defun my-company-backends-org-mode-hook ()
     (setq-local company-backends '(
 				   (company-dabbrev company-ispell)
-				   (company-tabnine)
-				    company-files)
-				   ))
+				   ;; commented below to speed up the completion
+				   ;; (company-tabnine)
+				   company-files)
+		))
   (add-hook 'org-mode-hook 'my-company-backends-org-mode-hook)
 
   ;; add `company-elisp' backend for elisp.
