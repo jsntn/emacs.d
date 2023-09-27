@@ -45,7 +45,8 @@ VALUES. VALUES should be a list of pairs where the car is the
 operating system identifier ('win', 'mac', 'linux') and the cdr
 is the value associated with that operating system.
 
-Version: 2023-09-24"
+Version: 2023-09-24
+Updated: 2023-09-26"
   (let* ((os (cond ((eq system-type 'windows-nt) 'win)
 		   ((eq system-type 'gnu/linux) 'linux)
 		   ((eq system-type 'darwin) 'mac)
@@ -55,6 +56,12 @@ Version: 2023-09-24"
 	     do (set var (if (stringp value)
 			     value
 			   (eval value))))))
+;; Example usage to set org-directory based on OS with my/set-var
+;; (my/set-var 'org-directory
+;;             '(win . "c:/org-directory")
+;;             '(mac . "~/org-directory")
+;;             '(linux . "~/org-directory"))
+;; (symbol-value 'org-directory)
 
 
 (defun my-check-for-executable (executable-name executable-file &optional message)
