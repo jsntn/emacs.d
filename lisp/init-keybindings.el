@@ -125,7 +125,7 @@
  "]" 'citre-peek
  "[" 'citre-jump-back
  "C-/" 'company-files
- "C-t" 'company-tabnine
+ "C-b" 'company-tabnine
  ;; ...
  )
 
