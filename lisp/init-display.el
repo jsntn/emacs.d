@@ -102,16 +102,23 @@
 ;; https://github.com/doomemacs/doomemacs/issues/3298
 ;; https://www.reddit.com/r/emacs/comments/4v7tcj/does_emacs_have_a_hook_for_when_the_theme_changes/
 
+;; (defvar after-load-theme-hook nil
+;;   "Hook run after a color theme is loaded using `load-theme'.")
+;; (defadvice load-theme (after run-after-load-theme-hook activate)
+;;   "Run `after-load-theme-hook'."
+;;   (run-hooks 'after-load-theme-hook))
+;; ...
+;; (add-hook 'after-load-theme-hook #'my-set-emoji-font)
+
 ;; for debugging,
 ;; (set-fontset-font t 'emoji nil)
 ;; :smile:
 ;; 😄
 
-(defvar after-load-theme-hook nil
-  "Hook run after a color theme is loaded using `load-theme'.")
-(defadvice load-theme (after run-after-load-theme-hook activate)
-  "Run `after-load-theme-hook'."
-  (run-hooks 'after-load-theme-hook))
+(defun my-emoji-can-display ()
+  (if (char-displayable-p ?😄)
+      t
+    nil))
 
 ;; 2023/08/29 enable this and this needs further investigation...
 ;; FIXME: to be fixed (GitHub Actions Pipeline). See error below,
@@ -144,7 +151,7 @@
     (message "set-fontset-font is not available in current %s" emacs-version))
   )
 
-(add-hook 'after-load-theme-hook #'my-set-emoji-font)
+(my-set-emoji-font)
 ;; END: display the emojis }}
 
 
