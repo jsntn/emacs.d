@@ -137,7 +137,9 @@
 	  ;; Via https://github.com/googlefonts/noto-emoji/blob/f826707b28355f6cd1593f504427ca2b1f6c4c19/README.md#using-notocoloremoji
 	  ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
 	  ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-	  ((member "Symbola" (font-family-list)) "Symbola"))) ; http://xahlee.info/comp/unicode_font_download.html
+	  ((member "Symbola" (font-family-list)) "Symbola")
+	  ((message "No emoji font found."))
+	  )) ; http://xahlee.info/comp/unicode_font_download.html
 	)
     (message "set-fontset-font is not available in current %s" emacs-version))
   )
