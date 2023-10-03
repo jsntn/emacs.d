@@ -147,11 +147,14 @@
 	  ((member "Symbola" (font-family-list)) "Symbola")
 	  ((message "No emoji font found."))
 	  )) ; http://xahlee.info/comp/unicode_font_download.html
+	  (remove-hook 'focus-in-hook #'my-set-emoji-font)
 	)
     (message "set-fontset-font is not available in current %s" emacs-version))
   )
 
-(my-set-emoji-font)
+;; (my-set-emoji-font)
+
+(add-hook 'focus-in-hook #'my-set-emoji-font)
 ;; END: display the emojis }}
 
 
