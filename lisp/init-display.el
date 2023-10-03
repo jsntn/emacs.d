@@ -154,6 +154,7 @@
 
 (my-set-emoji-font)
 
+;; https://www.reddit.com/r/emacs/comments/6lxf9b/question_emacsclient_and_connection_hooks/
 (add-hook 'focus-in-hook #'my-set-emoji-font)
 ;; END: display the emojis }}
 
