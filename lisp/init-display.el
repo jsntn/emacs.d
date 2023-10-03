@@ -154,7 +154,14 @@
 
 ;; (my-set-emoji-font)
 
-(add-hook 'focus-in-hook #'my-set-emoji-font)
+;; (add-hook 'focus-in-hook #'my-set-emoji-font)
+(defun my-advice-cnfonts-mode (&rest _)
+  "Advice function to set emoji font when cnfonts-mode is activated."
+  (when cnfonts-mode
+    (my-set-emoji-font)))
+
+;; Advising cnfonts-mode to include setting emoji font
+(advice-add 'cnfonts-mode :after 'my-advice-cnfonts-mode)
 ;; END: display the emojis }}
 
 
