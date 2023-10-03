@@ -152,16 +152,9 @@
     (message "set-fontset-font is not available in current %s" emacs-version))
   )
 
-;; (my-set-emoji-font)
+(my-set-emoji-font)
 
-;; (add-hook 'focus-in-hook #'my-set-emoji-font)
-(defun my-advice-cnfonts-mode (&rest _)
-  "Advice function to set emoji font when cnfonts-mode is activated."
-  (when cnfonts-mode
-    (my-set-emoji-font)))
-
-;; Advising cnfonts-mode to include setting emoji font
-(advice-add 'cnfonts-mode :after 'my-advice-cnfonts-mode)
+(add-hook 'focus-in-hook #'my-set-emoji-font)
 ;; END: display the emojis }}
 
 
