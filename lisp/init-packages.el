@@ -134,14 +134,7 @@ You need to install it manually. Continue?")
     ))
 ;; END: citre }
 
-(use-package cnfonts
-  :if window-system ; only load this package when in graphical Emacs
-  :config
-  (cnfonts-mode 1)
-  (setq cnfonts-profiles
-	'("program" "org-mode" "read-book"))
-  (setq cnfonts-use-system-type t) ; save profile config across different system-type
-  )
+
 
 (use-package company-tabnine
   :config
