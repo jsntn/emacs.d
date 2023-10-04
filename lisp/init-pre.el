@@ -38,6 +38,8 @@
 ;; -- END -- }
 
 
+
+
 (defun my/set-windows-paths (custom-paths-list)
   "Set the PATH and exec-path in sync for Windows-NT system type
 based on the given list of paths.
@@ -47,6 +49,26 @@ Version: 2023-09-27"
     (let ((xPaths custom-paths-list))
       (setenv "PATH" (mapconcat 'identity xPaths ";"))
       (setq exec-path (append xPaths (list "." exec-directory))))))
+;; Example usage,
+;; (setq my-windows-paths
+;; `(
+;; 	,(format "%s%s%s" "C:/Users/" (symbol-value 'user-login-name) "/scoop/apps/nodejs/current/bin")
+;; 	,(format "%s%s%s" "C:/Users/" (symbol-value 'user-login-name) "/scoop/apps/nodejs/current")
+;; 	,(format "%s%s%s" "C:/Users/" (symbol-value 'user-login-name) "/scoop/shims")
+;; 	"C:/Windows/System32/"
+;; 	"C:/Windows/system32/WindowsPowerShell/v1.0/"
+;; 	"C:/msys64/mingw64/bin/"
+;;  ,(symbol-value 'windows-portable-bin-directory)
+;; 	))
+;; (my/set-windows-paths my-windows-paths)
+;; (getenv "PATH")
+
+;; Difference between exec-path and PATH
+;; The value of environment variable "PATH" is used by emacs when you are trying to call a linux command from a shell in emacs.
+;; The exec-path is used by emacs itself to find programs it needs for its features, such as spell checking, file compression, compiling, grep, diff, etc.
+;; The value of (getenv "PATH") and exec-path do not need to be the same.
+;; http://xahlee.info/emacs/emacs/emacs_env_var_paths.html
+
 
 
 (defun my/set-var (var &rest values)
