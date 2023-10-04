@@ -147,15 +147,23 @@
 	  ((member "Symbola" (font-family-list)) "Symbola")
 	  ((message "No emoji font found."))
 	  )) ; http://xahlee.info/comp/unicode_font_download.html
-	  (remove-hook 'focus-in-hook #'my-set-emoji-font)
 	)
     (message "set-fontset-font is not available in current %s" emacs-version))
+  ;; (remove-hook 'focus-in-hook #'my-set-emoji-font)
   )
 
-(my-set-emoji-font)
+;; (my-set-emoji-font)
 
 ;; https://www.reddit.com/r/emacs/comments/6lxf9b/question_emacsclient_and_connection_hooks/
-(add-hook 'focus-in-hook #'my-set-emoji-font)
+;; (add-hook 'focus-in-hook #'my-set-emoji-font)
+
+(defun my-advice-cnfonts-set-font (&rest _)
+  "Advice function to set emoji font when cnfonts-mode is activated."
+  (my-set-emoji-font))
+
+;; Advising cnfonts-set-font to include setting emoji font
+(advice-add 'cnfonts-set-font :after 'my-advice-cnfonts-set-font)
+
 ;; END: display the emojis }}
 
 
