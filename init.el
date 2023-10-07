@@ -95,7 +95,7 @@
 
 
 (when (string-equal (getenv "ELPA") "local")
-  (message "The built-in Org version: %s" (org-version))
+  (message "The built-in Org version: %s" (org-version)))
 
 (when (string-equal (getenv "ELPA") "online")
   ;; use the latest version of Org
