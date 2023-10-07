@@ -83,7 +83,9 @@
 (advice-add 'cnfonts-set-font :after 'my-advice-cnfonts-set-font)
 
 (when (display-graphic-p)
-  (my-check-for-font "Symbola" "Symbola font is not installed, however, it is recommended to install for proper emoji display. Press ENTER to continue."))
+  (unless (my-emoji-can-display)
+    (my-check-for-font "Symbola" "Symbola font is not installed, however, it is recommended to install for proper emoji display. Press ENTER to continue.")
+    ))
 
 
 (use-package emojify
