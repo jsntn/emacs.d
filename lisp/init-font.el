@@ -84,6 +84,15 @@
 
 (when (display-graphic-p)
   (my-check-for-font "Symbola" "Symbola font is not installed, however, it is recommended to install for proper emoji display. Press ENTER to continue."))
+
+
+(use-package emojify
+  :init
+  (global-emojify-mode)
+  :config
+  (setq emojify-company-tooltips-p t)
+  (setq emojify-display-style 'unicode)
+  )
 ;; END: display the emojis }}
 
 
