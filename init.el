@@ -94,11 +94,13 @@
   (package-refresh-contents))
 
 
+(when (string-equal (getenv "ELPA") "local")
+  (message "The built-in Org version: %s" (org-version))
 
 (when (string-equal (getenv "ELPA") "online")
   ;; use the latest version of Org
   (add-to-list 'load-path (concat (getenv "GITHUB_WORKSPACE") "/src/org-mode/lisp"))
-  (message "Org version: %s" (org-version)))
+  (message "The latest Org version: %s" (org-version)))
 
 
 
