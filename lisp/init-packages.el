@@ -560,9 +560,10 @@ In that case, insert the number."
 
 (use-package org-drill
   :config
-  ;; make all agenda files with any archive files associated with them as the
-  ;; source of items for drill sessions(scope)
-  (setq org-drill-scope 'agenda-with-archives)
+  (unless noninteractive
+    ;; make all agenda files with any archive files associated with them as the
+    ;; source of items for drill sessions(scope)
+    (setq org-drill-scope 'agenda-with-archives))
   )
 
 (use-package org-modern
