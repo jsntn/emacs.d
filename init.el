@@ -37,6 +37,20 @@
 ;; =============================================================================
 
 (require 'init-portable) ; portable Emacs settings
+
+
+
+(when (string-equal (getenv "ELPA") "local")
+  (message "The built-in Org version: %s" (org-version)))
+
+(when (string-equal (getenv "ELPA") "online")
+  ;; use the latest version of Org
+  (add-to-list 'load-path (concat (getenv "GITHUB_WORKSPACE") "/src/org-mode/lisp"))
+  (require 'org)
+  (message "The latest Org version: %s" (org-version)))
+
+
+ 
 (require 'init-load-path) ; load-path settings
 (require 'init-pre) ; pre-startup settings
 
@@ -94,13 +108,7 @@
   (package-refresh-contents))
 
 
-(when (string-equal (getenv "ELPA") "local")
-  (message "The built-in Org version: %s" (org-version)))
 
-(when (string-equal (getenv "ELPA") "online")
-  ;; use the latest version of Org
-  (add-to-list 'load-path (concat (getenv "GITHUB_WORKSPACE") "/src/org-mode/lisp"))
-  (message "The latest Org version: %s" (org-version)))
 
 
 
