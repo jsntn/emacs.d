@@ -181,8 +181,7 @@ Version 2017-03-12"
       (hs-hide-block)
     (hs-show-block)))
 
-;; { -- START --
-;; default inline image background in Org-mode
+;; { -- START: default inline image background in Org-mode
 ;; https://emacs.stackexchange.com/a/37927/29715
 ;; note: restart Emacs to make this change effective
 (defcustom org-inline-image-background nil
@@ -191,7 +190,11 @@ When nil, use the default face background."
   :group 'org
   :type '(choice color (const nil)))
 
-(defun create-image-with-background-color (args)
+(defvar my-bg-color-to-create-image 'transparent
+  "Variable to track the current advice for create-image.
+   Possible values: 'transparent or 'white.")
+
+(defun my-create-image-with-white-background-color (args)
   "Specify background color of Org-mode inline image through modify `ARGS'."
   (let* ((file (car args))
 	 (type (cadr args))
@@ -202,9 +205,39 @@ When nil, use the default face background."
 	    (list :background "white")
 	    props)))
 
+(defun my-create-image-with-transparent-background-color (args)
+  "Specify background color of Org-mode inline image through modify `ARGS'."
+  (let* ((file (car args))
+	 (type (cadr args))
+	 (data-p (caddr args))
+	 (props (cdddr args)))
+    ;; Get this return result style from `create-image'.
+    (append (list file type data-p)
+	    (list :background "transparent")
+	    props)))
+
 (advice-add 'create-image :filter-args
-	    #'create-image-with-background-color)
-;; -- END -- }
+	    #'my-create-image-with-transparent-background-color)
+
+(defun my/toggle-bg-color-to-create-image ()
+  "Toggle between transparent and white background color advice for create-image."
+  (interactive)
+  (advice-remove 'create-image 'my-create-image-with-transparent-background-color)
+  (advice-remove 'create-image 'my-create-image-with-white-background-color)
+  (if (eq my-bg-color-to-create-image 'transparent)
+      (progn
+	(advice-add 'create-image :filter-args
+		    #'my-create-image-with-white-background-color)
+	(setq my-bg-color-to-create-image 'white)
+	(message "Switched background color for create-image to white.")
+	)
+    (progn
+      (advice-add 'create-image :filter-args
+		  #'my-create-image-with-transparent-background-color)
+      (setq my-bg-color-to-create-image 'transparent)
+      (message "Switched background color for create-image to transparent.")
+      )))
+;; -- END: default inline image background in Org-mode }
 
 
 (provide 'init-display)
