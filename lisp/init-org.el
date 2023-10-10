@@ -178,21 +178,21 @@
  "<- now -------------------------------------------------"
  )
 
-(add-hook 'org-agenda-finalize-hook 'place-agenda-tags)
 (defun place-agenda-tags ()
   "Put the agenda tags by the right border of the agenda window."
   ;; http://lists.gnu.org/archive/html/emacs-orgmode//2010-12/msg00410.html
   (setq org-agenda-tags-column (- 10 (window-width)))
   (org-agenda-align-tags)
   )
+(add-hook 'org-agenda-finalize-hook 'place-agenda-tags)
 
 ;; { -- BEGIN -- org-agenda custom commands
 ;; https://www.reddit.com/r/orgmode/comments/6ybjjw/aligned_agenda_view_anyway_to_make_this_more/
 (setq org-agenda-prefix-format ; the display format
       ;; http://doc.endlessparentheses.com/Var/org-agenda-prefix-format.html
       (quote
-       ((agenda . "%5e %12s %12t")
-	(timeline . "  % s")
+       ((agenda . "%5e %27s %12t")
+	;; (timeline . "  % s")
 	(todo . " %12t")
 	(tags . " %12t")
 	(search . " %12t"))
