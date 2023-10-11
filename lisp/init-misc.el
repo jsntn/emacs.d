@@ -84,8 +84,8 @@ to HTML files."
   (add-to-list 'org-export-filter-paragraph-functions 'eh-org-clean-space)
   )
 
-;; TODO: append needs to be tested...
-(defun my/create-tags (dir-name tags-format tag-relative tags-filename &optional append sudo process-name)
+;; TODO: tags-path needs to be tested...
+(defun my/create-tags (dir-name tags-format tag-relative tags-filename &optional tags-path append sudo process-name)
   "Create a tags file with absolute or relative symbols recorded inside. With a
 prefix argument SUDO, run the command with sudo privilege.
 
@@ -113,10 +113,11 @@ Updated: 2023-08-25"
 			(if (string-equal tags-format "etags")
 			    (if (string-equal tag-relative "y") "TAGS" "TAGS_ABS")
 			  (if (string-equal tag-relative "y") "tags" "tags_abs")))
+       (or tags-path nil) 
 	   (completing-read "Append the tags to existing tags index file? (y/n)\n(Note: omit input indicates creating) "
 			    '("y" "n"))
 	   current-prefix-arg ; if universal argument (sudo)
-	   nil)))
+	   (or process-name "create tags"))))
 
   (let* ((target-dir (if (string= "" dir-name)
 			 default-directory
@@ -130,15 +131,16 @@ Updated: 2023-08-25"
 
 	 (append-or-not (if (string-equal append 'y) "--append=yes" ""))
 
-	 (tags-path
+	 (tags-path-value
 	  (if (string= tag-relative 'y)
 	      (expand-file-name tags-filename target-dir)
+	      (or tags-path
 	    (expand-file-name tags-filename
 			      (read-directory-name
 			       "Enter the path to store the tags file: "
-			       nil default-directory))))
+			       nil default-directory)))))
 
-	 (command-process-name (or process-name "create tags"))
+	 (command-process-name process-name)
 
 	 (ctags-cmd (format "cd %s && ctags --options=%s %s -R --tag-relative=%s %s -f %s *"
 			    (if (eq system-type 'windows-nt)
@@ -155,7 +157,7 @@ Updated: 2023-08-25"
 			    ;; evaluate the expression (expand-file-name "tags"
 			    ;; target-dir) and use the result of that evaluation
 			    ;; as the final result.
-			    tags-path))
+			    tags-path-value))
          (command (if sudo
 		       (concat "sudo sh -c '"
 			       ctags-cmd
