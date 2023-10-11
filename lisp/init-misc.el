@@ -85,7 +85,9 @@ to HTML files."
   )
 
 ;; TODO: tags-path needs to be tested...
-(defun my/create-tags (dir-name tags-format tag-relative tags-filename &optional tags-path append sudo process-name)
+(defun my/create-tags
+    (dir-name tags-format tag-relative tags-filename
+	      &optional tags-path append sudo process-name)
   "Create a tags file with absolute or relative symbols recorded inside. With a
 prefix argument SUDO, run the command with sudo privilege.
 
@@ -98,7 +100,7 @@ indicates 'never'. The `*` wildcard is included in the `ctags`
 command to create tags for all files in the directory.
 
 Version: 2023-03-17
-Updated: 2023-08-25"
+Updated: 2023-10-11"
 
   ;; This function is improved by ChatGPT and Claude :)
   (interactive
@@ -113,11 +115,11 @@ Updated: 2023-08-25"
 			(if (string-equal tags-format "etags")
 			    (if (string-equal tag-relative "y") "TAGS" "TAGS_ABS")
 			  (if (string-equal tag-relative "y") "tags" "tags_abs")))
-       (or tags-path nil) 
+	   (if (boundp 'tags-path) tags-path nil)
 	   (completing-read "Append the tags to existing tags index file? (y/n)\n(Note: omit input indicates creating) "
 			    '("y" "n"))
 	   current-prefix-arg ; if universal argument (sudo)
-	   (or process-name "create tags"))))
+	   (if (boundp 'process-name) process-name "create tags"))))
 
   (let* ((target-dir (if (string= "" dir-name)
 			 default-directory
@@ -134,11 +136,11 @@ Updated: 2023-08-25"
 	 (tags-path-value
 	  (if (string= tag-relative 'y)
 	      (expand-file-name tags-filename target-dir)
-	      (or tags-path
-	    (expand-file-name tags-filename
-			      (read-directory-name
-			       "Enter the path to store the tags file: "
-			       nil default-directory)))))
+	    (or tags-path
+		(expand-file-name tags-filename
+				  (read-directory-name
+				   "Enter the path to store the tags file: "
+				   nil default-directory)))))
 
 	 (command-process-name process-name)
 
@@ -151,12 +153,6 @@ Updated: 2023-08-25"
 			    tags-format-value
 			    tag-relative-value
 			    append-or-not
-
-			    ;; if tags-path is non-nil, it will use that value
-			    ;; as the result. if tags-path is nil, it will
-			    ;; evaluate the expression (expand-file-name "tags"
-			    ;; target-dir) and use the result of that evaluation
-			    ;; as the final result.
 			    tags-path-value))
          (command (if sudo
 		       (concat "sudo sh -c '"
