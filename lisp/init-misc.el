@@ -113,7 +113,8 @@ Updated: 2023-08-25"
 			(if (string-equal tags-format "etags")
 			    (if (string-equal tag-relative "y") "TAGS" "TAGS_ABS")
 			  (if (string-equal tag-relative "y") "tags" "tags_abs")))
-	   nil
+	   (completing-read "Append the tags to existing tags index file? (y/n)\n(Note: omit input indicates creating) "
+			    '("y" "n"))
 	   current-prefix-arg ; if universal argument (sudo)
 	   nil)))
 
@@ -127,7 +128,7 @@ Updated: 2023-08-25"
 	 ;; yes   - relative symbols
 	 ;; never - absolute symbols
 
-	 (append-or-not (if append "--append=yes" ""))
+	 (append-or-not (if (string-equal append 'y) "--append=yes" ""))
 
 	 (tags-path (expand-file-name tags-filename target-dir))
 

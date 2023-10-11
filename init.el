@@ -50,7 +50,7 @@
   (message "The latest Org version: %s" (org-version)))
 
 
- 
+
 (require 'init-load-path) ; load-path settings
 (require 'init-pre) ; pre-startup settings
 
