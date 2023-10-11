@@ -106,7 +106,7 @@ Updated: 2023-08-25"
 				       '("ctags" "etags")))
 	 (tag-relative (completing-read "Create tags index file with relative symbols? (y/n)\n(Note: omit input indicates absolute symbols) "
 					'("y" "n"))))
-     (list (read-directory-name "Enter the directory to create tags file: ")
+     (list (read-directory-name "Enter the directory for creating tags file: ")
 	   tags-format
 	   tag-relative
 	   (read-string "Enter the desired tags filename: "
@@ -130,7 +130,13 @@ Updated: 2023-08-25"
 
 	 (append-or-not (if (string-equal append 'y) "--append=yes" ""))
 
-	 (tags-path (expand-file-name tags-filename target-dir))
+	 (tags-path
+	  (if (string= tag-relative 'y)
+	      (expand-file-name tags-filename target-dir)
+	    (expand-file-name tags-filename
+			      (read-directory-name
+			       "Enter the path to store the tags file: "
+			       nil default-directory))))
 
 	 (command-process-name (or process-name "create tags"))
 
