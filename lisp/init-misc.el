@@ -89,12 +89,10 @@ to HTML files."
 (defun my-write-to-file (content file &optional append sudo)
   "Write CONTENT to FILE. If APPEND is true, append the content to the file; otherwise, overwrite the file.
   If SUDO is provided and non-nil, execute the write operation with sudo."
-  (with-temp-buffer
-    (insert (concat "\n" content "\n"))
-    (if sudo
-        (let ((sudo-command (if append "sudo tee -a" "sudo tee")))
-          (shell-command-on-region (point-min) (point-max) sudo-command file t))
-      (write-region (point-min) (point-max) file append))))
+  (let* ((tee-command (if append "tee -a" "tee"))
+         (sudo-command (if sudo (concat "sudo " tee-command) tee-command))
+         (cmd (concat "echo " (shell-quote-argument content) " | " sudo-command " " (shell-quote-argument file))))
+    (shell-command cmd)))
 
 (defun my-merge-duplicated-lines-in-file (file &optional sudo)
   "Merge duplicated lines in FILE.
