@@ -167,7 +167,7 @@ Updated: 2023-10-11"
 
 	 (tags-path-value
 	  (if (string= tag-relative 'y)
-	      (expand-file-name tags-filename target-dir)
+	      (expand-file-name tags-filename target-dir-value)
 	    (or tags-path
 		(expand-file-name tags-filename
 				  (read-directory-name
