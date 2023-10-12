@@ -86,11 +86,11 @@ to HTML files."
 
 
 
-(defun my-write-to-file (content file)
-  "Write CONTENT to FILE."
+(defun my-write-to-file (content file &optional append)
+  "Write CONTENT to FILE. If APPEND is true, append the content to the file; otherwise, overwrite the file."
   (with-temp-buffer
-    (insert content)
-    (write-region (point-min) (point-max) file)))
+    (insert (concat "\n" content "\n"))
+    (write-region (point-min) (point-max) file append)))
 
 (defun my-merge-duplicated-lines-in-file (file)
   "Merge duplicated lines in FILE."
@@ -99,11 +99,12 @@ to HTML files."
     (insert-file-contents file)
     (let ((lines (split-string (buffer-string) "\n" t)))
       (setq lines (delete-dups lines))
+      (setq lines (sort lines 'string>)) ;; Sort the lines
       (erase-buffer)
       (insert (mapconcat 'identity lines "\n")))
     (write-region (point-min) (point-max) file)))
- 
- 
+
+
 ;; TODO: tags-path needs to be tested...
 (defun my/create-tags
     (dir-name tags-format tag-relative tags-filename
@@ -138,12 +139,26 @@ Updated: 2023-10-11"
 	   (if (boundp 'tags-path) tags-path nil)
 	   (completing-read "Append the tags to existing tags index file? (y/n)\n(Note: omit input indicates creating) "
 			    '("y" "n"))
-	   current-prefix-arg ; if universal argument (sudo)
+	   (if (boundp 'sudo)
+	       sudo
+	     current-prefix-arg ; if universal argument (sudo)
+	     )
 	   (if (boundp 'process-name) process-name "create tags"))))
 
   (let* ((target-dir (if (string= "" dir-name)
 			 default-directory
-		       (expand-file-name dir-name)))
+		       (if (eq system-type 'windows-nt)
+			   ;; if the dir-name already start with "/d", just use it
+			   (if (string-prefix-p "/d" dir-name)
+			       dir-name
+			     (expand-file-name dir-name)))))
+
+	 (target-dir-value (if (eq system-type 'windows-nt)
+			       ;; fix changing dir across different drives issue on Windows
+			       (if (string-prefix-p "/d" target-dir)
+				   target-dir
+				 (concat "/d " target-dir))
+			     target-dir))
 
 	 (tags-format-value (if (string-equal tags-format 'ctags) "" "-e"))
 
@@ -151,6 +166,8 @@ Updated: 2023-10-11"
 	 ;; yes   - relative symbols
 	 ;; never - absolute symbols
 
+	 (append-t-or-not (if (string-equal append 'y) t nil))
+	 (append-or-create (if (string-equal append 'y) "APPEND: " "CREATE: "))
 	 (append-or-not (if (string-equal append 'y) "--append=yes" ""))
 
 	 (tags-path-value
@@ -165,10 +182,7 @@ Updated: 2023-10-11"
 	 (command-process-name process-name)
 
 	 (ctags-cmd (format "cd %s && ctags --options=%s %s -R --tag-relative=%s %s -f %s *"
-			    (if (eq system-type 'windows-nt)
-				;; fix changing dir across different drives issue on Windows
-				(concat "/d" target-dir)
-			      target-dir)
+			    target-dir-value
 			    (expand-file-name ".ctags" user-emacs-directory)
 			    tags-format-value
 			    tag-relative-value
@@ -181,22 +195,28 @@ Updated: 2023-10-11"
 		     ctags-cmd)))
 
 
-(my-write-to-file
-command
-(expand-file-name ".commands" tags-path-value)
-)
+    (my-write-to-file
+     (concat append-or-create command)
+     (concat tags-path-value ".commands")
+     append-t-or-not)
 
-(my-write-to-file
-(format "(my/create-tags %s tags-format-value tag-relative-value tags-filename tags-path-value append-or-not sudo command-process-name)"
-(if (eq system-type 'windows-nt)
-				;; fix changing dir across different drives issue on Windows
-				(concat "/d" target-dir)
-			      target-dir))
-(expand-file-name ".commands" tags-path-value)
-)
+    (my-write-to-file
+     (concat append-or-create
+	     (format "(my/create-tags \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" %s \"%s\")"
+		     target-dir-value
+		     tags-format
+		     tag-relative
+		     tags-filename
+		     tags-path-value
+		     append
+		     sudo
+		     process-name
+		     ))
+     (concat tags-path-value ".commands")
+     t)
 
-(my-merge-duplicated-lines-in-file
-(expand-file-name ".commands" tags-path-value))
+    (my-merge-duplicated-lines-in-file
+     (concat tags-path-value ".commands"))
 
 
     (if (get-process command-process-name)
