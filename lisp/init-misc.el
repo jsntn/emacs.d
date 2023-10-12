@@ -197,13 +197,13 @@ Updated: 2023-10-12"
 
 
     (my-write-to-file
-     (concat append-or-create command)
+     (concat "\n" append-or-create command "\n")
      (concat tags-path-value ".commands")
      append-t-or-not
      sudo)
 
     (my-write-to-file
-     (concat append-or-create
+     (concat "\n" append-or-create
 	     (format "(my/create-tags \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" %s \"%s\")"
 		     target-dir-value
 		     tags-format
@@ -213,7 +213,7 @@ Updated: 2023-10-12"
 		     append
 		     sudo
 		     process-name
-		     ))
+		     ) "\n")
      (concat tags-path-value ".commands")
      t
      sudo)
