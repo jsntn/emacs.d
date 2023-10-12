@@ -86,14 +86,19 @@ to HTML files."
 
 
 
-(defun my-write-to-file (content file &optional append)
-  "Write CONTENT to FILE. If APPEND is true, append the content to the file; otherwise, overwrite the file."
+(defun my-write-to-file (content file &optional append sudo)
+  "Write CONTENT to FILE. If APPEND is true, append the content to the file; otherwise, overwrite the file.
+  If SUDO is provided and non-nil, execute the write operation with sudo."
   (with-temp-buffer
     (insert (concat "\n" content "\n"))
-    (write-region (point-min) (point-max) file append)))
+    (if sudo
+        (let ((sudo-command (if append "sudo tee -a" "sudo tee")))
+          (shell-command-on-region (point-min) (point-max) sudo-command file t))
+      (write-region (point-min) (point-max) file append))))
 
-(defun my-merge-duplicated-lines-in-file (file)
-  "Merge duplicated lines in FILE."
+(defun my-merge-duplicated-lines-in-file (file &optional sudo)
+  "Merge duplicated lines in FILE.
+  If SUDO is provided and non-nil, execute the merge operation with sudo."
   (interactive "f")
   (with-temp-buffer
     (insert-file-contents file)
@@ -102,7 +107,10 @@ to HTML files."
       (setq lines (sort lines 'string>)) ;; Sort the lines
       (erase-buffer)
       (insert (mapconcat 'identity lines "\n")))
-    (write-region (point-min) (point-max) file)))
+    (if sudo
+        (let ((sudo-command "sudo tee"))
+          (shell-command-on-region (point-min) (point-max) sudo-command file t))
+      (write-region (point-min) (point-max) file))))
 
 
 (defun my/create-tags
@@ -192,7 +200,8 @@ Updated: 2023-10-12"
     (my-write-to-file
      (concat append-or-create command)
      (concat tags-path-value ".commands")
-     append-t-or-not)
+     append-t-or-not
+     sudo)
 
     (my-write-to-file
      (concat append-or-create
@@ -207,10 +216,12 @@ Updated: 2023-10-12"
 		     process-name
 		     ))
      (concat tags-path-value ".commands")
-     t)
+     t
+     sudo)
 
     (my-merge-duplicated-lines-in-file
-     (concat tags-path-value ".commands"))
+     (concat tags-path-value ".commands")
+     sudo)
 
 
     (if (get-process command-process-name)
