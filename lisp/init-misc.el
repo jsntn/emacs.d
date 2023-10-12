@@ -141,24 +141,19 @@ Updated: 2023-10-11"
 			    '("y" "n"))
 	   (if (boundp 'sudo)
 	       sudo
-	     current-prefix-arg ; if universal argument (sudo)
+	     (if current-prefix-arg t nil) ; if universal argument (sudo)
 	     )
 	   (if (boundp 'process-name) process-name "create tags"))))
 
-  (let* ((target-dir (if (string= "" dir-name)
-			 default-directory
-		       (if (eq system-type 'windows-nt)
-			   ;; if the dir-name already start with "/d", just use it
-			   (if (string-prefix-p "/d" dir-name)
-			       dir-name
-			     (expand-file-name dir-name)))))
-
-	 (target-dir-value (if (eq system-type 'windows-nt)
-			       ;; fix changing dir across different drives issue on Windows
-			       (if (string-prefix-p "/d" target-dir)
-				   target-dir
-				 (concat "/d " target-dir))
-			     target-dir))
+  (let* ((target-dir-value (if (string= "" dir-name)
+			       default-directory
+			     (if (eq system-type 'windows-nt)
+				 ;; if the dir-name already start with "/d", just use it
+				 (if (string-prefix-p "/d" dir-name)
+				     dir-name
+				   ;; fix changing dir across different drives issue on Windows
+				   (concat "/d " dir-name))
+			       (expand-file-name dir-name))))
 
 	 (tags-format-value (if (string-equal tags-format 'ctags) "" "-e"))
 
