@@ -106,8 +106,9 @@ to HTML files."
       (erase-buffer)
       (insert (mapconcat 'identity lines "\n")))
     (if sudo
-        (let ((sudo-command "sudo tee"))
-          (shell-command-on-region (point-min) (point-max) sudo-command file t))
+        (let ((sudo-command (concat "sudo tee " (shell-quote-argument file)))
+        (cmd (concat "echo " (shell-quote-argument (buffer-string)) " | " sudo-command)))
+          (shell-command cmd))
       (write-region (point-min) (point-max) file))))
 
 
