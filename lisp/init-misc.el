@@ -84,6 +84,26 @@ to HTML files."
   (add-to-list 'org-export-filter-paragraph-functions 'eh-org-clean-space)
   )
 
+
+
+(defun my-write-to-file (content file)
+  "Write CONTENT to FILE."
+  (with-temp-buffer
+    (insert content)
+    (write-region (point-min) (point-max) file)))
+
+(defun my-merge-duplicated-lines-in-file (file)
+  "Merge duplicated lines in FILE."
+  (interactive "f")
+  (with-temp-buffer
+    (insert-file-contents file)
+    (let ((lines (split-string (buffer-string) "\n" t)))
+      (setq lines (delete-dups lines))
+      (erase-buffer)
+      (insert (mapconcat 'identity lines "\n")))
+    (write-region (point-min) (point-max) file)))
+ 
+ 
 ;; TODO: tags-path needs to be tested...
 (defun my/create-tags
     (dir-name tags-format tag-relative tags-filename
@@ -159,6 +179,25 @@ Updated: 2023-10-11"
 			       ctags-cmd
 			       "'")
 		     ctags-cmd)))
+
+
+(my-write-to-file
+command
+(expand-file-name ".commands" tags-path-value)
+)
+
+(my-write-to-file
+(format "(my/create-tags %s tags-format-value tag-relative-value tags-filename tags-path-value append-or-not sudo command-process-name)"
+(if (eq system-type 'windows-nt)
+				;; fix changing dir across different drives issue on Windows
+				(concat "/d" target-dir)
+			      target-dir))
+(expand-file-name ".commands" tags-path-value)
+)
+
+(my-merge-duplicated-lines-in-file
+(expand-file-name ".commands" tags-path-value))
+
 
     (if (get-process command-process-name)
 	(message "Process (%s) already running..." command-process-name)
