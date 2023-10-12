@@ -105,7 +105,6 @@ to HTML files."
     (write-region (point-min) (point-max) file)))
 
 
-;; TODO: tags-path needs to be tested...
 (defun my/create-tags
     (dir-name tags-format tag-relative tags-filename
 	      &optional tags-path append sudo process-name)
@@ -121,7 +120,7 @@ indicates 'never'. The `*` wildcard is included in the `ctags`
 command to create tags for all files in the directory.
 
 Version: 2023-03-17
-Updated: 2023-10-11"
+Updated: 2023-10-12"
 
   ;; This function is improved by ChatGPT and Claude :)
   (interactive
