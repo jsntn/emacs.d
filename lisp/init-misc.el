@@ -92,7 +92,10 @@ to HTML files."
   (let* ((tee-command (if append "tee -a" "tee"))
          (sudo-command (if sudo (concat "sudo " tee-command) tee-command))
          (cmd (concat "echo " (shell-quote-argument content) " | " sudo-command " " (shell-quote-argument file))))
-    (shell-command cmd)))
+    (if sudo
+        (shell-command cmd)
+      (write-region (point-min) (point-max) file append))
+    ))
 
 (defun my-merge-duplicated-lines-in-file (file &optional sudo)
   "Merge duplicated lines in FILE.
