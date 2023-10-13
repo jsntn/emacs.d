@@ -48,8 +48,8 @@
 (defun my-monitor-kill-and-write-to-file (output-file-path x-seconds)
   "Monitor current kill ring and write its content to the specified file."
   (defun my-kill-monitor-task ()
-    (when (current-kill 0)
-      (let ((current-contents (current-kill 0)))
+    (let ((current-contents (current-kill 0)))
+      (when current-contents
 	(unless (equal current-contents my-previous-kill-contents)
 	  (setq my-previous-kill-contents current-contents)
 	  (with-temp-file output-file-path
