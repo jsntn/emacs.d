@@ -69,24 +69,32 @@
 
 (defun my-monitor-file-and-copy-to-register (file-path register-name x-seconds)
   "Monitor the specified file for changes and copy its content to a register."
-  (defun my-file-monitor-task ()
-    (let ((base-filename (my-remove-file-suffix (file-name-nondirectory file-path)))
-	  (current-contents (when (file-readable-p file-path)
-                              (with-temp-buffer
-                                (insert-file-contents file-path)
-                                (buffer-string)))))
-      (unless (equal current-contents
-		     (intern (format "my-previous-%s-contents" base-filename)))
-	(set (intern (format "my-previous-%s-contents" base-filename))
-	      current-contents)
-        (set-register register-name current-contents))))
+  (let ((previous-contents-alist ()))
 
-  (set (intern (format "my-previous-%s-contents"
-			(my-remove-file-suffix (file-name-nondirectory file-path))))
-	nil)
-  (let ((task-name (concat "my-file-monitor-task_" (my-remove-file-suffix (file-name-nondirectory file-path)))))
-    (fset (intern task-name) #'my-file-monitor-task)
-    (my-schedule-task-every-x-secs x-seconds (intern task-name))))
+    (defun my-file-monitor-task ()
+      (let* ((base-filename
+	     (my-remove-file-suffix (file-name-nondirectory file-path)))
+	    (current-contents (when (file-readable-p file-path)
+				(with-temp-buffer
+				  (insert-file-contents file-path)
+				  (buffer-string))))
+	    (previous-contents (assoc base-filename previous-contents-alist)))
+
+	(unless (equal current-contents (cdr previous-contents))
+	  (set-register register-name current-contents)
+	  (setq previous-contents-alist
+		(cons
+		 (cons base-filename current-contents)
+		 (delq
+		  (assoc base-filename previous-contents-alist)
+		  previous-contents-alist)
+		 )))))
+
+    (let ((task-name (concat "my-file-monitor-task_"
+			     (my-remove-file-suffix
+			      (file-name-nondirectory file-path)))))
+      (fset (intern task-name) #'my-file-monitor-task)
+      (my-schedule-task-every-x-secs x-seconds (intern task-name)))))
 ;; Example usage:
 ;; (my-monitor-file-and-copy-to-register "c:/x-clipboard.txt" ?a 1)
 ;; (my-monitor-file-and-copy-to-register "c:/emacs-clipboard.txt" ?b 1)
@@ -97,24 +105,33 @@
 
 (defun my-monitor-file-and-copy-to-w32-clipboard (file-path x-seconds)
   "Monitor the specified file for changes and copy its content to Windows clipboard."
-  (defun my-file-monitor-task ()
-    (let ((base-filename (my-remove-file-suffix (file-name-nondirectory file-path)))
-	  (current-contents (when (file-readable-p file-path)
-                              (with-temp-buffer
-                                (insert-file-contents file-path)
-                                (buffer-string)))))
-      (unless (equal current-contents
-		     (intern (format "my-previous-%s-contents" base-filename)))
-	(set (intern (format "my-previous-%s-contents" base-filename))
-	      current-contents)
-	(w32-set-clipboard-data current-contents))))
+  (let ((previous-contents-alist ()))
 
-  (set (intern (format "my-previous-%s-contents"
-			(my-remove-file-suffix (file-name-nondirectory file-path))))
-	nil)
-  (let ((task-name (concat "my-file-monitor-task_" (my-remove-file-suffix (file-name-nondirectory file-path)))))
-    (fset (intern task-name) #'my-file-monitor-task)
-    (my-schedule-task-every-x-secs x-seconds (intern task-name))))
+    (defun my-file-monitor-task ()
+      (let* ((base-filename
+	      (my-remove-file-suffix (file-name-nondirectory file-path)))
+             (current-contents (when (file-readable-p file-path)
+                                (with-temp-buffer
+                                  (insert-file-contents file-path)
+                                  (buffer-string))))
+             (previous-contents (assoc base-filename previous-contents-alist)))
+
+        (unless (equal current-contents (cdr previous-contents))
+          (w32-set-clipboard-data current-contents)
+          (setq previous-contents-alist
+		(cons
+		 (cons base-filename current-contents)
+		 (delq
+		  (assoc base-filename previous-contents-alist)
+		  previous-contents-alist)
+		 )))))
+
+    (let ((task-name (concat "my-file-monitor-task_"
+			     (my-remove-file-suffix
+			      (file-name-nondirectory file-path)))))
+      (fset (intern task-name) #'my-file-monitor-task)
+      (my-schedule-task-every-x-secs x-seconds (intern task-name)))))
+
 ;; (my-monitor-file-and-copy-to-w32-clipboard "c:/emacs-clipboard.txt" 1)
 
 
