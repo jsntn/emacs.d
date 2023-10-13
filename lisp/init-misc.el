@@ -29,6 +29,98 @@
 
 
 
+
+(defun my-monitor-clipboard-and-write-to-file (output-file-path x-seconds)
+  "Monitor system clipboard and write new content to the specified file."
+  (defun my-clipboard-monitor-task ()
+    (let ((current-clipboard (x-get-selection 'CLIPBOARD)))
+      (unless (equal current-clipboard my-clipboard-text)
+	(setq my-clipboard-text current-clipboard)
+	(with-temp-file output-file-path
+	  (insert current-clipboard)))))
+
+  (setq my-clipboard-text nil)
+  (my-schedule-task-every-x-secs x-seconds 'my-clipboard-monitor-task))
+;; Call the function with the desired output file path
+;; (my-monitor-clipboard-and-write-to-file "c:/x-clipboard.txt" 1)
+
+(defun my-monitor-kill-and-write-to-file (output-file-path x-seconds)
+  "Monitor current kill ring and write its content to the specified file."
+  (defun my-kill-monitor-task ()
+    (let ((current-contents (current-kill 0)))
+      (unless (equal current-contents my-previous-kill-contents)
+	(setq my-previous-kill-contents current-contents)
+	(with-temp-file output-file-path
+	  (insert current-contents)))))
+
+  (setq my-previous-kill-contents nil)
+  (my-schedule-task-every-x-secs x-seconds 'my-kill-monitor-task))
+;; (current-kill 0)
+;; (my-monitor-kill-and-write-to-file "c:/emacs-clipboard.txt" 1)
+
+
+(defun my-remove-file-suffix (filename)
+  "Remove the file suffix from FILENAME."
+  (if (string-match "\\(.*\\)\\..*" filename)
+      (match-string 1 filename)
+    filename))
+;; (my-remove-file-suffix "abc.txt")
+;; (file-name-nondirectory "/temp/abc.txt")
+
+(defun my-monitor-file-and-copy-to-register (file-path register-name x-seconds)
+  "Monitor the specified file for changes and copy its content to a register."
+  (defun my-file-monitor-task ()
+    (let ((base-filename (my-remove-file-suffix (file-name-nondirectory file-path)))
+	  (current-contents (when (file-readable-p file-path)
+                              (with-temp-buffer
+                                (insert-file-contents file-path)
+                                (buffer-string)))))
+      (unless (equal current-contents
+		     (intern (format "my-previous-%s-contents" base-filename)))
+	(set (intern (format "my-previous-%s-contents" base-filename))
+	      current-contents)
+        (set-register register-name current-contents))))
+
+  (set (intern (format "my-previous-%s-contents"
+			(my-remove-file-suffix (file-name-nondirectory file-path))))
+	nil)
+  (let ((task-name (concat "my-file-monitor-task_" (my-remove-file-suffix (file-name-nondirectory file-path)))))
+    (fset (intern task-name) #'my-file-monitor-task)
+    (my-schedule-task-every-x-secs x-seconds (intern task-name))))
+;; Example usage:
+;; (my-monitor-file-and-copy-to-register "c:/x-clipboard.txt" ?a 1)
+;; (my-monitor-file-and-copy-to-register "c:/emacs-clipboard.txt" ?b 1)
+;; Testing:
+;; (get-register ?a)
+;; (get-register ?b)
+;; (w32-set-clipboard-data "Your content goes here")
+
+(defun my-monitor-file-and-copy-to-w32-clipboard (file-path x-seconds)
+  "Monitor the specified file for changes and copy its content to Windows clipboard."
+  (defun my-file-monitor-task ()
+    (let ((base-filename (my-remove-file-suffix (file-name-nondirectory file-path)))
+	  (current-contents (when (file-readable-p file-path)
+                              (with-temp-buffer
+                                (insert-file-contents file-path)
+                                (buffer-string)))))
+      (unless (equal current-contents
+		     (intern (format "my-previous-%s-contents" base-filename)))
+	(set (intern (format "my-previous-%s-contents" base-filename))
+	      current-contents)
+	(w32-set-clipboard-data current-contents))))
+
+  (set (intern (format "my-previous-%s-contents"
+			(my-remove-file-suffix (file-name-nondirectory file-path))))
+	nil)
+  (let ((task-name (concat "my-file-monitor-task_" (my-remove-file-suffix (file-name-nondirectory file-path)))))
+    (fset (intern task-name) #'my-file-monitor-task)
+    (my-schedule-task-every-x-secs x-seconds (intern task-name))))
+;; (my-monitor-file-and-copy-to-w32-clipboard "c:/emacs-clipboard.txt" 1)
+
+
+
+
+
 ;; via https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
 (defun my/reload-dir-locals-for-current-buffer ()
   "reload dir locals for the current buffer"
