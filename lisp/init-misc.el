@@ -33,13 +33,14 @@
 (defun my-monitor-clipboard-and-write-to-file (output-file-path x-seconds)
   "Monitor system clipboard and write new content to the specified file."
   (defun my-clipboard-monitor-task ()
-    (let ((current-clipboard (x-get-selection 'CLIPBOARD)))
+    (let ((current-clipboard
+	   (or (x-get-selection 'CLIPBOARD) "")))
       (unless (equal current-clipboard my-clipboard-text)
 	(setq my-clipboard-text current-clipboard)
 	(with-temp-file output-file-path
 	  (insert current-clipboard)))))
 
-  (setq my-clipboard-text "")
+  (setq my-clipboard-text nil)
   (my-schedule-task-every-x-secs x-seconds 'my-clipboard-monitor-task))
 ;; Call the function with the desired output file path
 ;; (my-monitor-clipboard-and-write-to-file "c:/x-clipboard.txt" 1)
