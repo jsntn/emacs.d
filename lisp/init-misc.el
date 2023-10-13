@@ -48,12 +48,13 @@
 (defun my-monitor-kill-and-write-to-file (output-file-path x-seconds)
   "Monitor current kill ring and write its content to the specified file."
   (defun my-kill-monitor-task ()
-    (let ((current-contents (current-kill 0)))
-      (when current-contents
-	(unless (equal current-contents my-previous-kill-contents)
-	  (setq my-previous-kill-contents current-contents)
-	  (with-temp-file output-file-path
-	    (insert current-contents))))))
+    (condition-case nil
+	(let ((current-contents (current-kill 0)))
+	  (unless (equal current-contents my-previous-kill-contents)
+	    (setq my-previous-kill-contents current-contents)
+	    (with-temp-file output-file-path
+	      (insert current-contents)))))
+    (error (message "Kill ring is empty.")))
 
   (setq my-previous-kill-contents "")
   (my-schedule-task-every-x-secs x-seconds 'my-kill-monitor-task))
