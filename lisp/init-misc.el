@@ -39,7 +39,7 @@
 	(with-temp-file output-file-path
 	  (insert current-clipboard)))))
 
-  (setq my-clipboard-text nil)
+  (setq my-clipboard-text "")
   (my-schedule-task-every-x-secs x-seconds 'my-clipboard-monitor-task))
 ;; Call the function with the desired output file path
 ;; (my-monitor-clipboard-and-write-to-file "c:/x-clipboard.txt" 1)
@@ -53,7 +53,7 @@
 	(with-temp-file output-file-path
 	  (insert current-contents)))))
 
-  (setq my-previous-kill-contents nil)
+  (setq my-previous-kill-contents "")
   (my-schedule-task-every-x-secs x-seconds 'my-kill-monitor-task))
 ;; (current-kill 0)
 ;; (my-monitor-kill-and-write-to-file "c:/emacs-clipboard.txt" 1)
