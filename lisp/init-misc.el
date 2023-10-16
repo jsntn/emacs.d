@@ -108,32 +108,34 @@
 
 (defun my-monitor-file-and-copy-to-w32-clipboard (file-path x-seconds)
   "Monitor the specified file for changes and copy its content to Windows clipboard."
-  (let ((previous-contents-alist ()))
+  (if *is-win*
+      (let ((previous-contents-alist ()))
 
-    (defun my-file-monitor-task ()
-      (let* ((base-filename
-	      (my-remove-file-suffix (file-name-nondirectory file-path)))
-             (current-contents (when (file-readable-p file-path)
-                                (with-temp-buffer
-                                  (insert-file-contents file-path)
-                                  (buffer-string))))
-             (previous-contents (assoc base-filename previous-contents-alist)))
+	(defun my-file-monitor-task ()
+	  (let* ((base-filename
+		  (my-remove-file-suffix (file-name-nondirectory file-path)))
+		 (current-contents (when (file-readable-p file-path)
+				     (with-temp-buffer
+				       (insert-file-contents file-path)
+				       (buffer-string))))
+		 (previous-contents (assoc base-filename previous-contents-alist)))
 
-        (unless (equal current-contents (cdr previous-contents))
-          (w32-set-clipboard-data current-contents)
-          (setq previous-contents-alist
-		(cons
-		 (cons base-filename current-contents)
-		 (delq
-		  (assoc base-filename previous-contents-alist)
-		  previous-contents-alist)
-		 )))))
+	    (unless (equal current-contents (cdr previous-contents))
+	      (w32-set-clipboard-data current-contents)
+	      (setq previous-contents-alist
+		    (cons
+		     (cons base-filename current-contents)
+		     (delq
+		      (assoc base-filename previous-contents-alist)
+		      previous-contents-alist)
+		     )))))
 
-    (let ((task-name (concat "my-file-monitor-task_"
-			     (my-remove-file-suffix
-			      (file-name-nondirectory file-path)))))
-      (fset (intern task-name) #'my-file-monitor-task)
-      (my-schedule-task-every-x-secs x-seconds (intern task-name)))))
+	(let ((task-name (concat "my-file-monitor-task_"
+				 (my-remove-file-suffix
+				  (file-name-nondirectory file-path)))))
+	  (fset (intern task-name) #'my-file-monitor-task)
+	  (my-schedule-task-every-x-secs x-seconds (intern task-name))))
+    (message "Only Windows system is supported.")))
 
 ;; (my-monitor-file-and-copy-to-w32-clipboard "c:/emacs-clipboard.txt" 1)
 
