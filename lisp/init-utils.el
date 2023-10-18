@@ -21,7 +21,7 @@ Version 2023-10-18"
     (overlay-put overlay 'face `((:background ,color :foreground ,text-color)))
     (add-hook 'before-revert-hook (lambda () (delete-overlay overlay)))))
 
- 
+
 (defun my/random-org-item ()
   "Go to a random org heading from all org files in `org-directory`."
   (interactive)
@@ -527,9 +527,9 @@ Version: 2023-08-31"
     (with-current-buffer existing-buffer
       (goto-char (point-max)) ; move to the end of the existing buffer
       (insert-buffer-substring source-buffer)
-      (pop-to-buffer existing-buffer)))) 
+      (pop-to-buffer existing-buffer))))
 
-  
+
 (defun my/kill-buffers-by-pattern (pattern)
   "Kill buffers whose names match the specified pattern.
 
