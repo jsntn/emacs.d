@@ -5,6 +5,23 @@
 
 ;; the my/xxx utils config - yet to be placed in dedicated init-xxx.el files
 
+
+
+(defun my/highlight-selected-text (start end &optional color)
+  "Highlight the selected region temporarily with the specified color.
+If color is not provided, the default color is #5F87FF.
+
+Version 2023-10-18"
+  (interactive "r\nsEnter color (e.g., 'red', press ENTER for default #5F87FF): ")
+  (let* ((overlay (make-overlay start end))
+	 (color (if (string= color "") "#5F87FF" color))
+	 (text-color (if (or (string= color "black") (string= color "#5F87FF"))
+			 "white"
+		       "black")))
+    (overlay-put overlay 'face `((:background ,color :foreground ,text-color)))
+    (add-hook 'before-revert-hook (lambda () (delete-overlay overlay)))))
+
+ 
 (defun my/random-org-item ()
   "Go to a random org heading from all org files in `org-directory`."
   (interactive)
