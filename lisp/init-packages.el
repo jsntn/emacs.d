@@ -873,6 +873,22 @@ In that case, insert the number."
 	      savehist-autosave-interval 300)
 	      )
 
+
+
+(use-package smooth-scroll
+  :delight
+  :straight (:type git :host github :repo "k-talo/smooth-scroll.el")
+  :config
+  (smooth-scroll-mode t)
+  (global-set-key [next] #'smooth-scroll/scroll-up)
+  (global-set-key [prior] #'smooth-scroll/scroll-down)
+  )
+
+(use-package smooth-scrolling
+  :config
+  (smooth-scrolling-mode 1))
+
+
 (use-package super-save
   :delight
   :config
