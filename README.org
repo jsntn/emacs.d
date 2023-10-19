@@ -2,8 +2,7 @@
 
 [[https://github.com/jsntn/emacs.d/actions/workflows/myelpa.yml][https://github.com/jsntn/emacs.d/actions/workflows/myelpa.yml/badge.svg]]
 
-This is my personal Emacs configuration, continually used and tweaked since
-2020, and I am always trying to make it same behaviour on my Windows and macOS.
+Behold, dear visitor, my cherished Emacs configuration, meticulously crafted and refined since the year of 2020. With unwavering dedication, I tirelessly endeavor to harmonize its functioning across both the Windows and macOS operating systems. 🙂
 
 * Table of Content                                                              :noexport:TOC_4:
 - [[#a-personal-emacs-configuration][A Personal Emacs Configuration]]
