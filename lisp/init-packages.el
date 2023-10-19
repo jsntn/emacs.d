@@ -36,46 +36,7 @@
   (ace-pinyin-global-mode +1)
   )
 
-(use-package annotate
-  :config
-  (custom-set-faces
-   '(annotate-annotation ((t (:background "#ff7f4f" :foreground "white"))))
-   '(annotate-annotation-secondary ((t (:background "#ff7f4f" :foreground "white"))))
-   '(annotate-highlight ((t (:underline "white"))))
-   '(annotate-highlight-secondary ((t (:underline "white"))))
-   )
-  ;; { START: my-annotate-mode-hook
-  (defun my-set-default-annotation-file (annotate-mode-status)
-    "set my default annotation-file, which is used in case the
-`.annotations' in the directory of the current buffer does not
-exist."
-    (interactive)
-    (setq annotate-file
-	  (expand-file-name ".annotations" user-emacs-directory))
-    (when (eq annotate-mode-status 'on)
-      (annotate-load-annotations))
-    (message "annotate-mode is %s, and the annotate-file is set to %s.annotations"
-	     annotate-mode-status user-emacs-directory)
-    )
-  (defun my-annotate-mode-hook ()
-    "my annotate-mode hook to check if `.annotations' exists in the
-directory of the current buffer then use it as the
-`annotate-file', otherwise call the
-`my-set-default-annotate-file'."
-    (interactive)
-    (if (bound-and-true-p annotate-mode); if annotate-mode is on
-	(if (file-exists-p ".annotations") ; if .annotations file exists
-	    (progn (setq-local annotate-file ".annotations")
-		   (annotate-load-annotations)
-		   (message "annotate-mode is on, and the annotate-file is %s.annotations"
-			    (file-name-directory (buffer-file-name))))
-	  (my-set-default-annotation-file 'on) ; if .annotations file does not exist
-	  )
-      (my-set-default-annotation-file 'off) ; if annotate-mode is off
-      ))
-  (add-hook 'annotate-mode-hook 'my-annotate-mode-hook)
-  ;; END: my-annotate-mode-hook }
-  )
+(use-package annotate)
 
 (use-package auto-capitalize
   :straight (:host github :repo "yuutayamada/auto-capitalize-el")
