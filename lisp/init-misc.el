@@ -200,6 +200,16 @@ to HTML files."
 
 
 
+
+
+(defun my-insert-newline-at-end-of-file (file-path)
+  "Inserts a new line at the end of the file specified by FILE-PATH."
+  (with-current-buffer (find-file-noselect file-path)
+    (goto-char (point-max))
+    (newline)
+    (save-buffer)
+    (kill-buffer)))
+
 (defun my-write-to-file (content file &optional append sudo)
   "Write CONTENT to FILE. If APPEND is true, append the content to the file; otherwise, overwrite the file.
   If SUDO is provided and non-nil, execute the write operation with sudo."
@@ -313,14 +323,22 @@ Updated: 2023-10-12"
 		     ctags-cmd)))
 
 
+(when append-t-or-not
+  (my-insert-newline-at-end-of-file
+    (concat tags-path-value ".commands")))
+
     (my-write-to-file
-     (concat "\n" append-or-create command "\n")
+     (concat append-or-create command)
      (concat tags-path-value ".commands")
      append-t-or-not
      sudo)
 
+;; TODO: to be tested on macOS...
+(my-insert-newline-at-end-of-file
+  (concat tags-path-value ".commands"))
+
     (my-write-to-file
-     (concat "\n" append-or-create
+     (concat append-or-create
 	     (format "(my/create-tags \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" %s \"%s\")"
 		     target-dir-value
 		     tags-format
@@ -330,11 +348,14 @@ Updated: 2023-10-12"
 		     append
 		     sudo
 		     process-name
-		     ) "\n")
+		     ))
      (concat tags-path-value ".commands")
      t
      sudo)
 
+(my-insert-newline-at-end-of-file
+  (concat tags-path-value ".commands"))
+ 
     (my-merge-duplicated-lines-in-file
      (concat tags-path-value ".commands")
      sudo)
