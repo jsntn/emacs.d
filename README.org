@@ -160,3 +160,6 @@ I use [[https://github.com/jwiegley/use-package][use-package]] to manage package
 However, it seems the hl-todo and org-bullets settings don't work if they are
 configured in the init-packages.el, i.e., [[https://github.com/jsntn/emacs.d/commit/1e409e075024d72f2dc7520ada092b04b3012f48#diff-aeac2722d1b94adc236ce40df31d9cb7eb107e43b95c13c6c795e71044ec2c29L119-L138][link 1]] and [[https://github.com/jsntn/emacs.d/commit/1e409e075024d72f2dc7520ada092b04b3012f48#diff-aeac2722d1b94adc236ce40df31d9cb7eb107e43b95c13c6c795e71044ec2c29L150-L152][link 2]], but both of them
 are effective if I move them to [[https://github.com/jsntn/emacs.d/commit/19e71501432f5b5ba36375ad711eb62a3fbe91d4#diff-54e03c0bf9c47228b3868e00ea21baade79013af33501ff53bbadbd26060a227R32-R35][init-display.el]] and my [[https://github.com/jsntn/emacs.d/blob/1e409e075024d72f2dc7520ada092b04b3012f48/init.el#L98][local-config.el]].
+
+* Read more
+- https://github.com/jsntn/emacs-vagrantfile
