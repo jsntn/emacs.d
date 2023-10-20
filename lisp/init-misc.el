@@ -366,7 +366,6 @@ Updated: 2023-10-20"
     (my-insert-newline-at-end-of-file
      (concat tags-path-value ".commands"))
 
-    ;; TODO: to be tested on macOS...
     (my-merge-duplicated-lines-in-file
      (concat tags-path-value ".commands")
      sudo)
