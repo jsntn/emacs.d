@@ -230,10 +230,11 @@ to HTML files."
     (let ((lines (split-string (buffer-string) (newline) t))
           (newline-str (newline))
           )
-      (setq lines (delete-dups lines))
-      (setq lines (sort lines 'string>)) ;; sort the lines
+      ;; reverse the list so that the first one will be kept after delete-dups
+      (setq lines (delete-dups (revese lines)))
+      ;; (setq lines (sort lines 'string>)) ;; sort the lines
       (erase-buffer)
-      (insert (mapconcat 'identity lines newline-str)))
+      (insert (mapconcat 'identity (reverse lines) newline-str)))
     (if sudo
         (let* ((sudo-command (concat "sudo tee " (shell-quote-argument file)))
               (cmd (concat "echo " (shell-quote-argument (buffer-string)) " | " sudo-command)))
