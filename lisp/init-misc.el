@@ -214,11 +214,13 @@ to HTML files."
   "Write CONTENT to FILE. If APPEND is true, append the content to the file; otherwise, overwrite the file.
   If SUDO is provided and non-nil, execute the write operation with sudo."
   (let* ((tee-command (if append "tee -a" "tee"))
-         (sudo-command (if sudo (concat "sudo " tee-command) tee-command))
-         (cmd (concat "echo " (shell-quote-argument content) " | " sudo-command " " (shell-quote-argument file))))
+	 (sudo-command (if sudo (concat "sudo " tee-command) tee-command))
+	 (cmd (concat "echo " (shell-quote-argument content) " | " sudo-command " " (shell-quote-argument file))))
     (if sudo
-        (shell-command cmd)
-      (write-region (point-min) (point-max) file append))
+	(shell-command cmd)
+      (with-temp-buffer
+	(insert content)
+	(write-region (point-min) (point-max) file append)))
     ))
 
 (defun my-merge-duplicated-lines-in-file (file &optional sudo)
@@ -226,6 +228,9 @@ to HTML files."
   If SUDO is provided and non-nil, execute the merge operation with sudo."
   (interactive "f")
   (with-temp-buffer
+    ;; fix "\r\n" and "\n" on different systems
+    ;; "\n" will be used as utf-8-unix for Unix-like systems
+    (set-buffer-file-coding-system 'utf-8-unix)
     (insert-file-contents file)
     (let ((lines (split-string (buffer-string) (newline) t))
           (newline-str (newline))
@@ -236,10 +241,11 @@ to HTML files."
       (erase-buffer)
       (insert (mapconcat 'identity (reverse lines) newline-str)))
     (if sudo
-        (let* ((sudo-command (concat "sudo tee " (shell-quote-argument file)))
-              (cmd (concat "echo " (shell-quote-argument (buffer-string)) " | " sudo-command)))
-          (shell-command cmd))
+	(let* ((sudo-command (concat "sudo tee " (shell-quote-argument file)))
+	       (cmd (concat "echo " (shell-quote-argument (buffer-string)) " | " sudo-command)))
+	  (shell-command cmd))
       (write-region (point-min) (point-max) file))))
+
 
 
 (defun my/create-tags
@@ -257,24 +263,27 @@ indicates 'never'. The `*` wildcard is included in the `ctags`
 command to create tags for all files in the directory.
 
 Version: 2023-03-17
-Updated: 2023-10-12"
+Updated: 2023-10-20"
 
   ;; This function is improved by ChatGPT and Claude :)
   (interactive
-   (let ((tags-format (completing-read "ctags or etags format? (ctags/etags)\n(Note: omit input indicates etags format) "
-				       '("ctags" "etags")))
-	 (tag-relative (completing-read "Create tags index file with relative symbols? (y/n)\n(Note: omit input indicates absolute symbols) "
-					'("y" "n"))))
+   (let* ((tags-format (completing-read "ctags or etags format? (ctags/etags)\n(Note: omit input indicates etags format) "
+					'("ctags" "etags")
+					nil t nil nil "etags"))
+	  (tag-relative (completing-read "Create tags index file with relative symbols? (y/n)\n(Note: omit input indicates absolute symbols) "
+					 '("y" "n")
+					 nil t nil nil "n"))
+	  (tags-filename (if (string-equal tags-format "etags")
+			     (if (string-equal tag-relative "y") "TAGS" "TAGS_ABS")
+			   (if (string-equal tag-relative "y") "tags" "tags_abs"))))
      (list (read-directory-name "Enter the directory for creating tags file: ")
 	   tags-format
 	   tag-relative
-	   (read-string "Enter the desired tags filename: "
-			(if (string-equal tags-format "etags")
-			    (if (string-equal tag-relative "y") "TAGS" "TAGS_ABS")
-			  (if (string-equal tag-relative "y") "tags" "tags_abs")))
+	   (read-string "Enter the desired tags filename: " tags-filename)
 	   (if (boundp 'tags-path) tags-path nil)
 	   (completing-read "Append the tags to existing tags index file? (y/n)\n(Note: omit input indicates creating) "
-			    '("y" "n"))
+			    '("y" "n")
+			    nil t nil nil "n")
 	   (if (boundp 'sudo)
 	       sudo
 	     (if current-prefix-arg t nil) ; if universal argument (sudo)
@@ -326,9 +335,9 @@ Updated: 2023-10-12"
 		     ctags-cmd)))
 
 
-(when append-t-or-not
-  (my-insert-newline-at-end-of-file
-    (concat tags-path-value ".commands")))
+    (when append-t-or-not
+      (my-insert-newline-at-end-of-file
+       (concat tags-path-value ".commands")))
 
     (my-write-to-file
      (concat append-or-create command)
@@ -336,9 +345,8 @@ Updated: 2023-10-12"
      append-t-or-not
      sudo)
 
-;; TODO: to be tested on macOS...
-(my-insert-newline-at-end-of-file
-  (concat tags-path-value ".commands"))
+    (my-insert-newline-at-end-of-file
+     (concat tags-path-value ".commands"))
 
     (my-write-to-file
      (concat append-or-create
@@ -356,9 +364,9 @@ Updated: 2023-10-12"
      t
      sudo)
 
-(my-insert-newline-at-end-of-file
-  (concat tags-path-value ".commands"))
- 
+    (my-insert-newline-at-end-of-file
+     (concat tags-path-value ".commands"))
+
     (my-merge-duplicated-lines-in-file
      (concat tags-path-value ".commands")
      sudo)
