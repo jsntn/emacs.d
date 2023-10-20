@@ -243,6 +243,8 @@ to HTML files."
       (write-region (point-min) (point-max) file))))
 
 
+
+;; TODO: omit input checking...
 (defun my/create-tags
     (dir-name tags-format tag-relative tags-filename
 	      &optional tags-path append sudo process-name)
