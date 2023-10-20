@@ -228,12 +228,15 @@ to HTML files."
   If SUDO is provided and non-nil, execute the merge operation with sudo."
   (interactive "f")
   (with-temp-buffer
+    ;; fix "\r\n" and "\n" on different systems
+    ;; "\n" will be used as utf-8-unix for Unix-like systems
+    (set-buffer-file-coding-system 'utf-8-unix)
     (insert-file-contents file)
-    (let ((lines (split-string (buffer-string) (newline) t))
-	  (newline-str (newline))
-	  )
-      (setq lines (delete-dups lines))
-      (setq lines (sort lines 'string>)) ;; sort the lines
+    (let* ((newline-str "\n")
+	   (lines (split-string (buffer-string) newline-str t))
+	   (lines (delete-dups lines))
+	   (lines (sort lines 'string>)) ;; sort the lines
+	   )
       (erase-buffer)
       (insert (mapconcat 'identity lines newline-str)))
     (if sudo
@@ -264,9 +267,9 @@ Updated: 2023-10-12"
 
   ;; This function is improved by ChatGPT and Claude :)
   (interactive
-   (let ((tags-format (completing-read "ctags or etags format? (ctags/etags)\n(Note: omit input indicates etags format) "
-				       '("ctags" "etags")))
-	 (tag-relative (completing-read "Create tags index file with relative symbols? (y/n)\n(Note: omit input indicates absolute symbols) "
+   (let* ((tags-format (completing-read "ctags or etags format? (ctags/etags)\n(Note: omit input indicates etags format) "
+					'("ctags" "etags")))
+	  (tag-relative (completing-read "Create tags index file with relative symbols? (y/n)\n(Note: omit input indicates absolute symbols) "
 					'("y" "n"))))
      (list (read-directory-name "Enter the directory for creating tags file: ")
 	   tags-format
@@ -362,9 +365,9 @@ Updated: 2023-10-12"
      (concat tags-path-value ".commands"))
 
     ;; TODO: to be tested on macOS...
-    ;; (my-merge-duplicated-lines-in-file
-    ;;  (concat tags-path-value ".commands")
-    ;;  sudo)
+    (my-merge-duplicated-lines-in-file
+     (concat tags-path-value ".commands")
+     sudo)
 
 
     (if (get-process command-process-name)
