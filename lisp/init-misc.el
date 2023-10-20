@@ -232,12 +232,12 @@ to HTML files."
     ;; "\n" will be used as utf-8-unix for Unix-like systems
     (set-buffer-file-coding-system 'utf-8-unix)
     (insert-file-contents file)
-    (let ((lines (split-string (buffer-string) (newline) t))
-          (newline-str (newline))
-          )
-      ;; reverse the list so that the first one will be kept after delete-dups
-      (setq lines (delete-dups (revese lines)))
-      ;; (setq lines (sort lines 'string>)) ;; sort the lines
+    (let* ((newline-str "\n")
+	   (lines (split-string (buffer-string) newline-str t))
+	   ;; reverse the list so that the first one will be kept after delete-dups
+	   (setq lines (delete-dups (revese lines)))
+	   ;; (setq lines (sort lines 'string>)) ;; sort the lines
+	   )
       (erase-buffer)
       (insert (mapconcat 'identity (reverse lines) newline-str)))
     (if sudo
