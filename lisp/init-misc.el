@@ -328,64 +328,66 @@ Updated: 2023-10-20"
 			    tag-relative-value
 			    append-or-not
 			    tags-path-value))
-         (command (if sudo
-		       (concat "sudo sh -c '"
-			       ctags-cmd
-			       "'")
-		     ctags-cmd)))
-
-
-    (when append-t-or-not
-      (my-insert-newline-at-end-of-file
-       (concat tags-path-value ".commands")))
-
-    (my-write-to-file
-     (format-time-string "%Y-%m-%d %H:%M:%S")
-     (concat tags-path-value ".commands")
-     append-t-or-not
-     sudo)
-
-    (my-insert-newline-at-end-of-file
-     (concat tags-path-value ".commands"))
-
-    (my-write-to-file
-     (concat append-or-create command)
-     (concat tags-path-value ".commands")
-     append-t-or-not
-     sudo)
-
-    (my-insert-newline-at-end-of-file
-     (concat tags-path-value ".commands"))
-
-    (my-write-to-file
-     (concat append-or-create
-	     (format "(my/create-tags \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" %s \"%s\")"
-		     target-dir-value
-		     tags-format
-		     tag-relative
-		     tags-filename
-		     tags-path-value
-		     append
-		     sudo
-		     process-name
-		     ))
-     (concat tags-path-value ".commands")
-     t
-     sudo)
-
-    (my-insert-newline-at-end-of-file
-     (concat tags-path-value ".commands"))
-
-    (my-merge-duplicated-lines-in-file
-     (concat tags-path-value ".commands")
-     sudo)
+	 (command (if sudo
+		      (concat "sudo sh -c '"
+			      ctags-cmd
+			      "'")
+		    ctags-cmd)))
 
 
     (if (get-process command-process-name)
 	(message "Process (%s) already running..." command-process-name)
       (progn
 	(start-process-shell-command command-process-name nil command)
-	(message "Creating tags...")))
+	(message "Creating tags...")
+
+	(when append-t-or-not
+	  (my-insert-newline-at-end-of-file
+	   (concat tags-path-value ".commands")))
+
+	(my-write-to-file
+	 (format-time-string "%Y-%m-%d %H:%M:%S")
+	 (concat tags-path-value ".commands")
+	 append-t-or-not
+	 sudo)
+
+	(my-insert-newline-at-end-of-file
+	 (concat tags-path-value ".commands"))
+
+	(my-write-to-file
+	 (concat append-or-create command)
+	 (concat tags-path-value ".commands")
+	 t
+	 sudo)
+
+	(my-insert-newline-at-end-of-file
+	 (concat tags-path-value ".commands"))
+
+	(my-write-to-file
+	 (concat append-or-create
+		 (format "(my/create-tags \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" %s \"%s\")"
+			 target-dir-value
+			 tags-format
+			 tag-relative
+			 tags-filename
+			 tags-path-value
+			 append
+			 sudo
+			 process-name
+			 ))
+	 (concat tags-path-value ".commands")
+	 t
+	 sudo)
+
+	(my-insert-newline-at-end-of-file
+	 (concat tags-path-value ".commands"))
+
+	(my-merge-duplicated-lines-in-file
+	 (concat tags-path-value ".commands")
+	 sudo)
+
+
+	))
     ))
 
 (defvar my/default-tags-file-name "TAGS"
