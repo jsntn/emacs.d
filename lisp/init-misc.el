@@ -214,10 +214,10 @@ to HTML files."
   "Write CONTENT to FILE. If APPEND is true, append the content to the file; otherwise, overwrite the file.
   If SUDO is provided and non-nil, execute the write operation with sudo."
   (let* ((tee-command (if append "tee -a" "tee"))
-         (sudo-command (if sudo (concat "sudo " tee-command) tee-command))
-         (cmd (concat "echo " (shell-quote-argument content) " | " sudo-command " " (shell-quote-argument file))))
+	 (sudo-command (if sudo (concat "sudo " tee-command) tee-command))
+	 (cmd (concat "echo " (shell-quote-argument content) " | " sudo-command " " (shell-quote-argument file))))
     (if sudo
-        (shell-command cmd)
+	(shell-command cmd)
       (write-region (point-min) (point-max) file append))
     ))
 
@@ -228,16 +228,16 @@ to HTML files."
   (with-temp-buffer
     (insert-file-contents file)
     (let ((lines (split-string (buffer-string) (newline) t))
-          (newline-str (newline))
-          )
+	  (newline-str (newline))
+	  )
       (setq lines (delete-dups lines))
       (setq lines (sort lines 'string>)) ;; sort the lines
       (erase-buffer)
       (insert (mapconcat 'identity lines newline-str)))
     (if sudo
-        (let* ((sudo-command (concat "sudo tee " (shell-quote-argument file)))
-              (cmd (concat "echo " (shell-quote-argument (buffer-string)) " | " sudo-command)))
-          (shell-command cmd))
+	(let* ((sudo-command (concat "sudo tee " (shell-quote-argument file)))
+	       (cmd (concat "echo " (shell-quote-argument (buffer-string)) " | " sudo-command)))
+	  (shell-command cmd))
       (write-region (point-min) (point-max) file))))
 
 
@@ -325,9 +325,9 @@ Updated: 2023-10-12"
 		     ctags-cmd)))
 
 
-(when append-t-or-not
-  (my-insert-newline-at-end-of-file
-    (concat tags-path-value ".commands")))
+    (when append-t-or-not
+      (my-insert-newline-at-end-of-file
+       (concat tags-path-value ".commands")))
 
     (my-write-to-file
      (concat append-or-create command)
@@ -335,9 +335,8 @@ Updated: 2023-10-12"
      append-t-or-not
      sudo)
 
-;; TODO: to be tested on macOS...
-(my-insert-newline-at-end-of-file
-  (concat tags-path-value ".commands"))
+    (my-insert-newline-at-end-of-file
+     (concat tags-path-value ".commands"))
 
     (my-write-to-file
      (concat append-or-create
@@ -355,12 +354,13 @@ Updated: 2023-10-12"
      t
      sudo)
 
-(my-insert-newline-at-end-of-file
-  (concat tags-path-value ".commands"))
- 
-    (my-merge-duplicated-lines-in-file
-     (concat tags-path-value ".commands")
-     sudo)
+    (my-insert-newline-at-end-of-file
+     (concat tags-path-value ".commands"))
+
+    ;; TODO: to be tested on macOS...
+    ;; (my-merge-duplicated-lines-in-file
+    ;;  (concat tags-path-value ".commands")
+    ;;  sudo)
 
 
     (if (get-process command-process-name)
