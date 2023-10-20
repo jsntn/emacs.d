@@ -227,15 +227,17 @@ to HTML files."
   (interactive "f")
   (with-temp-buffer
     (insert-file-contents file)
-    (let ((lines (split-string (buffer-string) "\n" t)))
+    (let ((lines (split-string (buffer-string) (newline) t))
+          (newline-str (newline))
+          )
       (setq lines (delete-dups lines))
-      (setq lines (sort lines 'string>)) ;; Sort the lines
+      (setq lines (sort lines 'string>)) ;; sort the lines
       (erase-buffer)
-      (insert (mapconcat 'identity lines "\n")))
+      (insert (mapconcat 'identity lines newline-str)))
     (if sudo
-	(let* ((sudo-command (concat "sudo tee " (shell-quote-argument file)))
-	      (cmd (concat "echo " (shell-quote-argument (buffer-string)) " | " sudo-command)))
-	  (shell-command cmd))
+        (let* ((sudo-command (concat "sudo tee " (shell-quote-argument file)))
+              (cmd (concat "echo " (shell-quote-argument (buffer-string)) " | " sudo-command)))
+          (shell-command cmd))
       (write-region (point-min) (point-max) file))))
 
 
