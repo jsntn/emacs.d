@@ -307,7 +307,7 @@ Updated: 2023-10-20"
 	 ;; never - absolute symbols
 
 	 (append-t-or-not (if (string-equal append 'y) t nil))
-	 (append-or-create (if (string-equal append 'y) "APPEND: " "CREATE: "))
+	 (append-or-create (if (string-equal append 'y) "- APPEND: " "- CREATE: "))
 	 (append-or-not (if (string-equal append 'y) "--append=yes" ""))
 
 	 (tags-path-value
@@ -338,6 +338,15 @@ Updated: 2023-10-20"
     (when append-t-or-not
       (my-insert-newline-at-end-of-file
        (concat tags-path-value ".commands")))
+
+    (my-write-to-file
+     (format-time-string "%Y-%m-%d %H:%M:%S")
+     (concat tags-path-value ".commands")
+     append-t-or-not
+     sudo)
+
+    (my-insert-newline-at-end-of-file
+     (concat tags-path-value ".commands"))
 
     (my-write-to-file
      (concat append-or-create command)
