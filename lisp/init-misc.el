@@ -218,7 +218,9 @@ to HTML files."
 	 (cmd (concat "echo " (shell-quote-argument content) " | " sudo-command " " (shell-quote-argument file))))
     (if sudo
 	(shell-command cmd)
-      (write-region (point-min) (point-max) file append))
+      (with-temp-buffer
+	(insert content)
+	(write-region (point-min) (point-max) file append)))
     ))
 
 (defun my-merge-duplicated-lines-in-file (file &optional sudo)
