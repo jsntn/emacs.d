@@ -247,7 +247,6 @@ to HTML files."
 
 
 
-;; TODO: omit input checking...
 (defun my/create-tags
     (dir-name tags-format tag-relative tags-filename
 	      &optional tags-path append sudo process-name)
@@ -263,24 +262,27 @@ indicates 'never'. The `*` wildcard is included in the `ctags`
 command to create tags for all files in the directory.
 
 Version: 2023-03-17
-Updated: 2023-10-12"
+Updated: 2023-10-20"
 
   ;; This function is improved by ChatGPT and Claude :)
   (interactive
    (let* ((tags-format (completing-read "ctags or etags format? (ctags/etags)\n(Note: omit input indicates etags format) "
-					'("ctags" "etags")))
+					'("ctags" "etags")
+					nil t nil nil "etags"))
 	  (tag-relative (completing-read "Create tags index file with relative symbols? (y/n)\n(Note: omit input indicates absolute symbols) "
-					'("y" "n"))))
+					 '("y" "n")
+					 nil t nil nil "n"))
+	  (tags-filename (if (string-equal tags-format "etags")
+			     (if (string-equal tag-relative "y") "TAGS" "TAGS_ABS")
+			   (if (string-equal tag-relative "y") "tags" "tags_abs"))))
      (list (read-directory-name "Enter the directory for creating tags file: ")
 	   tags-format
 	   tag-relative
-	   (read-string "Enter the desired tags filename: "
-			(if (string-equal tags-format "etags")
-			    (if (string-equal tag-relative "y") "TAGS" "TAGS_ABS")
-			  (if (string-equal tag-relative "y") "tags" "tags_abs")))
+	   (read-string "Enter the desired tags filename: " tags-filename)
 	   (if (boundp 'tags-path) tags-path nil)
 	   (completing-read "Append the tags to existing tags index file? (y/n)\n(Note: omit input indicates creating) "
-			    '("y" "n"))
+			    '("y" "n")
+			    nil t nil nil "n")
 	   (if (boundp 'sudo)
 	       sudo
 	     (if current-prefix-arg t nil) ; if universal argument (sudo)
