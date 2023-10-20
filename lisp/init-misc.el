@@ -235,8 +235,8 @@ to HTML files."
     (let* ((newline-str "\n")
 	   (lines (split-string (buffer-string) newline-str t))
 	   ;; reverse the list so that the first one will be kept after delete-dups
-	   (setq lines (delete-dups (revese lines)))
-	   ;; (setq lines (sort lines 'string>)) ;; sort the lines
+	   (lines (delete-dups (reverse lines)))
+	   ;; (lines (sort lines 'string>)) ;; sort the lines
 	   )
       (erase-buffer)
       (insert (mapconcat 'identity (reverse lines) newline-str)))
