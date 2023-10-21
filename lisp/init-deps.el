@@ -29,7 +29,8 @@
      :message nil ;; No message needed for js-yaml
      :enabled t)
     (pyright
-     :linux-command "sudo npm install -g pyright"
+     ;; :linux-command "sudo npm install -g pyright"
+     :linux-command "pipx install pyright"
      :message nil ;; No message needed for pyright
      :enabled t)
     (prettier
