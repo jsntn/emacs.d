@@ -54,7 +54,7 @@
 	    (setq my-previous-kill-contents current-contents)
 	    (with-temp-file output-file-path
 	      (insert current-contents))))
-    (error (message "Kill ring is empty."))))
+    (error)))
 
   (setq my-previous-kill-contents "")
   (my-schedule-task-every-x-secs x-seconds 'my-kill-monitor-task))
