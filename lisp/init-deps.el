@@ -103,6 +103,7 @@ Display the MESSAGE if installation is skipped."
 
 
 ;; (progn
+;;   (when *is-win* (yes-or-no-p "Windows OS is not supported currently, input yes to continue..."))
 ;;   (my-check-for-executable "Homebrew (macOS)" "brew")
 ;;   (my-check-for-executable "npm (macOS/Linux)" "npm")
 ;;   (my-install-all-deps))
