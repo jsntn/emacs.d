@@ -87,10 +87,7 @@ The installation result can be checked later manually with ctags command. Contin
   (require 'citre-config))
 
 (when (or (eq system-type 'darwin) (eq system-type 'windows-nt))
-  (unless (executable-find "ctags")
-    (yes-or-no-p "Please be informed the ctags is used in this configuration file, but the executable file is not found.
-You need to install it manually. Continue?")
-    ))
+  (my-check-for-executable "ctags" "ctags"))
 ;; END: citre }
 
 
