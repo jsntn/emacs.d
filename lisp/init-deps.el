@@ -10,7 +10,7 @@
 
 
 ;;; NOTE: specific package manager is required,
-;; - macOS: brew
+;; - macOS: brew, npm
 ;; - Linux: pacman, npm
 
 (defcustom my-install-deps
@@ -23,6 +23,11 @@
      :darwin-command "brew install universal-ctags"
      :linux-command "sudo pacman -S --noconfirm ctags"
      :message "ctags is needed in this configuration file, check/install it manually."
+     :enabled t)
+    (npm
+     :darwin-command "brew install node"
+     :linux-command "sudo pacman -S --noconfirm nodejs npm"
+     :message nil
      :enabled t) 
     (shellcheck
      :darwin-command "brew install shellcheck"
@@ -46,6 +51,7 @@
      :message "ripgrep is needed in this configuration file, check/install it manually."
      :enabled t)
     (js-yaml
+     :darwin-command "npm install -g js-yaml"
      :linux-command "sudo npm install -g js-yaml"
      :message nil ;; No message needed for js-yaml
      :enabled t)
