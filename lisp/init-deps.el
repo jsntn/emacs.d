@@ -4,14 +4,18 @@
 
 
 
-;;; TODO
-;; shred
-;; truecrypt/veracrypt
+;;; TODO:
+;; - shred
+;; - truecrypt/veracrypt
 
 
 ;;; NOTE: specific package manager is required,
 ;; - macOS: brew, npm
 ;; - Linux: pacman, npm
+
+;; (my-check-for-executable "Homebrew (macOS)" "brew")
+;; (my-check-for-executable "npm (macOS/Linux)" "npm")
+
 
 (defcustom my-install-deps
   '((aspell
@@ -96,6 +100,12 @@ Display the MESSAGE if installation is skipped."
          (unless (and command-darwin command-linux)
 	   (when message
             (message message))))))))
+
+
+;; (progn
+;;   (my-check-for-executable "Homebrew (macOS)" "brew")
+;;   (my-check-for-executable "npm (macOS/Linux)" "npm")
+;;   (my-install-all-deps))
 
 
 (provide 'init-deps)
