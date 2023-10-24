@@ -3,25 +3,46 @@
 ;;; Code:
 
 
+
+;;; TODO
+;; shred
+;; truecrypt/veracrypt
+
+
+;;; NOTE: specific package manager is required,
+;; - macOS: brew
+;; - Linux: pacman, npm
+
 (defcustom my-install-deps
   '((aspell
      :darwin-command "brew install aspell"
+     :linux-command "sudo pacman -S --noconfirm aspell"
      :message "aspell is needed in this configuration file, check/install it manually."
      :enabled t)
+    (ctags
+     :darwin-command "brew install universal-ctags"
+     :linux-command "sudo pacman -S --noconfirm ctags"
+     :message "ctags is needed in this configuration file, check/install it manually."
+     :enabled t) 
     (shellcheck
      :darwin-command "brew install shellcheck"
+     :linux-command "sudo pacman -S --noconfirm shellcheck"
      :message "shellcheck is needed in this configuration file, check/install it manually."
      :enabled t)
     (shfmt
      :darwin-command "brew install shfmt"
+     ;; :linux-command "sudo snap install shfmt"
+     :linux-command "sudo pacman -S --noconfirm shfmt"
      :message "shfmt is needed in this configuration file, check/install it manually."
      :enabled t)
     (sqlite3
      :darwin-command "brew install sqlite"
+     :linux-command "sudo pacman -S --noconfirm sqlite"
      :message "sqlite3 is needed in this configuration file, check/install it manually."
      :enabled t)
     (ripgrep
      :darwin-command "brew install ripgrep"
+     :linux-command "sudo pacman -S --noconfirm ripgrep"
      :message "ripgrep is needed in this configuration file, check/install it manually."
      :enabled t)
     (js-yaml
@@ -29,12 +50,14 @@
      :message nil ;; No message needed for js-yaml
      :enabled t)
     (pyright
-     ;; :linux-command "sudo npm install -g pyright"
-     :linux-command "pipx install pyright"
+     :darwin-command "brew install pyright"
+     ;; :linux-command "pipx install pyright"
+     :linux-command "sudo pacman -S --noconfirm pyright"
      :message nil ;; No message needed for pyright
      :enabled t)
     (prettier
-     :linux-command "sudo npm install -g prettier"
+     :darwin-command "brew install prettier"
+     :linux-command "sudo pacman -S --noconfirm prettier"
      :message nil ;; No message needed for prettier
      :enabled t)))
 

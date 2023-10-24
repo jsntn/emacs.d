@@ -70,8 +70,6 @@
 
 ;; { START: citre
 (unless (executable-find "ctags")
-  (when (eq system-type 'darwin)
-    (shell-command "brew install universal-ctags"))
   (when (string= (which-linux-release-info "distributor") "Ubuntu")
     (call-process "/bin/bash"
 		  (expand-file-name "scripts/ctags.sh" user-emacs-directory)))

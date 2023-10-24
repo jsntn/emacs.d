@@ -4,11 +4,6 @@
 
 
 ;; START: reformatter config
-(unless (executable-find "shfmt")
-  (when (eq system-type 'gnu/linux)
-    (shell-command "sudo snap install shfmt")
-    )
-  )
 (use-package reformatter
   :config
   (reformatter-define css-yaml-format
