@@ -17,7 +17,7 @@
 ;; (my-check-for-executable "npm (macOS/Linux)" "npm")
 
 
-(defcustom my-install-deps
+(defvar my-install-deps
   '((aspell
      :darwin-command "brew install aspell"
      :linux-command "sudo pacman -S --noconfirm aspell"
@@ -32,7 +32,7 @@
      :darwin-command "brew install node"
      :linux-command "sudo pacman -S --noconfirm nodejs npm"
      :message nil
-     :enabled t) 
+     :enabled t)
     (shellcheck
      :darwin-command "brew install shellcheck"
      :linux-command "sudo pacman -S --noconfirm shellcheck"
@@ -49,10 +49,10 @@
      :linux-command "sudo pacman -S --noconfirm sqlite"
      :message "sqlite3 is needed in this configuration file, check/install it manually."
      :enabled t)
-    (ripgrep
+    (rg
      :darwin-command "brew install ripgrep"
      :linux-command "sudo pacman -S --noconfirm ripgrep"
-     :message "ripgrep is needed in this configuration file, check/install it manually."
+     :message "ripgrep (rg) is needed in this configuration file, check/install it manually."
      :enabled t)
     (js-yaml
      :darwin-command "npm install -g js-yaml"
@@ -76,37 +76,39 @@
 Display the MESSAGE if installation is skipped."
   (unless (executable-find name)
     (if (y-or-n-p (format "Install %s? " name))
-        (progn
-          (message (format "Installing %s..." name))
-          (shell-command command))
+	(progn
+	  (message (format "Installing %s..." name))
+	  (shell-command command))
       (message "Skipping %s installation." name))))
 
 (defun my-install-all-deps ()
   "Install enabled Emacs dependencies."
   (interactive)
   (dolist (dep my-install-deps)
-    (let* ((name (car dep))
-           (command-darwin (plist-get dep :darwin-command))
-           (command-linux (plist-get dep :linux-command))
-           (command (plist-get dep :command))
-           (message (plist-get dep :message))
-           (enabled (plist-get dep :enabled)))
+    (let* ((name (symbol-name (car dep)))
+	   (value (cdr dep))
+	   (command-darwin (plist-get value :darwin-command))
+	   (command-linux (plist-get value :linux-command))
+	   (command (plist-get value :command))
+	   (msg (plist-get value :message))
+	   (enabled (plist-get value :enabled)))
       (when enabled
-        (cond
-         ((and command-darwin (eq system-type 'darwin))
-          (my-install-dependency name command-darwin))
-         ((and command-linux (eq system-type 'gnu/linux))
-          (my-install-dependency name command-linux))
-         (unless (and command-darwin command-linux)
-	   (when message
-            (message message))))))))
+	(cond
+	 ((and command-darwin (eq system-type 'darwin))
+	  (my-install-dependency name command-darwin))
+	 ((and command-linux (eq system-type 'gnu/linux))
+	  (my-install-dependency name command-linux))
+	 (unless (and command-darwin command-linux)
+	   (when msg
+	     (message msg))))))))
 
 
-;; (progn
-;;   (when *is-win* (yes-or-no-p "Windows OS is not supported currently, input yes to continue..."))
-;;   (my-check-for-executable "Homebrew (macOS)" "brew")
-;;   (my-check-for-executable "npm (macOS/Linux)" "npm")
-;;   (my-install-all-deps))
+(progn
+  (when *is-win*
+    (yes-or-no-p "Windows OS is not supported currently, input yes to continue..."))
+  (my-check-for-executable "Homebrew (macOS)" "brew")
+  (my-check-for-executable "npm (macOS/Linux)" "npm")
+  (my-install-all-deps))
 
 
 (provide 'init-deps)
