@@ -28,6 +28,11 @@
      :linux-command "sudo pacman -S --noconfirm ctags"
      :message "ctags is needed in this configuration file, check/install it manually."
      :enabled t)
+    (less
+     :darwin-command "brew install less"
+     :linux-command "sudo pacman -S --noconfirm less"
+     :message nil
+     :enabled t)
     (npm
      :darwin-command "brew install node"
      :linux-command "sudo pacman -S --noconfirm nodejs npm"
