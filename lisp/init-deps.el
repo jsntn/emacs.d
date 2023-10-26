@@ -63,7 +63,7 @@
      :darwin-command "brew install sdcv"
      :linux-command "sudo pacman -S --noconfirm sdcv"
      :message nil
-     :enabled t) 
+     :enabled t)
     (rg
      :darwin-command "brew install ripgrep"
      :linux-command "sudo pacman -S --noconfirm ripgrep"
