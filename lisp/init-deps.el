@@ -54,6 +54,16 @@
      :linux-command "sudo pacman -S --noconfirm sqlite"
      :message "sqlite3 is needed in this configuration file, check/install it manually."
      :enabled t)
+    (stardict
+     :darwin-command "brew install stardict"
+     :linux-command "sudo pacman -S --noconfirm stardict"
+     :message nil
+     :enabled t)
+    (sdcv
+     :darwin-command "brew install sdcv"
+     :linux-command "sudo pacman -S --noconfirm sdcv"
+     :message nil
+     :enabled t) 
     (rg
      :darwin-command "brew install ripgrep"
      :linux-command "sudo pacman -S --noconfirm ripgrep"
