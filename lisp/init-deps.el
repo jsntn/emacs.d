@@ -19,8 +19,8 @@
 
 (defvar my-install-deps
   '((aspell
-     :darwin-command "brew install aspell"
-     :linux-command "sudo pacman -S --noconfirm aspell"
+     :darwin-command "brew install aspell" ; TODO: is the en dictionary installed automatically by brew?
+     :linux-command "sudo pacman -S --noconfirm aspell aspell-en"
      :message "aspell is needed in this configuration file, check/install it manually."
      :enabled t)
     (ctags
