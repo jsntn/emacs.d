@@ -70,7 +70,7 @@
      :message "ripgrep (rg) is needed in this configuration file, check/install it manually."
      :enabled t)
     (js-yaml
-     :darwin-command "npm install -g js-yaml"
+     :darwin-command "npm install -g js-yaml" ; TODO: is sudo needed?
      :linux-command "sudo npm install -g js-yaml"
      :message nil ;; No message needed for js-yaml
      :enabled t)
