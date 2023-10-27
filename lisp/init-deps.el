@@ -28,6 +28,11 @@
      :linux-command "sudo pacman -S --noconfirm ctags"
      :message "ctags is needed in this configuration file, check/install it manually."
      :enabled t)
+    (languagetool
+     ;; :darwin-command "brew install languagetool"
+     :linux-command "sudo pacman -S --noconfirm languagetool"
+     :message nil
+     :enabled t)
     (less
      :darwin-command "brew install less"
      :linux-command "sudo pacman -S --noconfirm less"
