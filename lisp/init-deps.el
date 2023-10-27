@@ -5,13 +5,15 @@
 
 
 ;;; TODO:
-;; - shred
-;; - truecrypt/veracrypt
+;; - dep: shred
+;; - dep: truecrypt/veracrypt
+;; - deps installation on Windows OS
 
 
 ;;; NOTE: specific package manager is required,
 ;; - macOS: brew, npm
 ;; - Linux: pacman, npm
+;; - TODO: - Windows: scoop
 
 ;; (my-check-for-executable "Homebrew (macOS)" "brew")
 ;; (my-check-for-executable "npm (macOS/Linux)" "npm")
@@ -29,7 +31,7 @@
      :message "ctags is needed in this configuration file, check/install it manually."
      :enabled t)
     (languagetool
-     ;; :darwin-command "brew install languagetool"
+     ;; :darwin-command "brew install languagetool" ; TODO: to be tested on macOS...
      :linux-command "sudo pacman -S --noconfirm languagetool"
      :message nil
      :enabled t)
