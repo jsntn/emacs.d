@@ -4,7 +4,7 @@
 
 Behold, dear visitor, my cherished Emacs configuration, meticulously crafted and
 refined since the year of 2020. With unwavering dedication, I tirelessly
-endeavor to harmonize its functioning across both the Windows and macOS
+endeavor to harmonize its functioning across the Windows, Arch Linux and macOS
 operating systems. 🙂
 
 * Table of Content                                                              :noexport:TOC_4:
