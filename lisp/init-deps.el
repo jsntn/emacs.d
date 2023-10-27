@@ -38,6 +38,11 @@
      :linux-command "sudo pacman -S --noconfirm nodejs npm"
      :message nil
      :enabled t)
+    (sbcl
+     :darwin-command "brew install sbcl"
+     :linux-command "sudo pacman -S --noconfirm sbcl"
+     :message nil
+     :enabled t)
     (shellcheck
      :darwin-command "brew install shellcheck"
      :linux-command "sudo pacman -S --noconfirm shellcheck"
