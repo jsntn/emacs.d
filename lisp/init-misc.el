@@ -202,49 +202,6 @@ to HTML files."
 
 
 
-(defun my-insert-newline-at-end-of-file (file-path)
-  "Inserts a new line at the end of the file specified by FILE-PATH."
-  (with-current-buffer (find-file-noselect file-path)
-    (goto-char (point-max))
-    (newline)
-    (save-buffer)
-    (kill-buffer)))
-
-(defun my-write-to-file (content file &optional append sudo)
-  "Write CONTENT to FILE. If APPEND is true, append the content to the file; otherwise, overwrite the file.
-  If SUDO is provided and non-nil, execute the write operation with sudo."
-  (let* ((tee-command (if append "tee -a" "tee"))
-	 (sudo-command (if sudo (concat "sudo " tee-command) tee-command))
-	 (cmd (concat "echo " (shell-quote-argument content) " | " sudo-command " " (shell-quote-argument file))))
-    (if sudo
-	(shell-command cmd)
-      (with-temp-buffer
-	(insert content)
-	(write-region (point-min) (point-max) file append)))
-    ))
-
-(defun my-merge-duplicated-lines-in-file (file &optional sudo)
-  "Merge duplicated lines in FILE.
-  If SUDO is provided and non-nil, execute the merge operation with sudo."
-  (interactive "f")
-  (with-temp-buffer
-    ;; fix "\r\n" and "\n" on different systems
-    ;; "\n" will be used as utf-8-unix for Unix-like systems
-    (set-buffer-file-coding-system 'utf-8-unix)
-    (insert-file-contents file)
-    (let* ((newline-str "\n")
-	   (lines (split-string (buffer-string) newline-str t))
-	   ;; reverse the list so that the first one will be kept after delete-dups
-	   (lines (delete-dups (reverse lines)))
-	   ;; (lines (sort lines 'string>)) ;; sort the lines
-	   )
-      (erase-buffer)
-      (insert (mapconcat 'identity (reverse lines) newline-str)))
-    (if sudo
-	(let* ((sudo-command (concat "sudo tee " (shell-quote-argument file)))
-	       (cmd (concat "echo " (shell-quote-argument (buffer-string)) " | " sudo-command)))
-	  (shell-command cmd))
-      (write-region (point-min) (point-max) file))))
 
 
 
