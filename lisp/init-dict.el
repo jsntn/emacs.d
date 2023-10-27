@@ -42,6 +42,9 @@ Version 2023-08-03"
 	(let* ((dir (expand-file-name "misc" (getenv "HOME")))
 	       (extracted-file (concat dir "/extracted.txt"))
 	       (files (directory-files dir nil "\\.bz2\\'")))
+;; FIX: if misc folder and .bz2 files don't exist...
+;; TODO: to be tested...
+(when (and (file-directory-p dir) (not (null files)))
 	  (if (or (not (file-exists-p extracted-file))
 		  (not (my-file-contains-p extracted-file files)))
 	      (progn
@@ -57,8 +60,7 @@ Version 2023-08-03"
 		    ))
 		(my-merge-duplicated-lines-in-file extracted-file)
 		(message "StarDict dictionaries extraction completed."))
-	    (message "All StarDict dictionaries have already been extracted."))))
-      ;; FIX: if misc folder and .bz2 files don't exist...
+	    (message "All StarDict dictionaries have already been extracted.")))))
       (my-extract-stardict-bz2-files-on-linux)
 
       ))
