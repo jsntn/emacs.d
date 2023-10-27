@@ -29,6 +29,40 @@ Version 2023-08-03"
 ;; END }}
 
 
+(if *is-linux*
+    (use-package sdcv
+      :straight (:host github :repo "manateelazycat/sdcv")
+      :config
+      (setq sdcv-dictionary-data-dir "/usr/share/stardict/dic/")
+      (global-set-key (kbd "C-c d") 'sdcv-search-pointer)
+
+      ;; extract my dictionaries of ~/misc/*.bz2 files to stardict dictionary folder
+      (defun my-extract-stardict-bz2-files-on-linux ()
+	(interactive)
+	(let* ((dir (expand-file-name "misc" (getenv "HOME")))
+	       (extracted-file (concat dir "/extracted.txt"))
+	       (files (directory-files dir nil "\\.bz2\\'")))
+	  (if (or (not (file-exists-p extracted-file))
+		  (not (my-file-contains-p extracted-file files)))
+	      (progn
+		(dolist (file files)
+		  (let ((abs-file (concat dir "/" file)))
+		    (shell-command
+		     (format "sudo tar -xjvf %s -C /usr/share/stardict/dic" abs-file)))
+		  (with-temp-buffer
+		    (set-buffer-file-coding-system 'utf-8-unix)
+		    (insert file)
+		    (insert "\n")
+		    (append-to-file (point-min) (point-max) extracted-file)
+		    ))
+		(my-merge-duplicated-lines-in-file extracted-file)
+		(message "StarDict dictionaries extraction completed."))
+	    (message "All StarDict dictionaries have already been extracted."))))
+      ;; FIX: if misc folder and .bz2 files don't exist...
+      (my-extract-stardict-bz2-files-on-linux)
+
+      ))
+ 
 
 
 (provide 'init-dict)
