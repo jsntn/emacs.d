@@ -116,7 +116,8 @@ Display the MESSAGE if installation is skipped."
 	   (value (cdr dep))
 	   (command-darwin (plist-get value :darwin-command))
 	   (command-linux (plist-get value :linux-command))
-	   (command (plist-get value :command))
+	   ;; TODO: to be tested...
+	   (command-windows (plist-get value :windows-command))
 	   (msg (plist-get value :message))
 	   (enabled (plist-get value :enabled)))
       (when enabled
@@ -125,6 +126,10 @@ Display the MESSAGE if installation is skipped."
 	  (my-install-dependency name command-darwin))
 	 ((and command-linux (eq system-type 'gnu/linux))
 	  (my-install-dependency name command-linux))
+	  ;; TODO: to be tested...
+	 ((and command-windows (eq system-type 'windows-nt))
+	  (my-install-dependency name
+	  (format "powershell -Command \"%s\"" command-windows)))
 	 (unless (and command-darwin command-linux)
 	   (when msg
 	     (message msg))))))))
