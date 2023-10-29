@@ -31,7 +31,7 @@
      :message "ctags is needed in this configuration file, check/install it manually."
      :enabled t)
     (languagetool
-     ;; :darwin-command "brew install languagetool" ; TODO: to be tested on macOS...
+     :darwin-command "brew install languagetool"
      :linux-command "sudo pacman -S --noconfirm languagetool"
      :message nil
      :enabled t)
@@ -82,7 +82,7 @@
      :message "ripgrep (rg) is needed in this configuration file, check/install it manually."
      :enabled t)
     (js-yaml
-     :darwin-command "npm install -g js-yaml" ; TODO: is sudo needed?
+     :darwin-command "npm install js-yaml"
      :linux-command "sudo npm install -g js-yaml"
      :message nil ;; No message needed for js-yaml
      :enabled t)
