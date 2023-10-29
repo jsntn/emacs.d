@@ -81,6 +81,8 @@
 
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			 ("melpa" . "https://melpa.org/packages/")))
+;; Official MELPA Mirror, in case necessary.
+;;(add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t) 
 
 (when (string-equal (getenv "ELPA") "local")
   ;; when running on GitHub w/ local elpa Actions config, overwrite above `package-archives'
@@ -134,6 +136,7 @@
 (require 'init-sessions) ; session settings
 (require 'init-shell) ; Shell settings
 (require 'init-spelling) ; spelling settings
+(require 'init-tags) ; tags related config
 
 (require 'init-uuid) ; UUID settings
 (require 'init-veracrypt) ; VeraCrypt/TrueCrypt settings
