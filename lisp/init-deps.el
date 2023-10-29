@@ -11,8 +11,8 @@
 
 
 ;;; NOTE: specific package manager is required,
-;; - macOS: brew, npm
-;; - Linux: pacman, npm
+;; - macOS: brew
+;; - Linux: pacman
 ;; - TODO: - Windows: scoop
 
 ;; (my-check-for-executable "Homebrew (macOS)" "brew")
@@ -23,6 +23,7 @@
   '((aspell
      :darwin-command "brew install aspell" ; TODO: is the en dictionary installed automatically by brew?
      :linux-command "sudo pacman -S --noconfirm aspell aspell-en"
+     :windows-command "scoop install aspell"
      :message "aspell is needed in this configuration file, check/install it manually."
      :enabled t)
     (ctags
@@ -43,6 +44,7 @@
     (npm
      :darwin-command "brew install node"
      :linux-command "sudo pacman -S --noconfirm nodejs npm"
+     :windows-command "scoop install nodejs"
      :message nil
      :enabled t)
     (sbcl
@@ -53,12 +55,14 @@
     (shellcheck
      :darwin-command "brew install shellcheck"
      :linux-command "sudo pacman -S --noconfirm shellcheck"
+     :windows-command "scoop install shellcheck"
      :message "shellcheck is needed in this configuration file, check/install it manually."
      :enabled t)
     (shfmt
      :darwin-command "brew install shfmt"
      ;; :linux-command "sudo snap install shfmt"
      :linux-command "sudo pacman -S --noconfirm shfmt"
+     :windows-command "scoop install shfmt"
      :message "shfmt is needed in this configuration file, check/install it manually."
      :enabled t)
     (sqlite3
@@ -84,6 +88,7 @@
     (js-yaml
      :darwin-command "npm install js-yaml"
      :linux-command "sudo npm install -g js-yaml"
+     :windows-command "npm install -g js-yaml"
      :message nil ;; No message needed for js-yaml
      :enabled t)
     (pyright
@@ -95,6 +100,7 @@
     (prettier
      :darwin-command "brew install prettier"
      :linux-command "sudo pacman -S --noconfirm prettier"
+     :windows-command "npm install -g prettier"
      :message nil ;; No message needed for prettier
      :enabled t)))
 
@@ -130,11 +136,13 @@ Display the MESSAGE if installation is skipped."
 	 ((and command-windows (eq system-type 'windows-nt))
 	  (my-install-dependency name
 	  (format "powershell -Command \"%s\"" command-windows)))
-	 (unless (and command-darwin command-linux)
-	   (when msg
-	     (message msg))))))))
+	 (unless (and command-darwin command-linux windows-command)
+	   (if msg
+	     (message msg)
+	     (message "%s is needed in this configuration file, check/install it manually." name))))))))
 
 
+;; TODO: once Windows OS (scoop) is supported, update codes below,
 (progn
   (when *is-win*
     (yes-or-no-p "Windows OS is not supported currently, input yes to continue..."))
