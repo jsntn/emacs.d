@@ -21,7 +21,7 @@
 	  markdown-mode-hook
 	  rst-mode-hook))
   (define-key ta-mode-map (kbd "M-o") 'ta-next-homophony)
-  ) 
+  )
 
 
 (provide 'init-spelling)

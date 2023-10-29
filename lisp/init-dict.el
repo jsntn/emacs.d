@@ -41,30 +41,33 @@ Version 2023-08-03"
 	(interactive)
 	(let* ((dir (expand-file-name "misc" (getenv "HOME")))
 	       (extracted-file (concat dir "/extracted.txt"))
-	       (files (directory-files dir nil "\\.bz2\\'")))
-;; FIX: if misc folder and .bz2 files don't exist...
-;; TODO: to be tested...
-(when (and (file-directory-p dir) (not (null files)))
-	  (if (or (not (file-exists-p extracted-file))
-		  (not (my-file-contains-p extracted-file files)))
-	      (progn
-		(dolist (file files)
-		  (let ((abs-file (concat dir "/" file)))
-		    (shell-command
-		     (format "sudo tar -xjvf %s -C /usr/share/stardict/dic" abs-file)))
-		  (with-temp-buffer
-		    (set-buffer-file-coding-system 'utf-8-unix)
-		    (insert file)
-		    (insert "\n")
-		    (append-to-file (point-min) (point-max) extracted-file)
-		    ))
-		(my-merge-duplicated-lines-in-file extracted-file)
-		(message "StarDict dictionaries extraction completed."))
-	    (message "All StarDict dictionaries have already been extracted.")))))
+	       (files
+		(if (file-directory-p dir)
+		    (directory-files dir nil "\\.bz2\\'")
+		  nil)))
+	  (if (and files (not (null files)))
+	    (if (or (not (file-exists-p extracted-file))
+		    (not (my-file-contains-p extracted-file files)))
+		(progn
+		  (dolist (file files)
+		    (let ((abs-file (concat dir "/" file)))
+		      (shell-command
+		       (format "sudo tar -xjvf %s -C /usr/share/stardict/dic" abs-file)))
+		    (with-temp-buffer
+		      (set-buffer-file-coding-system 'utf-8-unix)
+		      (insert file)
+		      (insert "\n")
+		      (append-to-file (point-min) (point-max) extracted-file)
+		      ))
+		  (my-merge-duplicated-lines-in-file extracted-file)
+		  (message "StarDict dictionaries extraction completed."))
+	      (message "All StarDict dictionaries have already been extracted."))
+	    (message "The folder (misc) does not exist or does not contain any .bz2 files.")
+	    )))
       (my-extract-stardict-bz2-files-on-linux)
 
       ))
- 
+
 
 
 (provide 'init-dict)
