@@ -13,6 +13,19 @@
   (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US"))
   )
 
+
+(use-package auto-capitalize
+  :straight (:host github :repo "yuutayamada/auto-capitalize-el")
+  :config
+  (setq auto-capitalize-words `("I" "English"))
+  ;; this configuration adds capitalized words of .aspell.en.pws
+  (setq auto-capitalize-aspell-file (expand-file-name "misc/aspell.en.pws" user-emacs-directory))
+  (auto-capitalize-setup)
+  ;; (add-hook 'after-change-major-mode-hook 'auto-capitalize-mode)
+  :hook (org-mode .  auto-capitalize-mode)
+  )
+
+ 
 (use-package ta
   :delight
   :config
