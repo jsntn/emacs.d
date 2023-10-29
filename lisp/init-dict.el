@@ -29,6 +29,10 @@ Version 2023-08-03"
 ;; END }}
 
 
+(use-package company-english-helper
+  :straight (:host github :repo "manateelazycat/company-english-helper"))
+ 
+
 (if *is-linux*
     (use-package sdcv
       :straight (:host github :repo "manateelazycat/sdcv")

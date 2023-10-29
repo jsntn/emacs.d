@@ -169,9 +169,7 @@ In that case, insert the number."
   ;; END: company-candidates from abo-abo }
   )
 
-(use-package company-english-helper
-  :straight (:host github :repo "manateelazycat/company-english-helper")
-  )
+
 
 
 ;; use this package to fix tooltip alignment issue below,
