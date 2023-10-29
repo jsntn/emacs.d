@@ -32,6 +32,9 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 
+(defconst *dependencies-installation-enabled* nil) ; enable with t if you prefer
+
+
 ;; =============================================================================
 ;; require settings
 ;; =============================================================================
@@ -153,6 +156,10 @@
 (require 'init-hooks) ; hooks settings
 ;; move the keybindings to the end of the other settings
 (require 'init-keybindings) ; keybindings with general.el
+
+(when *dependencies-installation-enabled*
+  (require 'init-deps) ; dependencies installation
+  )
 
 
 ;; =============================================================================
