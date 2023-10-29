@@ -184,26 +184,7 @@ In that case, insert the number."
 
 (use-package counsel)
 
-(use-package delight)
 
-(use-package diminish)
-
-(use-package doom-themes
-  :config
-  ;; global settings (defaults)
-  (setq doom-themes-enable-bold t) ; if nil, bold is universally disabled
-  ;; corrects (and improves) org-mode's native fontification
-  ;; (doom-themes-org-config) ; disable this as it is not compatible with
-					; org-modern horizontal line, see,
-					; https://github.com/jsntn/emacs.d/issues/13
-  ;; personal modified version of doom-monokai-classic
-  (add-to-list 'custom-theme-load-path (expand-file-name "themes/" user-emacs-directory))
-  (load-theme 'doom-monokai-classic t)
-  (set-background-color "black")
-  (custom-set-faces
-   `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
-   `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6))))))
-  )
 
 (use-package eglot)
 
