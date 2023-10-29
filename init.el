@@ -124,6 +124,7 @@
 (require 'init-dict) ; dict settings
 (require 'init-display) ; display settings
 (require 'init-encryption) ; encryption settings
+(require 'init-evil) ; evil related config
 (require 'init-font) ; font settings
 (require 'init-gpg) ; GPG settings
 
