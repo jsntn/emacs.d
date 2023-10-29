@@ -68,27 +68,7 @@
     )
   )
 
-;; { START: citre
-(unless (executable-find "ctags")
-  (when (string= (which-linux-release-info "distributor") "Ubuntu")
-    (call-process "/bin/bash"
-		  (expand-file-name "scripts/ctags.sh" user-emacs-directory)))
-  (yes-or-no-p "Please be informed the ctags is started to install in the background...
-The installation result can be checked later manually with ctags command. Continue?")
-  )
 
-(use-package citre
-  :delight
-  ;; ctags should be installed first, the Universal Ctags is recommended,
-  ;; https://github.com/universal-ctags/ctags
-  :defer t
-  :init
-  ;; This is needed in `:init' block for lazy load to work.
-  (require 'citre-config))
-
-(when (or (eq system-type 'darwin) (eq system-type 'windows-nt))
-  (my-check-for-executable "ctags" "ctags"))
-;; END: citre }
 
 
 
