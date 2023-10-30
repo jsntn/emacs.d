@@ -151,12 +151,15 @@ Display the MESSAGE if installation is skipped."
 				  "powershell -Command \"%s\""
 				  command-windows)))
 	 (t
-	  (if msg
-	      (message msg)
-	    (message
-	     "%s executable is needed in this configuration file,
-check/install it manually."
-	     name))))))))
+	  (let* ((msg-content
+		  (if msg
+		      msg
+		    (format "%s executable is needed in this configuration file,
+check/install it manually." name)))
+	       (prompt-msg (concat msg-content " Press ENTER to continue.")))
+	    (when (string= (read-string prompt-msg) "")
+	      (message "Continuing..."))
+	    )))))))
 
 
 (progn

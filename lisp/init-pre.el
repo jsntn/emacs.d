@@ -112,7 +112,7 @@ but the %s executable file is not found. You need to install it manually."
     (unless (executable-find executable-file)
       (if noninteractive
 	  (message noninteractive-msg)
-	(unless (string= (read-string prompt-msg) "")
+	(when (string= (read-string prompt-msg) "")
 	  (message "Continuing..."))))))
 
 
@@ -125,7 +125,7 @@ but the %s executable file is not found. You need to install it manually."
 Press ENTER to continue." font-name))
 	 (prompt-msg (or message default-message)))
     (unless (member font-name (font-family-list))
-      (unless (string= (read-string prompt-msg) "")
+      (when (string= (read-string prompt-msg) "")
 	(message "Continuing...")))))
 
 
