@@ -28,13 +28,13 @@
     (ctags
      :darwin-command "brew install universal-ctags"
      :linux-command "sudo pacman -S --noconfirm ctags"
-     :windows-command "scoop install "
+     :windows-command "scoop install universal-ctags"
      :message "ctags is needed in this configuration file, check/install it manually."
      :enabled t)
     (languagetool
      :darwin-command "brew install languagetool"
      :linux-command "sudo pacman -S --noconfirm languagetool"
-     :windows-command "scoop install languagetool"
+     ;; :windows-command ""
      :message nil
      :enabled t)
     (less
