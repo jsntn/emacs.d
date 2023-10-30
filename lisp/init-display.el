@@ -24,7 +24,7 @@
    `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
    `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6))))))
   )
- 
+
 
 ;; { START: hide list of minor modes in mode-line
 ;; from https://emacs.stackexchange.com/a/3928/29715

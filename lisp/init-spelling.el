@@ -25,7 +25,7 @@
   :hook (org-mode .  auto-capitalize-mode)
   )
 
- 
+
 (use-package ta
   :delight
   :config

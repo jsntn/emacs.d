@@ -428,7 +428,7 @@ In that case, insert the number."
   ;; make all agenda files with any archive files associated with them as the
   ;; source of items for drill sessions(scope)
   (setq org-drill-scope 'agenda-with-archives)
-  (setq org-drill-leech-method "warn") 
+  (setq org-drill-leech-method "warn")
   )
 
 (use-package org-modern
