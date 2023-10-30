@@ -7,13 +7,12 @@
 ;;; TODO:
 ;; - dep: shred
 ;; - dep: truecrypt/veracrypt
-;; - deps installation on Windows OS
 
 
 ;;; NOTE: specific package manager is required,
 ;; - macOS: brew
 ;; - Linux: pacman
-;; - TODO: - Windows: scoop
+;; - Windows: scoop
 
 ;; (my-check-for-executable "Homebrew (macOS)" "brew")
 ;; (my-check-for-executable "npm (macOS/Linux)" "npm")
@@ -29,16 +28,19 @@
     (ctags
      :darwin-command "brew install universal-ctags"
      :linux-command "sudo pacman -S --noconfirm ctags"
+     :windows-command "scoop install "
      :message "ctags is needed in this configuration file, check/install it manually."
      :enabled t)
     (languagetool
      :darwin-command "brew install languagetool"
      :linux-command "sudo pacman -S --noconfirm languagetool"
+     :windows-command "scoop install languagetool"
      :message nil
      :enabled t)
     (less
      :darwin-command "brew install less"
      :linux-command "sudo pacman -S --noconfirm less"
+     :windows-command "scoop install less"
      :message nil
      :enabled t)
     (npm
@@ -50,6 +52,7 @@
     (sbcl
      :darwin-command "brew install sbcl"
      :linux-command "sudo pacman -S --noconfirm sbcl"
+     :windows-command "scoop install sbcl"
      :message nil
      :enabled t)
     (shellcheck
@@ -68,21 +71,25 @@
     (sqlite3
      :darwin-command "brew install sqlite"
      :linux-command "sudo pacman -S --noconfirm sqlite"
+     :windows-command "scoop install sqlite"
      :message "sqlite3 is needed in this configuration file, check/install it manually."
      :enabled t)
     (stardict
      :darwin-command "brew install stardict"
      :linux-command "sudo pacman -S --noconfirm stardict"
+     ;; :windows-command ""
      :message nil
      :enabled t)
     (sdcv
      :darwin-command "brew install sdcv"
      :linux-command "sudo pacman -S --noconfirm sdcv"
+     ;; :windows-command ""
      :message nil
      :enabled t)
     (rg
      :darwin-command "brew install ripgrep"
      :linux-command "sudo pacman -S --noconfirm ripgrep"
+     :windows-command "scoop install ripgrep"
      :message "ripgrep (rg) is needed in this configuration file, check/install it manually."
      :enabled t)
     (js-yaml
@@ -95,6 +102,7 @@
      :darwin-command "brew install pyright"
      ;; :linux-command "pipx install pyright"
      :linux-command "sudo pacman -S --noconfirm pyright"
+     ;; :windows-command ""
      :message nil ;; No message needed for pyright
      :enabled t)
     (prettier
@@ -122,32 +130,42 @@ Display the MESSAGE if installation is skipped."
 	   (value (cdr dep))
 	   (command-darwin (plist-get value :darwin-command))
 	   (command-linux (plist-get value :linux-command))
-	   ;; TODO: to be tested...
 	   (command-windows (plist-get value :windows-command))
 	   (msg (plist-get value :message))
 	   (enabled (plist-get value :enabled)))
       (when enabled
 	(cond
-	 ((and command-darwin (eq system-type 'darwin))
+	 ((and (eq system-type 'darwin)
+	       command-darwin
+	       (not (string-empty-p command-darwin)))
 	  (my-install-dependency name command-darwin))
-	 ((and command-linux (eq system-type 'gnu/linux))
+	 ((and (eq system-type 'gnu/linux)
+	       command-linux
+	       (not (string-empty-p command-linux)))
 	  (my-install-dependency name command-linux))
-	  ;; TODO: to be tested...
-	 ((and command-windows (eq system-type 'windows-nt))
+	 ((and (eq system-type 'windows-nt)
+	       command-windows
+	       (not (string-empty-p command-windows)))
 	  (my-install-dependency name
-	  (format "powershell -Command \"%s\"" command-windows)))
-	 (unless (and command-darwin command-linux windows-command)
-	   (if msg
-	     (message msg)
-	     (message "%s is needed in this configuration file, check/install it manually." name))))))))
+				 (format
+				  "powershell -Command \"%s\""
+				  command-windows)))
+	 (t
+	  (if msg
+	      (message msg)
+	    (message
+	     "%s executable is needed in this configuration file,
+check/install it manually."
+	     name))))))))
 
 
-;; TODO: once Windows OS (scoop) is supported, update codes below,
 (progn
   (when *is-win*
-    (yes-or-no-p "Windows OS is not supported currently, input yes to continue..."))
-  (my-check-for-executable "Homebrew (macOS)" "brew")
-  (my-check-for-executable "npm (macOS/Linux)" "npm")
+    (my-check-for-executable "Scoop (Windows)" "scoop"))
+  (when *is-mac*
+    (my-check-for-executable "Homebrew (macOS)" "brew"))
+  (when *is-linux*
+    (my-check-for-executable "npm (macOS/Linux)" "npm"))
   (my-install-all-deps))
 
 
