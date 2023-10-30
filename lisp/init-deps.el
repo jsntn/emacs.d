@@ -102,7 +102,7 @@
      :darwin-command "brew install pyright"
      ;; :linux-command "pipx install pyright"
      :linux-command "sudo pacman -S --noconfirm pyright"
-     ;; :windows-command ""
+     :windows-command ""
      :message nil ;; No message needed for pyright
      :enabled t)
     (prettier
@@ -135,14 +135,23 @@ Display the MESSAGE if installation is skipped."
 	   (enabled (plist-get value :enabled)))
       (when enabled
 	(cond
+	 ;; macOS condition
 	 ((and (eq system-type 'darwin)
 	       command-darwin
 	       (not (string-empty-p command-darwin)))
 	  (my-install-dependency name command-darwin))
+	 ((and (eq system-type 'darwin)
+	       (eq command-darwin nil))
+	  (message "%s is not considered to install on macOS." name))
+	 ;; Linux condition
 	 ((and (eq system-type 'gnu/linux)
 	       command-linux
 	       (not (string-empty-p command-linux)))
 	  (my-install-dependency name command-linux))
+	 ((and (eq system-type 'gnu/linux)
+	       (eq command-linux nil))
+	  (message "%s is not considered to install on Linux." name))
+	 ;; Windows condition
 	 ((and (eq system-type 'windows-nt)
 	       command-windows
 	       (not (string-empty-p command-windows)))
@@ -150,13 +159,17 @@ Display the MESSAGE if installation is skipped."
 				 (format
 				  "powershell -Command \"%s\""
 				  command-windows)))
+	 ((and (eq system-type 'windows-nt)
+	       (eq command-windows nil))
+	  (message "%s is not considered to install on Windows." name))
+	 ;; for any other condition
 	 (t
 	  (let* ((msg-content
 		  (if msg
 		      msg
 		    (format "%s executable is needed in this configuration file,
 check/install it manually." name)))
-	       (prompt-msg (concat msg-content " Press ENTER to continue.")))
+		 (prompt-msg (concat msg-content " Press ENTER to continue.")))
 	    (when (string= (read-string prompt-msg) "")
 	      (message "Continuing..."))
 	    )))))))
