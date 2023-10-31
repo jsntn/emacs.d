@@ -26,6 +26,12 @@
      :windows-command "scoop install nodejs"
      :message nil
      :enabled t)
+    (ansible-language-server
+     :darwin-command "npm install -g @ansible/ansible-language-server"
+     :linux-command "sudo npm install -g @ansible/ansible-language-server"
+     :windows-command "npm install -g @ansible/ansible-language-server"
+     :message nil
+     :enabled t)
     (aspell
      :darwin-command "brew install aspell" ; TODO: is the en dictionary installed automatically by brew?
      :linux-command "sudo pacman -S --noconfirm aspell aspell-en"
@@ -36,7 +42,7 @@
      :darwin-command "npm install -g bash-language-server"
      :linux-command "sudo npm install -g bash-language-server"
      :windows-command "npm install -g bash-language-server"
-     :message nil ;; No message needed for prettier
+     :message nil
      :enabled t)
     (ctags
      :darwin-command "brew install universal-ctags"
@@ -122,7 +128,7 @@
      :darwin-command "npm install -g yaml-language-server"
      :linux-command "sudo npm install -g yaml-language-server"
      :windows-command "npm install -g yaml-language-server"
-     :message nil ;; No message needed for prettier
+     :message nil
      :enabled t)
     ))
 
