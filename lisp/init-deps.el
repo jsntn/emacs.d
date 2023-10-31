@@ -19,11 +19,24 @@
 
 
 (defvar my-install-deps
-  '((aspell
+  '(
+    (npm ; install npm first
+     :darwin-command "brew install node"
+     :linux-command "sudo pacman -S --noconfirm nodejs npm"
+     :windows-command "scoop install nodejs"
+     :message nil
+     :enabled t)
+    (aspell
      :darwin-command "brew install aspell" ; TODO: is the en dictionary installed automatically by brew?
      :linux-command "sudo pacman -S --noconfirm aspell aspell-en"
      :windows-command "scoop install aspell"
      :message "aspell is needed in this configuration file, check/install it manually."
+     :enabled t)
+    (bash-language-server
+     :darwin-command "npm install -g bash-language-server"
+     :linux-command "sudo npm install -g bash-language-server"
+     :windows-command "npm install -g bash-language-server"
+     :message nil ;; No message needed for prettier
      :enabled t)
     (ctags
      :darwin-command "brew install universal-ctags"
@@ -41,12 +54,6 @@
      :darwin-command "brew install less"
      :linux-command "sudo pacman -S --noconfirm less"
      :windows-command "scoop install less"
-     :message nil
-     :enabled t)
-    (npm
-     :darwin-command "brew install node"
-     :linux-command "sudo pacman -S --noconfirm nodejs npm"
-     :windows-command "scoop install nodejs"
      :message nil
      :enabled t)
     (sbcl
@@ -93,7 +100,7 @@
      :message "ripgrep (rg) is needed in this configuration file, check/install it manually."
      :enabled t)
     (js-yaml
-     :darwin-command "npm install js-yaml"
+     :darwin-command "npm install -g js-yaml"
      :linux-command "sudo npm install -g js-yaml"
      :windows-command "npm install -g js-yaml"
      :message nil ;; No message needed for js-yaml
@@ -110,7 +117,14 @@
      :linux-command "sudo pacman -S --noconfirm prettier"
      :windows-command "npm install -g prettier"
      :message nil ;; No message needed for prettier
-     :enabled t)))
+     :enabled t)
+    (yaml-language-server
+     :darwin-command "npm install -g yaml-language-server"
+     :linux-command "sudo npm install -g yaml-language-server"
+     :windows-command "npm install -g yaml-language-server"
+     :message nil ;; No message needed for prettier
+     :enabled t)
+    ))
 
 (defun my-install-dependency (name command)
   "Install a dependency NAME using COMMAND if it is not already installed.
