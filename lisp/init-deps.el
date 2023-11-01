@@ -68,6 +68,12 @@
      :windows-command "scoop install less"
      :message nil
      :enabled t)
+    (marksman
+     :darwin-command "brew install marksman"
+     :linux-command "sudo pacman -S --noconfirm marksman"
+     ;; :windows-command ""
+     :message nil
+     :enabled t)
     (sbcl
      :darwin-command "brew install sbcl"
      :linux-command "sudo pacman -S --noconfirm sbcl"
