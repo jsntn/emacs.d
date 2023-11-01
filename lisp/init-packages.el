@@ -407,6 +407,11 @@ In that case, insert the number."
   (setq keyfreq-file-lock (expand-file-name ".emacs.keyfreq.lock" user-emacs-directory))
   )
 
+(use-package marginalia
+  :init
+  (marginalia-mode)
+  )
+
 (straight-use-package
  '(mr-poker :type git :host github :repo "jsntn/mr-poker.el"))
 
