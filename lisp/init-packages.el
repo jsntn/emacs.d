@@ -225,7 +225,6 @@ In that case, insert the number."
 
 (use-package git-timemachine)
 
-(use-package helm)
 
 ;; { -- START --
 ;; use helm-dash and language-detection
@@ -415,6 +414,11 @@ In that case, insert the number."
   :config
   (setq neo-smart-open t)
   (setq neo-window-fixed-size nil)
+  )
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
   )
 
 (use-package org-bullets
@@ -805,7 +809,7 @@ In that case, insert the number."
   )
 
 (use-package vertico
-  :config
+  :init
   (vertico-mode))
 
 (use-package vlf

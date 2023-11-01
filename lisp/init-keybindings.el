@@ -25,7 +25,6 @@
 
 ;; global keybindings
 (general-define-key
- "M-x" 'helm-M-x
  "C-s" 'swiper ; having own history variable allows to get more use of M-p, M-n
 	       ; and C-r.
  "C-=" 'er/expand-region
