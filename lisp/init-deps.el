@@ -50,6 +50,12 @@
      :windows-command "scoop install universal-ctags"
      :message "ctags is needed in this configuration file, check/install it manually."
      :enabled t)
+    (grammarly-languageserver
+     :darwin-command "npm install -g @emacs-grammarly/grammarly-languageserver"
+     :linux-command "sudo npm install -g @emacs-grammarly/grammarly-languageserver"
+     :windows-command "npm install -g @emacs-grammarly/grammarly-languageserver"
+     :message nil
+     :enabled t)
     (languagetool
      :darwin-command "brew install languagetool"
      :linux-command "sudo pacman -S --noconfirm languagetool"
