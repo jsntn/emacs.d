@@ -124,6 +124,7 @@
 ;; require settings
 ;; =============================================================================
 
+(require 'init-company) ; company completion related settings
 (require 'init-dict) ; dict settings
 (require 'init-display) ; display settings
 (require 'init-encryption) ; encryption settings
