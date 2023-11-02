@@ -5,7 +5,9 @@
 
 
 ;; {{ START: PComplete - Context-Sensitive Completion in Emacs
-;; via https://web.archive.org/web/20231102054827/http://www.masteringemacs.org:80/article/pcomplete-context-sensitive-completion-emacs
+;; reference,
+;; - https://web.archive.org/web/20231102054827/http://www.masteringemacs.org:80/article/pcomplete-context-sensitive-completion-emacs
+;; - https://web.archive.org/web/20231102145724/https://timmydouglas.com/2020/12/18/eshell-complete.html
 (defconst pcmpl-git-commands
   '("add"
     "bisect" "branch"
