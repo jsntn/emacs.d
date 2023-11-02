@@ -17,9 +17,9 @@
     "log"
     "merge" "mv"
     "pull" "push"
-    "rebase" "reset" "rm"
+    "rebase" "reset" "restore" "rm"
     "show" "submodule" "status"
-    "tag" )
+    "tag")
   "List of `git' commands.")
 
 (defvar pcmpl-git-ref-list-cmd "git for-each-ref refs/ --format='%(refname)'"
@@ -35,17 +35,29 @@
         (add-to-list 'ref-list (match-string 1)))
       ref-list)))
 
+(defun pcmpl-git-remotes ()
+  "Return a list of remote repositories."
+  (split-string (shell-command-to-string "git remote")))
+
 (defun pcomplete/git ()
   "Completion for `git'."
   ;; Completion for the command argument.
   (pcomplete-here* pcmpl-git-commands)
   ;; complete files/dirs forever if the command is `add' or `rm'
   (cond
+   ((pcomplete-match "help" 1)
+    (pcomplete-here* pcmpl-git-commands))
+   ((pcomplete-match (regexp-opt '("pull" "push")) 1)
+    (pcomplete-here (pcmpl-git-remotes)))
    ((pcomplete-match (regexp-opt '("add" "rm")) 1)
     (while (pcomplete-here (pcomplete-entries))))
    ;; provide branch completion for the command `checkout'.
    ((pcomplete-match "checkout" 1)
-    (pcomplete-here* (pcmpl-git-get-refs "heads")))))
+    (pcomplete-here* (append (pcmpl-git-get-refs "heads")
+			     (pcmpl-git-get-refs "tags"))))
+   (t
+    (while (pcomplete-here (pcomplete-entries))))
+   ))
 ;; END: PComplete - Context-Sensitive Completion in Emacs }}
 
 
