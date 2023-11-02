@@ -53,12 +53,6 @@
 
 ;; {{ START: pcomplete company completion
 ;; via https://web.archive.org/web/20231102031110/https://xenodium.com/eshell-pcomplete-company-completion/
-(require 'cl-lib)
-(require 'company)
-(require 'dash)
-(require 'pcomplete)
-(require 's)
-
 (defun company-pcomplete--overlap-tail (a b)
   "When A is \"SomeDev\" and B is \"Developer\", return \"eloper\"."
   (let ((prefix a)
@@ -82,7 +76,7 @@
 (defun company-pcomplete (command &optional arg &rest ignored)
   "Complete using pcomplete. See `company''s COMMAND ARG and IGNORED for details."
   (interactive (list 'interactive))
-  (case command
+  (cl-case command
     (interactive (company-begin-backend 'company-pcomplete))
     (prefix (company-grab-symbol))
     (candidates
