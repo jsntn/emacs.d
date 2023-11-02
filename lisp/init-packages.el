@@ -122,6 +122,13 @@
 		))
   (add-hook 'org-mode-hook 'my-company-backends-org-mode-hook)
 
+  ;; set the backends for shell-mode
+  (defun my-company-backends-shell-mode-hook ()
+    (setq-local company-backends '(
+				   (company-capf company-files company-pcomplete)
+				   )))
+  (add-hook 'shell-mode-hook 'my-company-backends-shell-mode-hook)
+
   ;; add `company-elisp' backend for elisp.
   ;; (add-hook 'emacs-lisp-mode-hook
   ;; 	    #'(lambda ()
