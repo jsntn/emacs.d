@@ -12,15 +12,39 @@
   '("add"
     "bisect" "branch"
     "checkout" "clone" "commit"
+ 
     "diff"
+    "diff --cached"
+    "diff --staged"
+ 
     "fetch"
     "grep"
     "init"
+ 
     "log"
+    "log --oneline"
+    "log --summary"
+ 
     "merge" "mv"
     "pull" "push"
-    "rebase" "reset" "restore" "rm"
-    "show" "submodule" "status"
+    "rebase" "remote" "reset" "restore" "rm"
+    "show"
+ 
+    "stash"
+    "stash clear"
+    "stash drop"
+    "stash list"
+    "stash pop"
+    "stash save"
+
+    "status"
+ 
+    "submodule"
+    "submodule init"
+    "submodule status"
+    "submodule sync"
+    "submodule update"
+ 
     "tag")
   "List of `git' commands.")
 
