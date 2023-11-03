@@ -174,7 +174,10 @@ Version: 2023-08-16"
 	 (sudo-command (if sudo (concat "sudo " tee-command) tee-command))
 	 (cmd (concat "echo " (shell-quote-argument content) " | " sudo-command " " (shell-quote-argument file))))
     (if sudo
-	(shell-command cmd)
+	(if (executable-find "tee")
+	    (shell-command cmd)
+	  (message "Not executed due to tee executable not found.
+The tee executable is required for the sudo execution."))
       (with-temp-buffer
 	(insert content)
 	(write-region (point-min) (point-max) file append)))
@@ -201,7 +204,10 @@ Version: 2023-08-16"
     (if sudo
 	(let* ((sudo-command (concat "sudo tee " (shell-quote-argument file)))
 	       (cmd (concat "echo " (shell-quote-argument (buffer-string)) " | " sudo-command)))
-	  (shell-command cmd))
+	  (if (executable-find "tee")
+	      (shell-command cmd)
+	    (message "Not executed due to tee executable not found.
+The tee executable is required for the sudo execution.")))
       (write-region (point-min) (point-max) file))))
 
 
