@@ -12,41 +12,49 @@
   '("add"
     "bisect" "branch"
     "checkout" "clone" "commit"
- 
     "diff"
-    "diff --cached"
-    "diff --staged"
- 
     "fetch"
     "grep"
     "init"
- 
     "log"
-    "log --oneline"
-    "log --summary"
- 
     "merge" "mv"
     "pull" "push"
     "rebase" "remote" "reset" "restore" "rm"
     "show"
- 
     "stash"
-    "stash clear"
-    "stash drop"
-    "stash list"
-    "stash pop"
-    "stash save"
-
     "status"
- 
     "submodule"
-    "submodule init"
-    "submodule status"
-    "submodule sync"
-    "submodule update"
- 
     "tag")
   "List of `git' commands.")
+
+(defconst pcmpl-git-submodule-commands
+  '(
+    "foreach"
+    "init"
+    "status"
+    "sync"
+    "update"
+    ))
+
+(defconst pcmpl-git-diff-args
+  '(
+    "--cached"
+    "--staged"
+    ))
+
+(defconst pcmpl-git-log-args
+  '(
+    "--oneline"
+    ))
+
+(defconst pcmpl-git-stash-commands
+  '(
+    "clear"
+    "drop"
+    "list"
+    "pop"
+    "save"
+    ))
 
 (defvar pcmpl-git-ref-list-cmd "git for-each-ref refs/ --format='%(refname)'"
   "The `git' command to run to get a list of refs.")
@@ -81,6 +89,14 @@
    ((pcomplete-match "checkout" 1)
     (pcomplete-here* (append (pcmpl-git-get-refs "heads")
 			     (pcmpl-git-get-refs "tags"))))
+   ((pcomplete-match "submodule" 1)
+    (pcomplete-here* pcmpl-git-submodule-commands))
+   ((pcomplete-match "diff" 1)
+    (pcomplete-here* pcmpl-git-diff-args))
+   ((pcomplete-match "log" 1)
+    (pcomplete-here* pcmpl-git-log-args))
+   ((pcomplete-match "stash" 1)
+    (pcomplete-here* pcmpl-git-stash-commands))
    (t
     (while (pcomplete-here (pcomplete-entries))))
    ))
