@@ -82,6 +82,7 @@ is the value associated with that operating system.
 
 Version: 2023-09-24
 Updated: 2023-09-26"
+  (require 'cl-lib) ; to avoid the cl-loop void definition
   (let* ((os (cond ((eq system-type 'windows-nt) 'win)
 		   ((eq system-type 'gnu/linux) 'linux)
 		   ((eq system-type 'darwin) 'mac)
