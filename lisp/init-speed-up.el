@@ -8,16 +8,16 @@
 ;; https://github.com/doomemacs/doomemacs/issues/3108#issuecomment-627537230
 ;; (setq garbage-collection-messages t)
 
-;; http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold
+;; https://web.archive.org/web/20231109122321/http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
 (defun my/minibuffer-setup-hook ()
-  ;; http://clhs.lisp.se/Body/v_most_p.htm
+  ;; https://web.archive.org/web/20231109123003/http://clhs.lisp.se/Body/v_most_p.htm
   (setq gc-cons-threshold most-positive-fixnum)
   )
 
 (defun my/minibuffer-exit-hook ()
   ;; defer it (1sec) so that commands launched immediately after will enjoy the
   ;; benefits.
-  ;; https://github.com/doomemacs/doomemacs/blob/develop/docs/faq.org#how-does-doom-start-up-so-quickly
+  ;; https://github.com/doomemacs/doomemacs/blob/35865ef5e89442e3809b8095199977053dd4210f/docs/faq.org#how-does-doom-start-up-so-quickly
   (run-at-time 1 nil
 	       (lambda () (setq gc-cons-threshold 16777216)) ; 16mb
 	       )
@@ -28,8 +28,8 @@
 
 
 ;; { START: 优化 Emacs 的垃圾搜集行为
-;; https://github.com/lujun9972/lujun9972.github.com/blob/81a7933b05495155a601b9b57991ca32d12c95a5/Emacs%E4%B9%8B%E6%80%92/%E4%BC%98%E5%8C%96Emacs%E7%9A%84%E5%9E%83%E5%9C%BE%E6%90%9C%E9%9B%86%E8%A1%8C%E4%B8%BA.org
-;; original link https://akrl.sdf.org
+;; https://web.archive.org/web/20231109123542/https://raw.githubusercontent.com/lujun9972/lujun9972.github.com/81a7933b05495155a601b9b57991ca32d12c95a5/Emacs%E4%B9%8B%E6%80%92/%E4%BC%98%E5%8C%96Emacs%E7%9A%84%E5%9E%83%E5%9C%BE%E6%90%9C%E9%9B%86%E8%A1%8C%E4%B8%BA.org
+;; original link https://web.archive.org/web/20231109123354/https://akrl.sdf.org/
 
 ;; (setq garbage-collection-messages t)
 ;; (setq garbage-collection-messages nil)
