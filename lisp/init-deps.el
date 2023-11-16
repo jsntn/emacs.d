@@ -20,6 +20,15 @@
 
 (defvar my-install-deps
   '(
+    ;; (npm ; the executable binary name
+    ;;  :darwin-command "brew install node" ; the installation command for macOS
+    ;;  :linux-command "sudo pacman -S --noconfirm nodejs npm" ; the installation command for Linux
+    ;;  :windows-command "scoop install nodejs" ; the installation command for Windows
+    ;;  ...... ; if the darwin/linux/windows-command (above) is,
+    ;;  ...... ; - empty value (like - linux-command: ""), then a reminding message will raise for manual installation
+    ;;  ...... ; - not exist, then reminding message will show that xxx (executable binary name) is not considered to install on specific OS
+    ;;  :message nil ; manual set reminding message
+    ;;  :enabled t) ; to install or not
     (npm ; install npm first
      :darwin-command "brew install node"
      :linux-command "sudo pacman -S --noconfirm nodejs npm"
