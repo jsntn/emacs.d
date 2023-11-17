@@ -20,6 +20,7 @@
 
 (defvar my-install-deps
   '(
+    ;; example,
     ;; (npm ; the executable binary name
     ;;  :darwin-command "brew install node" ; the installation command for macOS
     ;;  :linux-command "sudo pacman -S --noconfirm nodejs npm" ; the installation command for Linux
