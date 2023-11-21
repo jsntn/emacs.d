@@ -3,6 +3,9 @@
 ;;; Code:
 
 
+;; highlight current line for all programming major modes
+(add-hook 'prog-mode-hook #'hl-line-mode)
+
 (defun my/hs-hide-all ()
   (hs-minor-mode 1)
   (hs-hide-all)
