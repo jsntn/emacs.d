@@ -251,19 +251,21 @@ and the decrypted file will be securely deleted after opening in buffer."
 
 
 ;; {{ START: my/check-orphaned-org-ids-in-directory
-(require 'org-element) ; this should be here before `org-add-link-type'
-(require 'cl-lib)
+(defun my-org-id-link-pre ()
+  "The precondition config to my org id link settings"
+  (my-require 'org-element) ; this should be here before `org-add-link-type'
+  (my-require 'cl-lib)
 
-;; From ChatGPT,
-;; The message "Created id link." is printed by the `org-add-link-type` function
-;; each time it is called.
-;; Since you have the line `(org-add-link-type "id" #'my-org-id-link-follow)` in
-;; your code, this function is called every time you load or reload your Emacs
-;; configuration. It registers a new link type called `"id"` that is handled by
-;; the `my-org-id-link-follow` function.
+  ;; From ChatGPT,
+  ;; The message "Created id link." is printed by the `org-add-link-type` function
+  ;; each time it is called.
+  ;; Since you have the line `(org-add-link-type "id" #'my-org-id-link-follow)` in
+  ;; your code, this function is called every time you load or reload your Emacs
+  ;; configuration. It registers a new link type called `"id"` that is handled by
+  ;; the `my-org-id-link-follow` function.
 
-;; register new link type called "id"
-(org-add-link-type "id" #'my-org-id-link-follow)
+  ;; register new link type called "id"
+  (org-add-link-type "id" #'my-org-id-link-follow))
 
 (defun my-org-id-link-follow (id)
   "Follow an `id' link."
@@ -271,6 +273,7 @@ and the decrypted file will be securely deleted after opening in buffer."
 
 (defun my-org-id-links-in-buffer ()
   "Return a list of Org ID links in the current buffer."
+  (my-org-id-link-pre)
   (let (org-id-links) ; creates a local variable called `org-id-links` with an
 		      ; initial value of `nil` that is only visible within the
 		      ; `let` block
@@ -296,6 +299,7 @@ and the decrypted file will be securely deleted after opening in buffer."
 (defun my-list-org-ids-in-directory (directory)
   "List all org-ids in org-files in the given DIRECTORY and return them as a list."
   (interactive "DDirectory: ")
+  (my-org-id-link-pre)
   (let ((org-files (directory-files-recursively directory "\\.org$"))
 	(org-ids '()))
     (dolist (file org-files)

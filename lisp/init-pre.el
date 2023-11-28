@@ -9,6 +9,24 @@
 (defconst *is-win* (eq system-type 'windows-nt))
 (defconst *is-linux* (or (eq system-type 'gnu/linux) (eq system-type 'linux)) )
 
+
+
+(defun my-require (feature)
+  "Custom require function to prevent recursive loading."
+  (unless (featurep feature)
+    (require feature)))
+
+(defun my-require-maybe (feature &optional file)
+  "Try to require FEATURE, but don't signal an error if `require' fails."
+  (require feature file 'noerror))
+
+(defun my-when-available (func foo)
+  "Do something if FUNCTION is available."
+  (when (fboundp func) (funcall foo)))
+
+ 
+
+
 ;; { -- START --
 ;; check Linux distribution
 ;; https://emacs.stackexchange.com/questions/18205/how-can-i-distinguish-between-linux-distributions-in-emacs
