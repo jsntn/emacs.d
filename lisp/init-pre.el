@@ -24,7 +24,7 @@
   "Do something if FUNCTION is available."
   (when (fboundp func) (funcall foo)))
 
- 
+
 
 
 ;; { -- START --
