@@ -54,7 +54,7 @@
      :windows-command "npm install -g bash-language-server"
      :message nil
      :enabled t)
-    (crow
+    (crow ; for dictionary-overlay package
      :linux-command "sudo pacman -S --noconfirm crow-translate"
      :message nil
      :enabled t) 
@@ -76,7 +76,7 @@
      ;; :windows-command ""
      :message nil
      :enabled t)
-    (less
+    (less ; Linux utility
      :darwin-command "brew install less"
      :linux-command "sudo pacman -S --noconfirm less"
      :windows-command "scoop install less"
@@ -150,7 +150,7 @@
      :windows-command "npm install -g prettier"
      :message nil ;; No message needed for prettier
      :enabled t)
-    (unzip
+    (unzip ; for nov.el package
      :linux-command "sudo pacman -S --noconfirm unzip"
      :message nil
      :enabled t)
