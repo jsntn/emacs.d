@@ -146,6 +146,10 @@
      :windows-command "npm install -g prettier"
      :message nil ;; No message needed for prettier
      :enabled t)
+    (unzip
+     :linux-command "sudo pacman -S --noconfirm unzip"
+     :message nil
+     :enabled t)
     (yaml-language-server
      :darwin-command "npm install -g yaml-language-server"
      :linux-command "sudo npm install -g yaml-language-server"
