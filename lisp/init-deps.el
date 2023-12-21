@@ -55,9 +55,13 @@
      :message nil
      :enabled t)
     (crow ; for dictionary-overlay package
-     :linux-command "sudo pacman -S --noconfirm crow-translate"
+     ;; Chaotic-AUR repository should be set up before installing crow-translate, see,
+     ;; https://aur.chaotic.cx
+     ;; read more,
+     ;; https://github.com/jsntn/emacs.d/issues/21
+     :linux-command "sudo pacman -S --noconfirm crow-translate" ; https://crow-translate.github.io
      :message nil
-     :enabled t) 
+     :enabled t)
     (ctags
      :darwin-command "brew install universal-ctags"
      :linux-command "sudo pacman -S --noconfirm ctags"
