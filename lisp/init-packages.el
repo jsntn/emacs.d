@@ -238,6 +238,7 @@
 	  ;; align with the org-todo-keyword-faces
 	  ("TODO" :foreground "white" :background "#5F87FF")
 	  ("DONE" :foreground "white" :background "#2E8B57")
+	  ("CLOSED" :foreground "white" :background "#2E8B57")
 	  ("CANCELED" :foreground "white" :background "#95A5A6")
 	  ("WAIT" :foreground "white" :background "#F9BC41")
 	  ("IN-PROGRESS" :foreground "white" :background "#3498DB")

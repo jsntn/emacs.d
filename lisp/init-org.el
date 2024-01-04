@@ -78,13 +78,14 @@
 
 (setq org-todo-keywords
       ;; '((sequence "☛ TODO(t)" "➼ IN-PROGRESS" "⚑ WAIT(w@/!)" "|" "✔ DONE(d!)" "✘ CANCELED(c@)")
-      '((sequence "TODO(t)" "IN-PROGRESS" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")
+      '((sequence "TODO(t)" "IN-PROGRESS" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)" "CLOSED")
 	(sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "IMPROVEMENT(m)" "ENHANCEMENT(e)" "FEATURE(a)" "|" "FIXED(f)")
 	))
 
 (setf org-todo-keyword-faces '(
 			       ("CANCELED" . (:foreground "white" :background "#95A5A6"))
 			       ("DONE" . (:foreground "white" :background "#2E8B57"))
+			       ("CLOSED" . (:foreground "white" :background "#2E8B57"))
 			       ("WAIT" . (:foreground "white" :background "#F9BC41"))
 			       ("IN-PROGRESS" . (:foreground "white" :background "#3498DB"))
 			       ("TODO" . (:foreground "white" :background "#5F87FF"))
