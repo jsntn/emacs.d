@@ -192,7 +192,7 @@
 ;; teach Org where to look for all of the files you wish to include in your agenda
 ;; https://stackoverflow.com/a/41969519/4274775
 (setq org-agenda-files
-	      (directory-files-recursively org-directory "\\.org$")) ; <<od-1>>
+	      (directory-files-recursively org-directory "\\.org$"))
 ;; (length org-agenda-files)
 
 ;; fix issue like below,
@@ -226,7 +226,6 @@ Version: 2023/09/27"
 				  ;; https://orgmode.org/list/loom.20111014T204701-149@post.gmane.org/
 				  (setq org-agenda-files
 					(delete-dups (append org-agenda-files
-							     ;; <<od-2>>
 							     ;; TODO: to be tested...
 							     (when (and org-directory (not (string= org-directory "")))
 							     (directory-files-recursively org-directory "\\.org$")))))
@@ -235,7 +234,7 @@ Version: 2023/09/27"
 					 (append org-agenda-files
 					 ;; TODO: to be tested...
 					     (when (and org-mobile-directory (not (string= org-mobile-directory "")))
-						 (directory-files-recursively org-mobile-directory "\\.org$"))))) ; <<omd>>
+						 (directory-files-recursively org-mobile-directory "\\.org$")))))
 
 				  ;; remove the duplicates like below,
 				  ;; ("~/abc.org" "/Users/jason/abc.org")
