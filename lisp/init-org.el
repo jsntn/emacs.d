@@ -227,15 +227,13 @@ Version: 2023/09/27"
 				  ;; https://orgmode.org/list/loom.20111014T204701-149@post.gmane.org/
 				  (setq org-agenda-files
 					(delete-dups (append org-agenda-files
-							     ;; TODO: to be tested...
 							     (when (and org-directory (not (string= org-directory "")))
-							     (directory-files-recursively org-directory "\\.org$")))))
+							       (directory-files-recursively org-directory "\\.org$")))))
 				  (setq org-agenda-files
 					(delete-dups
 					 (append org-agenda-files
-					 ;; TODO: to be tested...
-					     (when (and org-mobile-directory (not (string= org-mobile-directory "")))
-						 (directory-files-recursively org-mobile-directory "\\.org$")))))
+						 (when (and org-mobile-directory (not (string= org-mobile-directory "")))
+						   (directory-files-recursively org-mobile-directory "\\.org$")))))
 
 				  ;; remove the duplicates like below,
 				  ;; ("~/abc.org" "/Users/jason/abc.org")
