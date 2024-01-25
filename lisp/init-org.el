@@ -191,8 +191,9 @@
 
 ;; teach Org where to look for all of the files you wish to include in your agenda
 ;; https://stackoverflow.com/a/41969519/4274775
-(setq org-agenda-files
-	      (directory-files-recursively org-directory "\\.org$"))
+(when (and (file-directory-p org-directory) (not (string= org-directory "")))
+  (setq org-agenda-files
+	(directory-files-recursively org-directory "\\.org$")))
 ;; (length org-agenda-files)
 
 ;; fix issue like below,
