@@ -80,7 +80,7 @@
      ;; :windows-command ""
      :message nil
      :enabled t)
-    (less ; Linux utility
+    (less
      :darwin-command "brew install less"
      :linux-command "sudo pacman -S --noconfirm less"
      :windows-command "scoop install less"
@@ -90,6 +90,10 @@
      :darwin-command "brew install marksman"
      :linux-command "sudo pacman -S --noconfirm marksman"
      ;; :windows-command ""
+     :message nil
+     :enabled t)
+    (rsync
+     :linux-command "sudo pacman -S --noconfirm rsync"
      :message nil
      :enabled t)
     (sbcl
