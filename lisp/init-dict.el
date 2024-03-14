@@ -56,7 +56,10 @@ Version 2023-08-03"
 		  (dolist (file files)
 		    (let ((abs-file (concat dir "/" file)))
 		      (shell-command
-		       (format "sudo tar -xjvf %s -C /usr/share/stardict/dic" abs-file)))
+		       ;; (format "sudo tar -xjvf %s -C /usr/share/stardict/dic" abs-file)))
+		       (format "sudo tar -xjvf %s -C %s"
+			       abs-file
+			       (expand-file-name ".stardict/dic" (getenv "HOME")))))
 		    (with-temp-buffer
 		      (set-buffer-file-coding-system 'utf-8-unix)
 		      (insert file)
