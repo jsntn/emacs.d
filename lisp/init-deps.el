@@ -68,6 +68,10 @@
      :windows-command "scoop install universal-ctags"
      :message "ctags is needed in this configuration file, check/install it manually."
      :enabled t)
+    (dovecot
+     :linux-command "sudo pacman -S --noconfirm dovecot"
+     :message nil
+     :enabled t)
     (grammarly-languageserver
      :darwin-command "npm install -g @emacs-grammarly/grammarly-languageserver"
      :linux-command "sudo npm install -g @emacs-grammarly/grammarly-languageserver"
@@ -90,6 +94,10 @@
      :darwin-command "brew install marksman"
      :linux-command "sudo pacman -S --noconfirm marksman"
      ;; :windows-command ""
+     :message nil
+     :enabled t)
+    (offlineimap
+     :linux-command "sudo pacman -S --noconfirm offlineimap"
      :message nil
      :enabled t)
     (rsync
