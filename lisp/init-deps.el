@@ -96,6 +96,10 @@
      ;; :windows-command ""
      :message nil
      :enabled t)
+    (notmuch
+     :linux-command "sudo pacman -S --noconfirm notmuch"
+     :message nil
+     :enabled t)
     (offlineimap
      :linux-command "sudo pacman -S --noconfirm offlineimap"
      :message nil
