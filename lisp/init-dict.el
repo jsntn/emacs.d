@@ -41,6 +41,7 @@ Version 2023-08-03"
       (global-set-key (kbd "C-c d") 'sdcv-search-pointer)
 
       ;; extract my dictionaries of ~/misc/*.bz2 files to stardict dictionary folder
+			;; note: the extraction will not happen if ~/misc/extracted.txt exists
       (defun my-extract-stardict-bz2-files-on-linux ()
 	(interactive)
 	(let* ((dir (expand-file-name "misc" (getenv "HOME")))
