@@ -72,6 +72,10 @@
      :linux-command "sudo pacman -S --noconfirm dovecot"
      :message nil
      :enabled t)
+    (fzf
+     :linux-command "sudo pacman -S --noconfirm fzf"
+     :message nil
+     :enabled t)
     (grammarly-languageserver
      :darwin-command "npm install -g @emacs-grammarly/grammarly-languageserver"
      :linux-command "sudo npm install -g @emacs-grammarly/grammarly-languageserver"
@@ -90,10 +94,14 @@
      :windows-command "scoop install less"
      :message nil
      :enabled t)
-    (marksman
+    (marksman ; https://github.com/artempyanykh/marksman
      :darwin-command "brew install marksman"
      :linux-command "sudo pacman -S --noconfirm marksman"
      ;; :windows-command ""
+     :message nil
+     :enabled t)
+    (mbsync ; https://isync.sourceforge.io
+     :linux-command "sudo pacman -S --noconfirm isync"
      :message nil
      :enabled t)
     (notmuch
