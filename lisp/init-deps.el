@@ -68,10 +68,10 @@
      :windows-command "scoop install universal-ctags"
      :message "ctags is needed in this configuration file, check/install it manually."
      :enabled t)
-    (dovecot
-     :linux-command "sudo pacman -S --noconfirm dovecot"
-     :message nil
-     :enabled t)
+    ;; (dovecot
+    ;;  :linux-command "sudo pacman -S --noconfirm dovecot"
+    ;;  :message nil
+    ;;  :enabled t)
     (fzf
      :linux-command "sudo pacman -S --noconfirm fzf"
      :message nil
@@ -108,10 +108,10 @@
      :linux-command "sudo pacman -S --noconfirm notmuch"
      :message nil
      :enabled t)
-    (offlineimap
-     :linux-command "sudo pacman -S --noconfirm offlineimap"
-     :message nil
-     :enabled t)
+    ;; (offlineimap
+    ;;  :linux-command "sudo pacman -S --noconfirm offlineimap"
+    ;;  :message nil
+    ;;  :enabled t)
     (rsync
      :linux-command "sudo pacman -S --noconfirm rsync"
      :message nil
