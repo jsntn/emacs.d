@@ -178,6 +178,10 @@
      :windows-command "npm install -g prettier"
      :message nil ;; No message needed for prettier
      :enabled t)
+    (trash-list ;; check trash-list command as the trash-cli is not a valid command for trash-cli
+     :linux-command "sudo pacman -S --noconfirm trash-cli"
+     :message nil
+     :enabled t)
     (tmux
      :linux-command "sudo pacman -S --noconfirm tmux"
      :message nil
