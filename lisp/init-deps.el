@@ -178,8 +178,20 @@
      :windows-command "npm install -g prettier"
      :message nil ;; No message needed for prettier
      :enabled t)
+    (tmux
+     :linux-command "sudo pacman -S --noconfirm tmux"
+     :message nil
+     :enabled t)
     (unzip ; for nov.el package
      :linux-command "sudo pacman -S --noconfirm unzip"
+     :message nil
+     :enabled t)
+    (vi ; recommended as it is needed by `git merge` by default
+     :linux-command "sudo pacman -S --noconfirm vi"
+     :message nil
+     :enabled t)
+    (vim
+     :linux-command "sudo pacman -S --noconfirm vim"
      :message nil
      :enabled t)
     (yaml-language-server
