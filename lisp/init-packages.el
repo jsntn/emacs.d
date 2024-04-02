@@ -658,11 +658,8 @@
 
 ;; { -- start: if emacs is running in a terminal
 (unless (display-graphic-p)
-
-  (add-to-list 'package-archives
-	       '("cselpa" . "https://elpa.thecybershadow.net/packages/"))
-
   (use-package term-keys
+    :straight (:type git :host github :repo "CyberShadow/term-keys")
     :config
     (term-keys-mode t)
     ;; to configure alacritty for term-keys, use term-keys/alacritty-config to generate a alacritty.yml fragment:
@@ -673,20 +670,6 @@
     ;; then, add the output to your main alacritty.yml file.
     ;; via https://github.com/CyberShadow/term-keys#alacritty
     )
-
-  (setq package-archives (delete '("cselpa" . "https://elpa.thecybershadow.net/packages/") package-archives))
-
-  (defun term-keys-reminder-messages ()
-    (yes-or-no-p "term-keys is used to handle keyboard input involving any combination of keys and modifiers in emacs through supported terminal emulator(Alacritty is recommended on Windows), refer to term-keys README for configuration. Continue?")
-    )
-
-  (unless noninteractive
-    (if (boundp 'term-keys-reminder)
-	(when (symbol-value 'term-keys-reminder) (term-keys-reminder-messages))
-      (term-keys-reminder-messages)
-      )
-    )
-
   )
 ;; -- end: if emacs is running in a terminal }
 
