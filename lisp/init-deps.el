@@ -76,6 +76,10 @@
      :linux-command "sudo pacman -S --noconfirm fzf"
      :message nil
      :enabled t)
+    ;; (global ; https://www.gnu.org/software/global/
+    ;;  :linux-command "sudo pacman -S --noconfirm global"
+    ;;  :message nil
+    ;;  :enabled t)
     (grammarly-languageserver
      :darwin-command "npm install -g @emacs-grammarly/grammarly-languageserver"
      :linux-command "sudo npm install -g @emacs-grammarly/grammarly-languageserver"
