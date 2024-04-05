@@ -109,7 +109,9 @@
      :message nil
      :enabled t)
     (notmuch
-     :linux-command "sudo pacman -S --noconfirm notmuch"
+     ;; install the specific version that should come the same as Emacs
+     ;; `notmuch` package (in my `site-lisp`)
+     :linux-command "sudo pacman -S --noconfirm notmuch=0.38.3-1"
      :message nil
      :enabled t)
     ;; (offlineimap
