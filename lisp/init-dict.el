@@ -30,7 +30,7 @@ Version 2023-08-03"
 
 
 (use-package company-english-helper
-  :straight (:host github :repo "manateelazycat/company-english-helper"))
+  :straight (:host github :repo "jsntn/company-english-helper" :branch "my"))
 
 
 (if *is-linux*
