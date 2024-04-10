@@ -188,15 +188,20 @@
 	      '(:with company-yasnippet))))
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
-  ;; set the backends for org-mode
-  (defun my-company-backends-org-mode-hook ()
+  ;; set the backends for writing in text related mode
+  (defun my-company-backends-text-mode-hook ()
     (setq-local company-backends '(
 				   (company-dabbrev company-ispell)
 				   ;; commented below to speed up the completion
 				   ;; (company-tabnine)
 				   company-files)
 		))
-  (add-hook 'org-mode-hook 'my-company-backends-org-mode-hook)
+  (dolist (hook '(
+		markdown-mode-hook
+		org-mode-hook
+		text-mode-hook
+		))
+  (add-hook hook 'my-company-backends-text-mode-hook))
 
   ;; set the backends for shell-mode
   (defun my-company-backends-shell-mode-hook ()
