@@ -436,15 +436,20 @@
   ;; :if window-system ; for graphical Emacs
   :after emacsql-sqlite3
   :config
-  (org-roam-db-autosync-mode)
+  (add-hook 'emacs-startup-hook #'my-activate-org-roam-db-autosync)
   (setq org-roam-database-connector 'sqlite3)
   (setq org-roam-mode-sections
   (list #'org-roam-backlinks-section
 	    #'org-roam-reflinks-section
 	    ;; ripgrep (rg) is used for unlinked references below - (executable-find "rg")
-	    #'org-roam-unlinked-references-section
+	    ;; #'org-roam-unlinked-references-section
 	    ))
   )
+
+(defun my-activate-org-roam-db-autosync ()
+  "Activate `org-roam-db-autosync-mode` after a delay"
+  (run-with-idle-timer 7 nil 'org-roam-db-autosync-mode))
+
 
 (my-check-for-executable "ripgrep (rg)" "rg")
 ;; END: Org-roam }
