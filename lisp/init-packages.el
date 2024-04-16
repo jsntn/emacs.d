@@ -433,7 +433,7 @@
   )
 
 (use-package org-roam
-  :if window-system ; for graphical Emacs
+  ;; :if window-system ; for graphical Emacs
   :after emacsql-sqlite3
   :config
   (org-roam-db-autosync-mode)
