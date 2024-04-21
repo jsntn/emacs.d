@@ -34,7 +34,7 @@
   )
 
 (use-package evil-leader
-  :init
+  :config
   (global-evil-leader-mode)
   )
 
