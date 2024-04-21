@@ -4,6 +4,13 @@
 
 
 
+
+
+(use-package on
+  :straight (:host github :repo "ajgrf/on.el"))
+
+
+
 ;; a utility package to collect various Icon Fonts and propertize them within Emacs.
 (use-package all-the-icons
   :config
@@ -444,6 +451,8 @@
 	    ;; ripgrep (rg) is used for unlinked references below - (executable-find "rg")
 	    ;; #'org-roam-unlinked-references-section
 	    ))
+  ;; TODO: to be tested... 
+  ;; :hook (on-first-file-hook . org-roam-db-autosync-mode) 
   )
 
 (defun my-activate-org-roam-db-autosync ()
