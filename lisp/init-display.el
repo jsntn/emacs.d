@@ -13,16 +13,27 @@
   ;; global settings (defaults)
   (setq doom-themes-enable-bold t) ; if nil, bold is universally disabled
   ;; corrects (and improves) org-mode's native fontification
-  ;; (doom-themes-org-config) ; disable this as it is not compatible with
-					; org-modern horizontal line, see,
-					; https://github.com/jsntn/emacs.d/issues/13
-  ;; personal modified version of doom-monokai-classic
-  (add-to-list 'custom-theme-load-path (expand-file-name "themes/" user-emacs-directory))
-  (load-theme 'doom-monokai-classic t)
-  (set-background-color "black")
-  (custom-set-faces
-   `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
-   `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6))))))
+  ;; update: disable this as it is not compatible with org-modern horizontal
+  ;; line, see https://github.com/jsntn/emacs.d/issues/13
+  ;; (doom-themes-org-config)
+
+  ;; theme does not load correctly in daemon mode, see,
+  ;; - https://stackoverflow.com/a/23668935/4274775
+  ;; - https://github.com/cpaulik/emacs-material-theme/issues/45#issuecomment-385247309
+  ;; - https://github.com/nordtheme/emacs/issues/59
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+		(lambda (frame)
+		  (with-selected-frame frame
+		    (my-load-theme))))
+    (my-load-theme))
+  ;; customization on doom-monokai-classic
+  (defun my-load-theme ()
+    (load-theme 'doom-monokai-classic t)
+    (custom-set-faces
+     `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
+     `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6)))))
+     `(default ((t (:background "black"))))))
   )
 
 
