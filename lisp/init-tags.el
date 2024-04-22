@@ -22,7 +22,11 @@ The installation result can be checked later manually with ctags command. Contin
   :defer t
   :init
   ;; This is needed in `:init' block for lazy load to work.
-  (require 'citre-config))
+  (require 'citre-config)
+  :config
+  ;; see https://github.com/universal-ctags/citre/issues/161
+  (setq citre-peek-fill-fringe nil)
+  (setq citre-peek-use-dashes-as-horizontal-border t))
 
 (when (or (eq system-type 'darwin) (eq system-type 'windows-nt))
   (my-check-for-executable "ctags" "ctags"))
