@@ -45,11 +45,11 @@
 ;; Call the function with the desired output file path
 ;; (my-monitor-clipboard-and-write-to-file "c:/x-clipboard.txt" 1)
 
-(defun my-monitor-kill-and-write-to-file (output-file-path x-seconds)
-  "Monitor current kill ring and write its content to the specified file."
+(defun my-monitor-kill-and-write-to-file (register-name output-file-path x-seconds)
+  "Monitor the specified kill ring for changes and write its content to a specified file."
   (defun my-kill-monitor-task ()
     (condition-case nil
-	(let ((current-contents (current-kill 0)))
+	(let ((current-contents (current-kill (get-register register-name))))
 	  (unless (equal current-contents my-previous-kill-contents)
 	    (setq my-previous-kill-contents current-contents)
 	    (with-temp-file output-file-path
@@ -71,7 +71,7 @@
 ;; (file-name-nondirectory "/temp/abc.txt")
 
 (defun my-monitor-file-and-copy-to-register (file-path register-name x-seconds)
-  "Monitor the specified file for changes and copy its content to a register."
+  "Monitor the specified file for changes and copy its content to a specified register."
   (let ((previous-contents-alist ()))
 
     (defun my-file-monitor-task ()
