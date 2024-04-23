@@ -111,7 +111,7 @@
   (if *is-win*
       (let ((previous-contents-alist ()))
 
-	(defun my-file-monitor-task ()
+	(defun my-w32-file-monitor-task ()
 	  (let* ((base-filename
 		  (my-remove-file-suffix (file-name-nondirectory file-path)))
 		 (current-contents (when (file-readable-p file-path)
@@ -133,7 +133,7 @@
 	(let ((task-name (concat "my-w32-file-monitor-task_"
 				 (my-remove-file-suffix
 				  (file-name-nondirectory file-path)))))
-	  (fset (intern task-name) #'my-file-monitor-task)
+	  (fset (intern task-name) #'my-w32-file-monitor-task)
 	  (my-schedule-task-every-x-secs x-seconds (intern task-name))))
     (message "Only Windows system is supported.")))
 
