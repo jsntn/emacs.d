@@ -130,7 +130,7 @@
 		      previous-contents-alist)
 		     )))))
 
-	(let ((task-name (concat "my-file-monitor-task_"
+	(let ((task-name (concat "my-w32-file-monitor-task_"
 				 (my-remove-file-suffix
 				  (file-name-nondirectory file-path)))))
 	  (fset (intern task-name) #'my-file-monitor-task)
