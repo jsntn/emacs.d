@@ -294,6 +294,8 @@
 (use-package marginalia
   :init
   (marginalia-mode)
+  :config
+  (setq marginalia-field-width 9999999) ; maximize the width of marginalia field
   )
 
 (straight-use-package
