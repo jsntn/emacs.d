@@ -123,8 +123,9 @@ Updated: 2023-10-20"
     (if (get-process command-process-name)
 	(message "Process (%s) already running..." command-process-name)
       (progn
-      ;; TODO: to check if the buffer can be created or not...
-	(start-process-shell-command command-process-name (format "*%s*" command-process-name) command)
+	(start-process-shell-command command-process-name
+				     (format "*%s*" command-process-name)
+				     command)
 	(message "Creating tags...")
 
 	(when append-t-or-not
