@@ -151,8 +151,7 @@ Updated: 2024-04-24"
 
 	(let ((task-name (concat "my-w32-file-monitor-task_from-"
 				 (my-remove-file-suffix (file-name-nondirectory file-path))
-				 "-to-"
-				 (string register-name))))
+				 "-to-w32-clipboard")))
 	  (fset (intern task-name) #'my-w32-file-monitor-task)
 	  (my-schedule-task-every-x-secs x-seconds (intern task-name))))
     (message "Only Windows system is supported.")))
