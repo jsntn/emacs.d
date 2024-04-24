@@ -63,9 +63,15 @@ Updated: 2024-04-24"
     (error)))
 
   (setq my-previous-kill-contents "")
-  (my-schedule-task-every-x-secs x-seconds 'my-kill-monitor-task))
+  (let ((task-name (concat "my-kill-monitor-task_from-"
+			   (string register-name)
+			   "-to-"
+			   (my-remove-file-suffix (file-name-nondirectory output-file-path)))))
+    (fset (intern task-name) #'my-kill-monitor-task)
+    (my-schedule-task-every-x-secs x-seconds (intern task-name))))
 ;; (current-kill 0)
-;; (my-monitor-kill-and-write-to-file "c:/emacs-clipboard.txt" 1)
+;; (get-register ?0)
+;; (my-monitor-kill-and-write-to-file ?0 "c:/emacs-clipboard.txt" 1)
 
 
 (defun my-remove-file-suffix (filename)
