@@ -55,7 +55,7 @@ Version: 2023
 Updated: 2024-04-24"
   (defun my-kill-monitor-task ()
     (condition-case nil
-	(let ((current-contents (current-kill (get-register register-name))))
+	(let ((current-contents (get-register register-name)))
 	  (unless (equal current-contents my-previous-kill-contents)
 	    (setq my-previous-kill-contents current-contents)
 	    (with-temp-file output-file-path
