@@ -46,7 +46,13 @@
 ;; (my-monitor-clipboard-and-write-to-file "c:/x-clipboard.txt" 1)
 
 (defun my-monitor-kill-and-write-to-file (register-name output-file-path x-seconds)
-  "Monitor the specified kill ring for changes and write its content to a specified file."
+  "Monitor the specified kill ring for changes and write its content to a specified file.
+
+Example usage:
+(my-monitor-kill-and-write-to-file ?0 \"c:/emacs-clipboard.txt\" 1)
+
+Version: 2023
+Updated: 2024-04-24"
   (defun my-kill-monitor-task ()
     (condition-case nil
 	(let ((current-contents (current-kill (get-register register-name))))
@@ -71,7 +77,13 @@
 ;; (file-name-nondirectory "/temp/abc.txt")
 
 (defun my-monitor-file-and-copy-to-register (file-path register-name x-seconds)
-  "Monitor the specified file for changes and copy its content to a specified register."
+  "Monitor the specified file for changes and copy its content to a specified register.
+
+Example usage:
+(my-monitor-file-and-copy-to-register \"c:/x-clipboard.txt\" ?a 1)
+
+Version: 2023
+Updated: 2024-04-24"
   (let ((previous-contents-alist ()))
 
     (defun my-file-monitor-task ()
@@ -93,9 +105,10 @@
 		  previous-contents-alist)
 		 )))))
 
-    (let ((task-name (concat "my-file-monitor-task_"
-			     (my-remove-file-suffix
-			      (file-name-nondirectory file-path)))))
+    (let ((task-name (concat "my-file-monitor-task_from-"
+			     (my-remove-file-suffix (file-name-nondirectory file-path))
+			     "-to-"
+			     (string register-name))))
       (fset (intern task-name) #'my-file-monitor-task)
       (my-schedule-task-every-x-secs x-seconds (intern task-name)))))
 ;; Example usage:
@@ -107,7 +120,13 @@
 ;; (w32-set-clipboard-data "Your content goes here")
 
 (defun my-monitor-file-and-copy-to-w32-clipboard (file-path x-seconds)
-  "Monitor the specified file for changes and copy its content to Windows clipboard."
+  "Monitor the specified file for changes and copy its content to Windows clipboard.
+
+Example usage:
+(my-monitor-file-and-copy-to-w32-clipboard \"c:/emacs-clipboard.txt\" 1)
+
+Version: 2023
+Updated: 2024-04-24"
   (if *is-win*
       (let ((previous-contents-alist ()))
 
@@ -130,9 +149,10 @@
 		      previous-contents-alist)
 		     )))))
 
-	(let ((task-name (concat "my-w32-file-monitor-task_"
-				 (my-remove-file-suffix
-				  (file-name-nondirectory file-path)))))
+	(let ((task-name (concat "my-w32-file-monitor-task_from-"
+				 (my-remove-file-suffix (file-name-nondirectory file-path))
+				 "-to-"
+				 (string register-name))))
 	  (fset (intern task-name) #'my-w32-file-monitor-task)
 	  (my-schedule-task-every-x-secs x-seconds (intern task-name))))
     (message "Only Windows system is supported.")))
@@ -145,7 +165,7 @@
 
 ;; via https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
 (defun my/reload-dir-locals-for-current-buffer ()
-  "reload dir locals for the current buffer"
+  "Reload dir locals for the current buffer"
   (interactive)
   (let ((enable-local-variables :all))
     (hack-dir-local-variables-non-file-buffer)))
@@ -170,7 +190,7 @@ current buffer's, reload dir-locals."
 			nil t))))
 
 (defun eh-org-clean-space (text backend info)
-  "remove the space between chinese characters during exporting
+  "Remove the space between chinese characters during exporting
 to HTML files."
   ;; https://github.com/hick/emacs-chinese#%E4%B8%AD%E6%96%87%E6%96%AD%E8%A1%8C
   (when (org-export-derived-backend-p backend 'html)
