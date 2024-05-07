@@ -21,12 +21,6 @@
   ;; - https://stackoverflow.com/a/23668935/4274775
   ;; - https://github.com/cpaulik/emacs-material-theme/issues/45#issuecomment-385247309
   ;; - https://github.com/nordtheme/emacs/issues/59
-  (if (daemonp)
-      (add-hook 'after-make-frame-functions
-		(lambda (frame)
-		  (with-selected-frame frame
-		    (my-load-theme))))
-    (my-load-theme))
   ;; customization on doom-monokai-classic
   (defun my-load-theme ()
     (load-theme 'doom-monokai-classic t)
@@ -34,6 +28,12 @@
      `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
      `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6)))))
      `(default ((t (:background "black"))))))
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+		(lambda (frame)
+		  (with-selected-frame frame
+		    (my-load-theme))))
+    (my-load-theme))
   )
 
 
