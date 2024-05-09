@@ -5,7 +5,7 @@
 
 ;; save a list of open files in ~/.emacs.d/.emacs.desktop
 (setq desktop-path (list user-emacs-directory)
-      desktop-auto-save-timeout 600
+      desktop-auto-save-timeout 6
       desktop-save t
       desktop-restore-eager 10 ; the maximum number of 10 buffers to restore
 			       ; immediately, and the remaining buffers are
