@@ -107,6 +107,13 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(when (or (string-equal (getenv "ELPA") "local")
+	  (string-equal (getenv "STRAIGHT") "freeze"))
+  (let ((source (expand-file-name "straight/versions/my.el" user-emacs-directory))
+	(destination (expand-file-name "straight/versions/default.el" user-emacs-directory)))
+    (when (file-exists-p source)
+      (copy-file source destination t))))
+
 
 (package-initialize)
 (unless package-archive-contents
