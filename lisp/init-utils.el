@@ -499,7 +499,7 @@ function as a hook, add it to the appropriate hook list, such as
 Buffers in modified (not yet saved) state in emacs will not be reverted. They
 will be reverted though if they were modified outside emacs.
 Buffers visiting files which do not exist any more or are no longer readable
-will be killed."
+will be killed. Read-only buffers will be skipped."
   ;; via https://emacs.stackexchange.com/a/24461/29715
   (interactive)
   (dolist (buf (buffer-list))
@@ -507,7 +507,8 @@ will be killed."
       ;; Revert only buffers containing files, which are not modified;
       ;; do not try to revert non-file buffers like *Messages*.
       (when (and filename
-		 (not (buffer-modified-p buf)))
+		 (not (buffer-modified-p buf))
+		 (not (buffer-read-only buf)))
 	(if (file-readable-p filename)
 	    ;; If the file exists and is readable, revert the buffer.
 	    (with-current-buffer buf
