@@ -370,9 +370,11 @@ DIRECTORY is the directory where the org files are located."
   "Copy the ID property of the heading at point to the kill-ring."
   (interactive)
   (let ((id (org-entry-get nil "ID")))
-    (when id
-      (kill-new id)
-      (message "Copied ID: %s" id))))
+    (if id
+	(progn
+	  (kill-new id)
+	  (message "Copied ID: %s" id))
+      (message "No ID property in the heading at point."))))
 
 (defun my-get-heading-from-org-id-db (org-id)
   "Retrieve the heading title associated with an Org ID from the
