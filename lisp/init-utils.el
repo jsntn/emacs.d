@@ -369,7 +369,7 @@ Otherwise, output to the message buffer."
       ;; Insert title if the output is an org file
       (when (and filepath (string-suffix-p ".org" filepath))
         (insert (format "#+TITLE: My Packages and Versions on Emacs %s\n" emacs-version))
-	(insert (format "#+DATE: %sn\n" (format-time-string "%Y-%m-%d %H:%M:%S"))))
+	(insert (format "#+DATE: %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))))
       ;; Insert package and version information
       (dolist (pkg pkgs)
         (insert (format "%s - %s\n"
