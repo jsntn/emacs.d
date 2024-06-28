@@ -54,6 +54,10 @@
      :windows-command "npm install -g bash-language-server"
      :message nil
      :enabled t)
+    ;; (cscope
+    ;;  :linux-command "sudo pacman -S --noconfirm cscope"
+    ;;  :message nil
+    ;;  :enabled t)
     (ctags
      :darwin-command "brew install universal-ctags"
      :linux-command "sudo pacman -S --noconfirm ctags"
