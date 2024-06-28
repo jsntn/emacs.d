@@ -360,19 +360,25 @@ DIRECTORY is the directory where the org files are located."
 (defun my/list-packages-and-versions (&optional filepath)
   "List installed packages and their versions.
 If FILEPATH is provided, export the output to the specified file.
+If the file is an org file, insert a title with the Emacs version at the beginning.
 Otherwise, output to the message buffer."
   (interactive)
   (package-initialize)
-  (let ((pkgs (mapcar 'car package-alist))
-        (output-buffer (or filepath "*Packages and Versions*")))
+  (let ((pkgs (mapcar 'car package-alist)))
     (with-temp-buffer
+      ;; Insert title if the output is an org file
+      (when (and filepath (string-suffix-p ".org" filepath))
+        (insert (format "#+TITLE: My Packages and Versions on Emacs %s\n" emacs-version))
+	(insert (format "#+DATE: %sn\n" (format-time-string "%Y-%m-%d %H:%M:%S"))))
+      ;; Insert package and version information
       (dolist (pkg pkgs)
         (insert (format "%s - %s\n"
                         pkg (package-desc-version (cadr (assq pkg package-alist))))))
+      ;; Output to message buffer or write to file
       (if (or (called-interactively-p 'interactive) (not filepath))
           (message "%s" (buffer-string))
         (when filepath
-	  (set-buffer-file-coding-system 'utf-8-unix)
+          (set-buffer-file-coding-system 'utf-8-unix)
           (write-file filepath))))))
 
 
