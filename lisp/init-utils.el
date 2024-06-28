@@ -364,7 +364,7 @@ If the file is an org file, insert a title with the Emacs version at the beginni
 Otherwise, output to the message buffer."
   (interactive)
   (package-initialize)
-  (let ((pkgs (mapcar 'car package-alist)))
+  (let ((pkgs (sort (mapcar 'car package-alist) 'string<))) ; Sort packages alphabetically
     (with-temp-buffer
       ;; Insert title if the output is an org file
       (when (and filepath (string-suffix-p ".org" filepath))
