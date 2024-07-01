@@ -26,6 +26,7 @@
         (compile-history          . 30)
         desktop-missing-file-warning
         (dired-regexp-history     . 20)
+	enable-local-variables
         (extended-command-history . 30)
         (face-name-history        . 20)
         (file-name-history        . 100)
