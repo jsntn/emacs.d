@@ -228,6 +228,17 @@ The tee executable is required for the sudo execution."))
 The tee executable is required for the sudo execution.")))
       (write-region (point-min) (point-max) file))))
 
+(defun my-run-after-emacs-startup (func)
+  "Run FUNC after Emacs startup, with special handling for daemon mode."
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+		(lambda (frame)
+		  (with-selected-frame frame
+		    (funcall func))))
+    (add-hook 'emacs-startup-hook func)))
+;; use the function for `desktop-read`
+;; (my-run-after-emacs-startup 'desktop-read)
+
 
 (provide 'init-pre)
 

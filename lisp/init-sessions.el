@@ -17,7 +17,7 @@
       )
 (desktop-save-mode 1)
 
-(add-hook 'emacs-startup-hook 'desktop-read)
+(my-run-after-emacs-startup 'desktop-read)
 
 ;; save a bunch of variables to the desktop file
 ;; for lists specify the len of the maximal saved data also
