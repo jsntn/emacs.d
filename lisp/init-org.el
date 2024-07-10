@@ -8,8 +8,6 @@
 (setq org-log-done 'time) ; keep track of when a certain TODO item was marked as
 			  ; done
 
-(setq org-log-done 'note) ; record a note along with the timestamp
-
 (setq org-log-into-drawer t) ; log into LOGBOOK drawer
 
 (setq org-src-fontify-natively t) ; highlight the code in Org-mode
