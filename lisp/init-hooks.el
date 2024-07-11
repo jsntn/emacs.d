@@ -6,7 +6,8 @@
 ;; highlight current line
 (dolist (hook '(
 		prog-mode-hook
-		text-mode-hook
+		;; text-mode-hook
+		org-agenda-finalize-hook
 		))
   (add-hook hook #'hl-line-mode))
 
