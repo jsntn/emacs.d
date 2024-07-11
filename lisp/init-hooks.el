@@ -3,8 +3,12 @@
 ;;; Code:
 
 
-;; highlight current line for all programming major modes
-(add-hook 'prog-mode-hook #'hl-line-mode)
+;; highlight current line
+(dolist (hook '(
+		prog-mode-hook
+		text-mode-hook
+		))
+  (add-hook hook #'hl-line-mode))
 
 (defun my/hs-hide-all ()
   (hs-minor-mode 1)
