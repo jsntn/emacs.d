@@ -89,28 +89,27 @@
   ;; statement with two branches in the then clause.
 
   ;; In this if statement, disable is the condition being tested. If disable is
-  ;; non-nil (i.e., a prefix argument was given when the function was called), the
-  ;; first branch of the then clause is taken, which disables the strike-through
-  ;; style for both org-done and org-headline-done faces.
+  ;; non-nil (i.e., a prefix argument was given when the function was called),
+  ;; it disables the strike-through style for both org-done and
+  ;; org-headline-done faces.
 
-  ;; If disable is nil, the second branch of the then clause is taken, which
-  ;; enables the strike-through style for both faces. The third form
-  ;; set-face-attribute is not actually part of an else clause, but is instead
-  ;; an additional statement that will always be executed, regardless of the
-  ;; value of disable. It sets the foreground color of the org-headline-done
-  ;; face to white.
+  ;; If disable is nil, it enables the strike-through style for both faces.
+
+  ;; The foreground white color form set-face-attribute will always be executed,
+  ;; regardless of the value of disable. It sets the foreground color of the
+  ;; org-headline-done face to white.
   (interactive "P")
   ;; `org-headline-done' is used to indicate that a headline is DONE. This face
   ;; is only used if `org-fontify-done-headline' is set.
   ;; `org-done' is the face used for todo keywords that indicate DONE items.
   (setq org-fontify-done-headline t)
+  (set-face-attribute 'org-headline-done nil
+		      :foreground "white")
   (if disable
       (mapc (lambda (face) (set-face-attribute face nil :strike-through nil))
 	    '(org-done org-headline-done))
     (mapc (lambda (face) (set-face-attribute face nil :strike-through t))
-	  '(org-done org-headline-done))
-    (set-face-attribute 'org-headline-done nil
-			:foreground "white")))
+	  '(org-done org-headline-done))))
 
 (unless noninteractive
   (unless (display-graphic-p)
