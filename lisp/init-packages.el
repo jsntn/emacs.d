@@ -672,7 +672,11 @@
 (use-package undo-tree
   :config
   (global-undo-tree-mode)
-  )
+  (setq undo-tree-auto-save-history t)
+  (let ((undo-dir (expand-file-name "undo" user-emacs-directory)))
+    (unless (file-exists-p undo-dir)
+      (make-directory undo-dir t))
+    (setq undo-tree-history-directory-alist `(("." . ,undo-dir)))))
 
 (use-package vertico
   :init
