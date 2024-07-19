@@ -673,6 +673,7 @@
   :config
   (global-undo-tree-mode)
   (setq undo-tree-auto-save-history t)
+  (setq undo-tree-visualizer-timestamps t)
   (let ((undo-dir (expand-file-name "undo" user-emacs-directory)))
     (unless (file-exists-p undo-dir)
       (make-directory undo-dir t))
