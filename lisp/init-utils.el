@@ -117,24 +117,37 @@ Version 2023-10-18"
     (fill-region (region-beginning) (region-end) nil)))
 ;; END: undo fill-paragraph
 
-(defun my/org-insert-src-block (src-code-type)
-  "insert a `SRC-CODE-TYPE' type source code block in org-mode."
+
+(defun my/org-insert-src-block (src-code-type &optional selected-lines)
+  "Insert a `SRC-CODE-TYPE' type source code block in org-mode.
+If SELECTED-LINES is non-nil, wrap the selected lines with the source code block."
   (interactive
    (let ((src-code-types
-	  '("emacs-lisp" "python" "C" "shell" "java" "js" "clojure" "C++" "css"
-	    "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
-	    "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
-	    "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
-	    "scheme" "sqlite")))
-     (list (ido-completing-read "Source code type: " src-code-types))))
-  (progn
-    (newline-and-indent)
-    (insert (format "#+BEGIN_SRC %s\n" src-code-type))
-    (newline-and-indent)
-    (insert "#+END_SRC\n")
-    (previous-line 2)
-    (org-edit-src-code))
-  )
+          '("emacs-lisp" "python" "C" "shell" "java" "js" "clojure" "C++" "css"
+            "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+            "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+            "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+            "scheme" "sqlite")))
+         (list (ido-completing-read "Source code type: " src-code-types)
+               current-prefix-arg)))
+  (if selected-lines
+      (let ((beg (region-beginning))
+            (end (region-end)))
+        (save-excursion
+          (goto-char end)
+          (insert "#+END_SRC")
+	  (newline)
+          (goto-char beg)
+          (insert (format "#+BEGIN_SRC %s\n" src-code-type))))
+    (progn
+      (newline-and-indent)
+      (insert (format "#+BEGIN_SRC %s\n" src-code-type))
+      (newline-and-indent)
+      (insert "#+END_SRC\n")
+      (previous-line 2)
+      (org-edit-src-code))))
+
+
 
 (defun my/hide-dos-eol ()
   "do not show ^M in files containing mixed UNIX and DOS line endings."
