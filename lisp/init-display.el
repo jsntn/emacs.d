@@ -84,9 +84,9 @@
       '((propertize
 	 ;; %W and %V
 	 ;; http://emacs.1067599.n8.nabble.com/Week-number-tp89988p89991.html
-	 (format-time-string "[%V] %b-%d %a %H:%M:%S" now) ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Time-Parsing.html
+	 (format-time-string "[%V] %m-%d %a %H:%M:%S" now) ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Time-Parsing.html
 	 ;; 'face 'modeline-display-time
-	 'help-echo (format-time-string "[%V] %b-%d %a %H:%M:%S" now))))
+	 'help-echo (format-time-string "[%V] %m-%d %a %H:%M:%S" now))))
 (display-time-mode 1)
 (defun my-update-time ()
   "Update the time string in the mode line every second."
