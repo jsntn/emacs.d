@@ -3,7 +3,7 @@
 ;;; Code:
 
 
-(setq messages-buffer-max-lines 10000)
+(setq messages-buffer-max-lines t)
 
 ;; {{ START: add a timestamp to each entry in Emacs' *Messages* buffer
 ;; via https://emacs.stackexchange.com/a/33523
