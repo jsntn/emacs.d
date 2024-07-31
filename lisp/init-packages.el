@@ -69,7 +69,10 @@
 
 
 
-(use-package eglot)
+(use-package eglot
+  :config
+  (setq eglot-stay-out-of '(company)) ; see https://web.archive.org/web/20240731123602/https://github.com/joaotavora/eglot/issues/324
+  )
 
 ;; M-x elgrep: search a single directory
 ;; C-u M-x elgrep: search the directory recursively
