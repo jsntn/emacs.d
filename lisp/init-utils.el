@@ -149,6 +149,55 @@ If SELECTED-LINES is non-nil, wrap the selected lines with the source code block
 
 
 
+
+
+
+(defun my-org-get-structure-templates ()
+  "Retrieve org structure templates for insertion."
+  (let ((templates org-structure-template-alist)
+        (friendly-templates '()))
+    (dolist (template templates)
+      (let* ((key (car template))
+             (value (cdr template))
+             (name (if (listp value) (car value) value)))
+        (push (cons name key) friendly-templates)))
+    (append (reverse friendly-templates) '(("Custom" . "custom")))))
+
+(defun my/org-insert-block (block-type &optional selected-lines)
+  "Insert a BLOCK-TYPE block in org-mode.
+If SELECTED-LINES is non-nil, wrap the selected lines with the block."
+  (interactive
+   (let* ((templates (my-org-get-structure-templates))
+          (choices (mapcar #'car templates))
+          (choice (ido-completing-read "Block type: " choices)))
+     (list (cdr (assoc choice templates))
+           current-prefix-arg)))
+  (if (equal block-type "custom")
+      (setq block-type (read-string "Custom block type: ")))
+  (let ((block-type (assoc-default block-type org-structure-template-alist)))
+    (if (listp block-type)
+        (setq block-type (format "%s %s" (car block-type) (cadr block-type))))
+    (if (use-region-p)
+        (let ((beg (region-beginning))
+              (end (region-end)))
+          (save-excursion
+            (goto-char end)
+            (insert (format "#+END_%s" (upcase block-type)))
+            (newline)
+            (goto-char beg)
+            (insert (format "#+BEGIN_%s\n" (upcase block-type)))))
+      (progn
+        (newline-and-indent)
+        (insert (format "#+BEGIN_%s\n" (upcase block-type)))
+        (newline-and-indent)
+        (insert (format "#+END_%s\n" (upcase block-type)))
+        (previous-line 2)
+        (org-edit-special)))))
+
+
+
+
+
 (defun my/hide-dos-eol ()
   "do not show ^M in files containing mixed UNIX and DOS line endings."
   (interactive)
