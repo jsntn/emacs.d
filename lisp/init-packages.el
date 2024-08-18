@@ -441,7 +441,7 @@
   ;; :if window-system ; for graphical Emacs
   :after emacsql-sqlite3
   :config
-  (add-hook 'emacs-startup-hook #'my-activate-org-roam-db-autosync)
+  (my-run-after-emacs-startup 'my-activate-org-roam-db-autosync)
   (setq org-roam-database-connector 'sqlite3)
   (setq org-roam-mode-sections
   (list #'org-roam-backlinks-section
