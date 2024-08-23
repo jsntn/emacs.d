@@ -256,7 +256,24 @@ Updated: 2023-09-05"
 
 
 
+(defun my-is-today (type day)
+  "Check if today matches the specified DAY based on TYPE.
+TYPE can be 'week' for checking the day of the week or 'month' for checking the day of the month.
+DAY should be an integer where:
+- If TYPE is 'week', 0 = Sunday, 1 = Monday, ..., 6 = Saturday.
+- If TYPE is 'month', DAY should be the day of the month (1 to 31).
 
+Usage:
+(my-is-today 'month 25)
+(my-is-today 'week 5)
+
+Version: 2024-08-23"
+  (let* ((decoded-time (decode-time (current-time)))
+	 (current-day (cond
+		       ((eq type 'week) (nth 6 decoded-time))
+		       ((eq type 'month) (nth 3 decoded-time))
+		       (t (error "Invalid type. Use 'week' or 'month'.")))))
+    (= current-day day)))
 
 
 
