@@ -68,6 +68,10 @@
     ;;  :linux-command "sudo pacman -S --noconfirm dovecot"
     ;;  :message nil
     ;;  :enabled t)
+    (fusermount3
+     :linux-command "sudo pacman -S --noconfirm fuse3" ; for rclone mount
+     :message nil
+     :enabled t)
     (fzf
      :linux-command "sudo pacman -S --noconfirm fzf"
      :message nil
