@@ -240,6 +240,28 @@ The tee executable is required for the sudo execution.")))
 ;; (my-run-after-emacs-startup 'desktop-read)
 
 
+
+(when *is-win*
+
+  ;; START: my w32-shell-execute
+  (defvar my-enable-w32-shell-execute t
+    "Flag to indicate if the `w32-shell-execute` is enabled.")
+
+  (defun my-w32-shell-execute (operation file &optional parameters show-flag)
+    "Execute a shell command using `w32-shell-execute` if enabled.
+OPERATION specifies the action to be performed (e.g., 'open').
+FILE specifies the file to execute.
+PARAMETERS specify additional parameters for the execution.
+SHOW-FLAG is used to control the window display options."
+    (if my-enable-w32-shell-execute
+	(w32-shell-execute operation file parameters show-flag)
+      (message "The w32-shell-execute is disabled by me.")))
+  ;; END: my w32-shell-execute
+
+  )
+
+
+
 (provide 'init-pre)
 
 ;; Local Variables:
