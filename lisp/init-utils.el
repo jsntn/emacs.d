@@ -111,10 +111,11 @@ Version 2023-10-18"
   (let ((fill-column (point-max)))
     (fill-paragraph nil)))
 
-(defun my/unfill-region ()
-  (interactive)
+(defun my/unfill-region (beg end)
+  "Transform a filled region into a single line from BEG to END."
+  (interactive "r")
   (let ((fill-column (point-max)))
-    (fill-region (region-beginning) (region-end) nil)))
+    (fill-region beg end nil)))
 ;; END: undo fill-paragraph
 
 
