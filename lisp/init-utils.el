@@ -503,16 +503,32 @@ text."
   (when (string-match "id:\\(.+\\)" link)
     (match-string 1 link)))
 
+(defvar my-org-link-jump-stack nil
+  "Stack to store positions for jumping back after following a link.")
+
 (defun my/org-link-goto-at-point ()
-  "Check if link at point is a file link or an ID link, and jump to
-the appropriate location."
+  "Check if the link at point is a file link or an ID link, and jump to the appropriate location.
+Pushes the current position to `my-org-link-jump-stack`."
   (interactive)
-  (if-let ((link (org-element-property :raw-link (org-element-context))))
-      (cond ((string-prefix-p "file:" link)
-             (org-open-at-point))
-            ((string-prefix-p "id:" link)
-	     (org-id-goto (my-parse-link-id link))))
-    (message "No link at point.")))
+  (let ((link (org-element-property :raw-link (org-element-context))))
+    (if link
+	(progn
+	  ;; Save current position to jump stack before jumping to the link
+	  (push (point-marker) my-org-link-jump-stack)
+	  (cond ((string-prefix-p "file:" link)
+		 (org-open-at-point))
+		((string-prefix-p "id:" link)
+		 (org-id-goto (my-parse-link-id link)))))
+      (message "No link at point."))))
+
+(defun my/org-link-jump-back ()
+  "Jump back to the previous position saved in `my-org-link-jump-stack`."
+  (interactive)
+  (if my-org-link-jump-stack
+      (let ((marker (pop my-org-link-jump-stack)))
+	(goto-char marker)
+	(set-marker marker nil))  ; Clean up marker once used
+    (message "No previous position to jump back to.")))
 
 
 (defun my/switch-opened-org-files-to-org-mode ()
