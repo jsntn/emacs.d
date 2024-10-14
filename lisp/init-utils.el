@@ -503,18 +503,20 @@ text."
   (when (string-match "id:\\(.+\\)" link)
     (match-string 1 link)))
 
+
+;; START: my org link jumping
 (defvar my-org-link-jump-stack nil
-  "Stack to store positions for jumping back after following a link.")
+  "Stack to store positions (buffer and marker) for jumping back after following a link.")
 
 (defun my/org-link-goto-at-point ()
   "Check if the link at point is a file link or an ID link, and jump to the appropriate location.
-Pushes the current position to `my-org-link-jump-stack`."
+Pushes the current position and buffer to `my-org-link-jump-stack`."
   (interactive)
   (let ((link (org-element-property :raw-link (org-element-context))))
     (if link
 	(progn
-	  ;; Save current position to jump stack before jumping to the link
-	  (push (point-marker) my-org-link-jump-stack)
+	  ;; Save current position and buffer to jump stack before jumping to the link
+	  (push (cons (current-buffer) (point-marker)) my-org-link-jump-stack)
 	  (cond ((string-prefix-p "file:" link)
 		 (org-open-at-point))
 		((string-prefix-p "id:" link)
@@ -522,14 +524,20 @@ Pushes the current position to `my-org-link-jump-stack`."
       (message "No link at point."))))
 
 (defun my/org-link-jump-back ()
-  "Jump back to the previous position saved in `my-org-link-jump-stack`."
+  "Jump back to the previous buffer and position saved in `my-org-link-jump-stack`."
   (interactive)
   (if my-org-link-jump-stack
-      (let ((marker (pop my-org-link-jump-stack)))
-	(goto-char marker)
-	(set-marker marker nil))  ; Clean up marker once used
+      (let* ((entry (pop my-org-link-jump-stack))
+	     (buffer (car entry))
+	     (marker (cdr entry)))
+	(if (buffer-live-p buffer)
+	    (progn
+	      (switch-to-buffer buffer)
+	      (goto-char marker)
+	      (set-marker marker nil))  ; Clean up marker once used
+	  (message "The buffer no longer exists.")))
     (message "No previous position to jump back to.")))
-
+;; END: my org link jumping
 
 (defun my/switch-opened-org-files-to-org-mode ()
   "Switch all open buffers that end with .org to org-mode,
