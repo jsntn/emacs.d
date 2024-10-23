@@ -119,27 +119,38 @@ Version 2023-10-18"
 ;; END: undo fill-paragraph
 
 
+(defvar my-org-recent-src-code-types '()
+  "List of recently used source code types, ordered by recency.")
+
 (defun my/org-insert-src-block (src-code-type &optional selected-lines)
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode.
-If SELECTED-LINES is non-nil, wrap the selected lines with the source code block."
+If SELECTED-LINES is non-nil, wrap the selected lines with the source code block.
+Updates the recent source code types, so the most recently used types appear first."
   (interactive
-   (let ((src-code-types
-          '("emacs-lisp" "python" "C" "shell" "java" "js" "clojure" "C++" "css"
-            "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
-            "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
-            "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
-            "scheme" "sqlite")))
-         (list (ido-completing-read "Source code type: " src-code-types)
-               current-prefix-arg)))
+   (let* ((all-src-code-types
+	   '("emacs-lisp" "python" "C" "shell" "java" "js" "clojure" "C++" "css"
+	     "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+	     "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+	     "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+	     "scheme" "sqlite"))
+	  (recent-src-code-types (cl-remove-duplicates (append my-org-recent-src-code-types all-src-code-types) :from-end t))
+	  (src-code-type (ido-completing-read "Source code type: " recent-src-code-types)))
+     (list src-code-type current-prefix-arg)))
+
+  ;; Update the recent list by moving the chosen src-code-type to the front
+  (setq my-org-recent-src-code-types
+	(cons src-code-type (delete src-code-type my-org-recent-src-code-types)))
+
+  ;; Insert the source block
   (if selected-lines
       (let ((beg (region-beginning))
-            (end (region-end)))
-        (save-excursion
-          (goto-char end)
-          (insert "#+END_SRC")
+	    (end (region-end)))
+	(save-excursion
+	  (goto-char end)
 	  (newline)
-          (goto-char beg)
-          (insert (format "#+BEGIN_SRC %s\n" src-code-type))))
+	  (insert "#+END_SRC")
+	  (goto-char beg)
+	  (insert (format "#+BEGIN_SRC %s\n" src-code-type))))
     (progn
       (newline-and-indent)
       (insert (format "#+BEGIN_SRC %s\n" src-code-type))
@@ -147,6 +158,7 @@ If SELECTED-LINES is non-nil, wrap the selected lines with the source code block
       (insert "#+END_SRC\n")
       (previous-line 2)
       (org-edit-src-code))))
+
 
 
 
