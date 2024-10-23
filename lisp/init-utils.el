@@ -164,48 +164,69 @@ Updates the recent source code types, so the most recently used types appear fir
 
 
 
+(defvar my-org-structure-template-usage '()
+  "List of last used org structure templates.")
+
+(defun my-org-update-template-usage (template)
+  "Update the usage record for TEMPLATE."
+  (let ((existing (assoc template my-org-structure-template-usage)))
+    (if existing
+	(setcdr existing (1+ (cdr existing))) ; Increment usage count
+      (push (cons template 1) my-org-structure-template-usage)))) ; Add new template with count 1
 
 (defun my-org-get-structure-templates ()
-  "Retrieve org structure templates for insertion."
+  "Retrieve org structure templates for insertion ordered by recency."
   (let ((templates org-structure-template-alist)
-        (friendly-templates '()))
+	(friendly-templates '()))
     (dolist (template templates)
       (let* ((key (car template))
-             (value (cdr template))
-             (name (if (listp value) (car value) value)))
-        (push (cons name key) friendly-templates)))
-    (append (reverse friendly-templates) '(("Custom" . "custom")))))
+	     (value (cdr template))
+	     (name (if (listp value) (car value) value)))
+	(push (cons name key) friendly-templates)))
+    ;; Sort templates by usage count (higher is more recent)
+    (setq friendly-templates
+	  (sort friendly-templates
+		(lambda (a b)
+		  (> (or (cdr (assoc (cdr a) my-org-structure-template-usage)) 0)
+		     (or (cdr (assoc (cdr b) my-org-structure-template-usage)) 0)))))
+    (append friendly-templates '(("Custom" . "custom")))))
 
 (defun my/org-insert-block (block-type &optional selected-lines)
   "Insert a BLOCK-TYPE block in org-mode.
 If SELECTED-LINES is non-nil, wrap the selected lines with the block."
   (interactive
    (let* ((templates (my-org-get-structure-templates))
-          (choices (mapcar #'car templates))
-          (choice (ido-completing-read "Block type: " choices)))
+	  (choices (mapcar #'car templates))
+	  (choice (ido-completing-read "Block type: " choices)))
      (list (cdr (assoc choice templates))
-           current-prefix-arg)))
+	   current-prefix-arg)))
+  ;; Update usage for the chosen block type
+  (my-org-update-template-usage block-type)
+
   (if (equal block-type "custom")
       (setq block-type (read-string "Custom block type: ")))
   (let ((block-type (assoc-default block-type org-structure-template-alist)))
     (if (listp block-type)
-        (setq block-type (format "%s %s" (car block-type) (cadr block-type))))
+	(setq block-type (format "%s %s" (car block-type) (cadr block-type))))
     (if (use-region-p)
-        (let ((beg (region-beginning))
-              (end (region-end)))
-          (save-excursion
-            (goto-char end)
-            (insert (format "#+END_%s" (upcase block-type)))
-            (newline)
-            (goto-char beg)
-            (insert (format "#+BEGIN_%s\n" (upcase block-type)))))
+	(let ((beg (region-beginning))
+	      (end (region-end)))
+	  (save-excursion
+	    (goto-char end)
+	    (insert (format "#+END_%s" (upcase block-type)))
+	    (newline)
+	    (goto-char beg)
+	    (insert (format "#+BEGIN_%s\n" (upcase block-type)))))
       (progn
-        (newline-and-indent)
-        (insert (format "#+BEGIN_%s\n" (upcase block-type)))
-        (newline-and-indent)
-        (insert (format "#+END_%s\n" (upcase block-type)))
-        (previous-line 2)
-        (org-edit-special)))))
+	(newline-and-indent)
+	(insert (format "#+BEGIN_%s\n" (upcase block-type)))
+	(newline-and-indent)
+	(insert (format "#+END_%s\n" (upcase block-type)))
+	(previous-line 2)
+	(org-edit-special)))))
+
+
+
 
 
 
