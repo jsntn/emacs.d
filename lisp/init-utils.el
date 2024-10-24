@@ -147,7 +147,11 @@ Updates the recent source code types, so the most recently used types appear fir
 	    (end (region-end)))
 	(save-excursion
 	  (goto-char end)
-	  (newline)
+	  ;; Ensure that we're at the beginning of a new line before inserting,
+	  ;; this is needed in case there is no newline char at the end of
+	  ;; region-end
+	  (unless (bolp)
+	    (newline))
 	  (insert "#+END_SRC")
 	  (goto-char beg)
 	  (insert (format "#+BEGIN_SRC %s\n" src-code-type))))
@@ -213,6 +217,11 @@ If SELECTED-LINES is non-nil, wrap the selected lines with the block."
 	      (end (region-end)))
 	  (save-excursion
 	    (goto-char end)
+	    ;; Ensure that we're at the beginning of a new line before inserting,
+	    ;; this is needed in case there is no newline char at the end of
+	    ;; region-end
+	    (unless (bolp)
+	      (newline))
 	    (insert (format "#+END_%s" (upcase block-type)))
 	    (newline)
 	    (goto-char beg)
