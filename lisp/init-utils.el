@@ -685,6 +685,19 @@ Version: 2023-08-31"
       (pop-to-buffer existing-buffer))))
 
 
+
+
+(defun my/copy-line-range (start-line end-line)
+  "Copy lines from START-LINE to END-LINE."
+  (interactive "nStart line: \nnEnd line: ")
+  (let ((start-pos (progn (goto-line start-line) (point)))
+	(end-pos (progn (goto-line end-line) (end-of-line) (point))))
+    (kill-ring-save start-pos end-pos)
+    (message "Copied lines %d to %d" start-line end-line)))
+
+
+
+
 (defun my/kill-buffers-by-pattern (pattern)
   "Kill buffers whose names match the specified pattern.
 
