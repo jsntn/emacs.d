@@ -698,6 +698,30 @@ Version: 2023-08-31"
 
 
 
+(defun my/remove-non-existent-org-agenda-files ()
+  "Remove the non-existent files from `org-agenda-files`,
+prompting with `yes-or-no-p` to confirm removal for each missing file."
+  (interactive)
+  (let ((files org-agenda-files))
+    (dolist (file files)
+      (unless (file-exists-p file)
+	(message "Non-existent Org agenda file: %s" file)
+	(when (yes-or-no-p (format "Remove %s from org-agenda-files?" file))
+	  (setq org-agenda-files (delete file org-agenda-files)))))))
+
+
+
+
+
+(defun my/remove-org-file-from-agenda (file-path)
+  "Remove the specified FILE-PATH from `org-agenda-files`."
+  (interactive "sEnter the full path of the Org file to remove: ")
+  (setq org-agenda-files (delete (expand-file-name file-path) org-agenda-files))
+  (message "Removed %s from org-agenda-files" file-path))
+
+
+ 
+
 (defun my/kill-buffers-by-pattern (pattern)
   "Kill buffers whose names match the specified pattern.
 
