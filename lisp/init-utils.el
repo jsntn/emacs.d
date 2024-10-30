@@ -562,7 +562,8 @@ Pushes the current position and buffer to `my-org-link-jump-stack`."
 	  (cond ((string-prefix-p "file:" link)
 		 (org-open-at-point))
 		((string-prefix-p "id:" link)
-		 (org-id-goto (my-parse-link-id link)))))
+		 (org-id-goto (my-parse-link-id link))))
+	  (message "Jump back to the previous position by my/org-link-jump-back"))
       (message "No link at point."))))
 
 (defun my/org-link-jump-back ()
