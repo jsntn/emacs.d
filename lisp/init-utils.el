@@ -687,6 +687,24 @@ Version: 2023-08-31"
 
 
 
+(defconst my-remember-register ?\uffff
+  "A register unlikely to conflict with daily usage.")
+
+(defun my/remember-init ()
+  "Remember current position in my unique register."
+  (interactive)
+  (point-to-register my-remember-register)
+  (message "Remembered position."))
+
+(defun my/remember-jump ()
+  "Jump to the position remembered in my unique register."
+  (interactive)
+  (jump-to-register my-remember-register)
+  (message "Back to remembered position."))
+
+
+
+
 (defun my/copy-line-range (start-line end-line)
   "Copy lines from START-LINE to END-LINE."
   (interactive "nStart line: \nnEnd line: ")
@@ -720,7 +738,7 @@ prompting with `yes-or-no-p` to confirm removal for each missing file."
   (message "Removed %s from org-agenda-files" file-path))
 
 
- 
+
 
 (defun my/kill-buffers-by-pattern (pattern)
   "Kill buffers whose names match the specified pattern.
