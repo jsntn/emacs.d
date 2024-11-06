@@ -551,20 +551,26 @@ text."
   "Stack to store positions (buffer and marker) for jumping back after following a link.")
 
 (defun my/org-link-goto-at-point ()
-  "Check if the link at point is a file link or an ID link, and jump to the appropriate location.
+  "Check if the link at point is a file link, ID link, or footnote link, and jump to the appropriate location.
 Pushes the current position and buffer to `my-org-link-jump-stack`."
   (interactive)
-  (let ((link (org-element-property :raw-link (org-element-context))))
-    (if link
+  (let ((context (org-element-context))
+	(link (org-element-property :raw-link (org-element-context))))
+    (if (or link (eq (org-element-type context) 'footnote-reference))
 	(progn
 	  ;; Save current position and buffer to jump stack before jumping to the link
 	  (push (cons (current-buffer) (point-marker)) my-org-link-jump-stack)
-	  (cond ((string-prefix-p "file:" link)
-		 (org-open-at-point))
-		((string-prefix-p "id:" link)
-		 (org-id-goto (my-parse-link-id link))))
+	  (cond
+	   ((string-prefix-p "file:" link)
+	    (org-open-at-point))
+	   ((string-prefix-p "id:" link)
+	    (org-id-goto (my-parse-link-id link)))
+	   ((eq (org-element-type context) 'footnote-reference)
+	    ;; Get the footnote label and jump to the definition
+	    (let ((label (org-element-property :label context)))
+	      (org-footnote-goto-definition label))))
 	  (message "Jump back to the previous position by my/org-link-jump-back"))
-      (message "No link at point."))))
+      (message "No link or footnote at point."))))
 
 (defun my/org-link-jump-back ()
   "Jump back to the previous buffer and position saved in `my-org-link-jump-stack`."
