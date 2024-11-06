@@ -620,6 +620,9 @@
 	    (set-cursor-color "blue"))
 	;; 用户在这里定义 pyim 输入英文时的光标颜色设置语句
 	(set-cursor-color "red"))))
+
+  ;; M-x my-pyim/simp2trad
+  (load-file (concat user-emacs-directory "misc/pyim-simp2trad.el"))
   )
 
 
