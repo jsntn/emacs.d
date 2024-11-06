@@ -31,8 +31,8 @@
 				     ; primary, secondary
 
 (defun my/mount-veracrypt-volume (mode drive-option
-                                  &optional volume-path drive-letter use-point-link truecrypt
-                                  passphrase keyfiles)
+				       &optional volume-path drive-letter use-point-link truecrypt
+				       passphrase keyfiles)
   "Mount a VeraCrypt or TrueCrypt volume in the selected MODE and assign DRIVE-LETTER automatically.
 If USE-POINT-LINK is non-nil, use the volume link at point instead of prompting.
 
@@ -48,12 +48,12 @@ KEYFILES is a list of keyfiles for the volume.
 Version 2023-08-07
 Updated 2023-08-15"
 
-;; Usage:
-;; (my/mount-veracrypt-volume "read-only" "auto" "/path/to/volume")
-;; (my/mount-veracrypt-volume "read-only" "specify" "/path/to/volume" "D")
-;; (my/mount-veracrypt-volume "read-only" "auto" "/path/to/volume" nil nil t)
-;; (my/mount-veracrypt-volume "read-only" "auto" "/path/to/volume" nil nil t "test" '("/path/to/keyfile"))
-;; (my/mount-veracrypt-volume "read-only" "auto" "/path/to/volume" nil nil t "test" '("/path/to/keyfile1" "/path/to/keyfile2"))
+  ;; Usage:
+  ;; (my/mount-veracrypt-volume "read-only" "auto" "/path/to/volume")
+  ;; (my/mount-veracrypt-volume "read-only" "specify" "/path/to/volume" "D")
+  ;; (my/mount-veracrypt-volume "read-only" "auto" "/path/to/volume" nil nil t)
+  ;; (my/mount-veracrypt-volume "read-only" "auto" "/path/to/volume" nil nil t "test" '("/path/to/keyfile"))
+  ;; (my/mount-veracrypt-volume "read-only" "auto" "/path/to/volume" nil nil t "test" '("/path/to/keyfile1" "/path/to/keyfile2"))
 
   (interactive
    (let ((universal-arg current-prefix-arg)
@@ -114,41 +114,43 @@ Updated 2023-08-15"
              (vera-or-true (if truecrypt "truecrypt" "veracrypt")))
 
         (if (and abs-volume-path (file-exists-p abs-volume-path))
-            (let ((command (if is-windows
-                               (format "%s /q /m %s /v \"%s\" %s %s %s"
-                                       vera-or-true
-                                       mode-abbrev
-				       ;; fix the path for Windows
-                                       (subst-char-in-string ?/ ?\\ abs-volume-path)
-                                       (if (not (equal final-drive-letter "auto"))
-                                           (format "/a /l %s" final-drive-letter)
-                                         (format "/a /l %s" (my-find-available-drive-letter)))
-				       (if passphrase (format "/p %s" passphrase) "")
-				       (if keyfiles
-					   (mapconcat (lambda (file)
-							(format "/k \"%s\""
-								;; fix the path for Windows
-								(subst-char-in-string ?/ ?\\ file)))
-						      keyfiles
-						      " ")
-					 ""))
-                             (if (or is-macos is-linux)
-                                 (format "%s -q -m %s -v \"%s\" %s %s %s"
-                                         vera-or-true
-                                         mode-abbrev
-                                         abs-volume-path
-                                         (if (not (equal final-drive-letter "auto"))
-                                             (format "-a -l %s" final-drive-letter)
-                                           "-a")
-					 (if passphrase (format "-p %s" passphrase) "")
-					 (if keyfiles
-					     (mapconcat (lambda (file)
-							  (format "-k \"%s\"" keyfiles))
-							keyfiles
-							" ")
-					   ""))
-                               (user-error "Unknown platform")))))
-              (message command)
+	    (let* ((command (if is-windows
+				(format "%s /q /m %s /v \"%s\" %s %s %s"
+					vera-or-true
+					mode-abbrev
+					;; fix the path for Windows
+					(subst-char-in-string ?/ ?\\ abs-volume-path)
+					(if (not (equal final-drive-letter "auto"))
+					    (format "/a /l %s" final-drive-letter)
+					  (format "/a /l %s" (my-find-available-drive-letter)))
+					(if passphrase (format "/p %s" passphrase) "")
+					(if keyfiles
+					    (mapconcat (lambda (file)
+							 (format "/k \"%s\""
+								 ;; fix the path for Windows
+								 (subst-char-in-string ?/ ?\\ file)))
+						       keyfiles
+						       " ")
+					  ""))
+			      (if (or is-macos is-linux)
+				  (format "%s -q -m %s -v \"%s\" %s %s %s"
+					  vera-or-true
+					  mode-abbrev
+					  abs-volume-path
+					  (if (not (equal final-drive-letter "auto"))
+					      (format "-a -l %s" final-drive-letter)
+					    "-a")
+					  (if passphrase (format "-p %s" passphrase) "")
+					  (if keyfiles
+					      (mapconcat (lambda (file)
+							   (format "-k \"%s\"" keyfiles))
+							 keyfiles
+							 " ")
+					    ""))
+				(user-error "Unknown platform"))))
+		   (safe-command (replace-regexp-in-string passphrase "*******" command))
+		   )
+              (message safe-command)
               (my-async-shell-command-with-unique-buffer-name command))
           (user-error "Volume does not exist")))
     (user-error "Neither VeraCrypt nor TrueCrypt is installed")))
