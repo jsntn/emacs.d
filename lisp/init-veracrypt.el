@@ -148,7 +148,12 @@ Updated 2023-08-15"
 							 " ")
 					    ""))
 				(user-error "Unknown platform"))))
-		   (safe-command (replace-regexp-in-string passphrase "*******" command))
+		   (safe-command (if passphrase
+				     (replace-regexp-in-string
+				      (concat "/p " (regexp-quote passphrase) "\\s-")
+				      "/p *******"
+				      command)
+				   ""))
 		   )
               (message safe-command)
               (my-async-shell-command-with-unique-buffer-name command))
