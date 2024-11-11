@@ -152,7 +152,7 @@ Updates the recent source code types, so the most recently used types appear fir
 	  ;; region-end
 	  (unless (bolp)
 	    (newline))
-	  (insert "#+END_SRC")
+	  (insert "#+END_SRC\n")
 	  (goto-char beg)
 	  (insert (format "#+BEGIN_SRC %s\n" src-code-type))))
     (progn
@@ -222,8 +222,7 @@ If SELECTED-LINES is non-nil, wrap the selected lines with the block."
 	    ;; region-end
 	    (unless (bolp)
 	      (newline))
-	    (insert (format "#+END_%s" (upcase block-type)))
-	    (newline)
+	    (insert (format "#+END_%s\n" (upcase block-type)))
 	    (goto-char beg)
 	    (insert (format "#+BEGIN_%s\n" (upcase block-type)))))
       (progn
