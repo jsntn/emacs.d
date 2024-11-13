@@ -292,19 +292,18 @@ Version 2023-07-25"
     (let* ((command (nth (random (length config-functions)) config-functions)))
       (describe-function (intern command)))))
 
-(defun my/review-random-my-function ()
-  "Review a random function that starts with 'my/' in my Emacs configuration."
-  (interactive)
+(defun my--review-random-my-function (prefix)
+  "Review a random function that starts with PREFIX in my Emacs configuration."
   (let* ((config-functions '())
-         (config-files (directory-files-recursively user-emacs-directory "\\.el$")))
+	 (config-files (directory-files-recursively user-emacs-directory "\\.el$")))
     (dolist (file config-files)
       (with-temp-buffer
-        (insert-file-contents file)
-        (goto-char (point-min))
-        (while (re-search-forward "(defun my/\\([^ ]+\\)" nil t)
-          (push (match-string 1) config-functions))))
+	(insert-file-contents file)
+	(goto-char (point-min))
+	(while (re-search-forward (format "(defun %s\\([^ ]+\\)" prefix) nil t)
+	  (push (match-string 1) config-functions))))
     (let* ((command (nth (random (length config-functions)) config-functions)))
-      (describe-function (intern (concat "my/" command))))))
+      (describe-function (intern (concat prefix command))))))
 
 
 
