@@ -322,6 +322,7 @@
   )
 
 (use-package org-drill
+  :straight (:host github :repo "jsntn/org-drill")
   :config
   ;; make all agenda files with any archive files associated with them as the
   ;; source of items for drill sessions(scope)
