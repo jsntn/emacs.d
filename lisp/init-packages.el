@@ -68,10 +68,6 @@
 (use-package counsel)
 
 
-(use-package delight)
-
-(use-package diminish)
-
 
 
 (use-package eglot
