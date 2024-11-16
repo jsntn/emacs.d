@@ -221,6 +221,10 @@ Version: 2023/09/27"
 
 (add-hook 'org-agenda-mode-hook (lambda ()
 
+				  ;; prevent issue below,
+				  ;; org-agenda-get-day-entries: Agenda file xxx.org is not in Org mode
+				  (my/switch-opened-org-files-to-org-mode)
+
 				  ;; https://orgmode.org/list/loom.20111014T204701-149@post.gmane.org/
 				  (setq org-agenda-files
 					(delete-dups (append org-agenda-files
