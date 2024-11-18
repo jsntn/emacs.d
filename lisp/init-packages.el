@@ -463,6 +463,7 @@
 
 (use-package org-roam-ui
   :delight
+  :straight (:host github :repo "jsntn/org-roam-ui")
   :if window-system ; for graphical Emacs
   :after org-roam
   :config
