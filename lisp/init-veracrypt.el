@@ -165,7 +165,7 @@ Updated 2023-08-15"
 
 
 (defun my/dismount-tc-vc-volume (volume-path &optional use-truecrypt)
-  "Dismount a TrueCrypt or VeraCrypt volume at the given Drive Letter.
+  "Dismount a TrueCrypt (C-u) or VeraCrypt volume at the given Drive Letter.
 If called with a universal argument (C-u), TrueCrypt will be used; otherwise, VeraCrypt will be used.
 
 Version 2023-08-10"
