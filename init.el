@@ -114,6 +114,9 @@
     (when (file-exists-p source)
       (copy-file source destination t))))
 
+;; tell straight.el to not clone Org if it is required,
+;; just use the built-in Org instead,
+(add-to-list 'straight-built-in-pseudo-packages 'org)
 
 (package-initialize)
 (unless package-archive-contents
