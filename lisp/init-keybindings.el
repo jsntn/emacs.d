@@ -36,7 +36,6 @@
  "C-M-<up>" 'enlarge-window
  "M-i" 'pyim-convert-string-at-point ; <<pyim-csap>>
  "C-;" 'pyim-delete-word-from-personal-buffer
- "M-," 'citre-jump-back
  ;; ...
  )
 
@@ -76,7 +75,6 @@
  "bb" 'evil-scroll-page-up ; <<page-up>>
  "br" 'ibuffer
  "SPC" 'my/toggle-hideshow-block
- "C-]" 'citre-jump
  ;; ...
  )
 
@@ -121,8 +119,6 @@
  "b" 'counsel-bookmark
  "c" 'org-capture
  "f" 'ace-jump-char-mode ;; <<ajm-1>>
- "]" 'citre-peek
- "[" 'citre-jump-back
  "C-/" 'company-files
  "C-b" 'company-tabnine
  ;; ...
