@@ -78,12 +78,9 @@ Updated: 2023-10-20"
   ;; debug,
   ;; (message "dir-name: %s" dir-name)
 
-  (let* ((target-dir-value (cond
-			    ((string-empty-p dir-name) default-directory)
-			    ((and (eq system-type 'windows-nt) (not (string-prefix-p "/d" dir-name)))
-			     ;; On Windows, add "/d " if switching across drives
-			     (concat "/d " dir-name))
-			    (t dir-name)))
+  (let* ((target-dir-value (if (string-empty-p dir-name)
+			       default-directory
+			     dir-name))
 
 	 (tags-format-value (if (string-equal tags-format 'ctags) "" "-e"))
 
@@ -97,7 +94,7 @@ Updated: 2023-10-20"
 
 	 (tags-path-value
 	  (if (string= tag-relative 'y)
-	      (expand-file-name tags-filename dir-name)
+	      (expand-file-name tags-filename target-dir-value)
 	    (or tags-path
 		(expand-file-name tags-filename
 				  (read-directory-name
@@ -107,7 +104,12 @@ Updated: 2023-10-20"
 	 (command-process-name process-name)
 
 	 (ctags-cmd (format "cd %s && ctags --options=%s %s -R --tag-relative=%s %s -f %s *"
-			    target-dir-value
+			    (if (and
+				 (eq system-type 'windows-nt)
+				 (not (string-prefix-p "/d" target-dir-value)))
+				;; On Windows, add "/d " if switching across drives
+				(concat "/d " target-dir-value)
+			      target-dir-value)
 			    (expand-file-name ".ctags" user-emacs-directory)
 			    tags-format-value
 			    tag-relative-value
@@ -119,6 +121,7 @@ Updated: 2023-10-20"
 			      "'")
 		    ctags-cmd)))
 
+    ;; (message "command: %s" ctags-cmd)
 
     (if (get-process command-process-name)
 	(message "Process (%s) already running..." command-process-name)
