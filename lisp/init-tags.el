@@ -61,7 +61,7 @@ Updated: 2023-10-20"
 	  (tags-filename (if (string-equal tags-format "etags")
 			     (if (string-equal tag-relative "y") "TAGS" "TAGS_ABS")
 			   (if (string-equal tag-relative "y") "tags" "tags_abs"))))
-     (list (read-directory-name "Enter the directory for creating tags file: ")
+     (list (expand-file-name (read-directory-name "Enter the directory for creating tags file: "))
 	   tags-format
 	   tag-relative
 	   (read-string "Enter the desired tags filename: " tags-filename)
@@ -75,15 +75,15 @@ Updated: 2023-10-20"
 	     )
 	   (if (boundp 'process-name) process-name "create tags"))))
 
-  (let* ((target-dir-value (if (string= "" dir-name)
-			       default-directory
-			     (if (eq system-type 'windows-nt)
-				 ;; if the dir-name already start with "/d", just use it
-				 (if (string-prefix-p "/d" dir-name)
-				     dir-name
-				   ;; fix changing dir across different drives issue on Windows
-				   (concat "/d " dir-name))
-			       (expand-file-name dir-name))))
+  ;; debug,
+  ;; (message "dir-name: %s" dir-name)
+
+  (let* ((target-dir-value (cond
+			    ((string-empty-p dir-name) default-directory)
+			    ((and (eq system-type 'windows-nt) (not (string-prefix-p "/d" dir-name)))
+			     ;; On Windows, add "/d " if switching across drives
+			     (concat "/d " dir-name))
+			    (t dir-name)))
 
 	 (tags-format-value (if (string-equal tags-format 'ctags) "" "-e"))
 
@@ -97,7 +97,7 @@ Updated: 2023-10-20"
 
 	 (tags-path-value
 	  (if (string= tag-relative 'y)
-	      (expand-file-name tags-filename target-dir-value)
+	      (expand-file-name tags-filename dir-name)
 	    (or tags-path
 		(expand-file-name tags-filename
 				  (read-directory-name
