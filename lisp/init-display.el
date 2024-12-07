@@ -142,15 +142,24 @@
   (interactive)
   (if (> (length (window-list)) 2)
       (error "Can't toggle with more than 2 windows!")
-    (let ((func (if (window-full-height-p)
-		    #'split-window-vertically
-		  #'split-window-horizontally)))
+
+    (let* ((current-buffer (window-buffer))
+	   (other-window-buffer (window-buffer (next-window)))
+	   (func (if (window-full-height-p)
+		     #'split-window-vertically
+		   #'split-window-horizontally)))
       (delete-other-windows)
+
+      ;; Split the window as needed (either horizontally or vertically)
       (funcall func)
-      (save-selected-window
-	(other-window 1)
-	(switch-to-buffer (other-buffer)))))
-  )
+
+      ;; Ensure that the original buffer from the other window is switched to
+      (let ((other-win (selected-window)))
+	(select-window (next-window other-win))
+	(switch-to-buffer other-window-buffer)
+
+	;; Return to the original window to maintain focus if needed
+	(select-window other-win)))))
 
 (defun xah-syntax-color-hex ()
   "Syntax color text of the form 「#ff1100」 and 「#abc」 in current buffer.
