@@ -188,6 +188,14 @@
 	      '(:with company-yasnippet))))
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
+  ;; Add `company-elisp' backend for elisp,
+  (add-hook 'emacs-lisp-mode-hook
+	    (lambda ()
+	      (require 'company-elisp)
+	      (unless (memq 'company-elisp company-backends)
+		(push 'company-elisp company-backends))))
+
+
   ;; set the backends for writing in text related mode
   (defun my-company-backends-text-mode-hook ()
     (setq-local company-backends '(
