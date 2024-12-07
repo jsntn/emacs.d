@@ -111,6 +111,14 @@
    )
   )
 
+(general-define-key
+ :states '(insert)
+ ;; override any existing binding here while in insert mode
+ :keymaps 'override
+ ;; bind C-c C-t to `company-tabnine` in insert mode
+ "C-c C-t" 'company-tabnine
+ )
+
 ;; prefix keybindings
 (general-define-key
  :prefix "C-c"
@@ -120,7 +128,6 @@
  "c" 'org-capture
  "f" 'ace-jump-char-mode ;; <<ajm-1>>
  "C-/" 'company-files
- "C-b" 'company-tabnine
  ;; ...
  )
 
