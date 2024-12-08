@@ -188,14 +188,6 @@
 	      '(:with company-yasnippet))))
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
-  ;; Add `company-elisp' backend for elisp,
-  (add-hook 'emacs-lisp-mode-hook
-	    (lambda ()
-	      (require 'company-elisp)
-	      (unless (memq 'company-elisp company-backends)
-		(push 'company-elisp company-backends))))
-
-
   ;; set the backends for writing in text related mode
   (defun my-company-backends-text-mode-hook ()
     (setq-local company-backends '(
@@ -218,51 +210,6 @@
 				   )))
   (add-hook 'shell-mode-hook 'my-company-backends-shell-mode-hook)
 
-  ;; add `company-elisp' backend for elisp.
-  ;; (add-hook 'emacs-lisp-mode-hook
-  ;; 	    #'(lambda ()
-  ;; 		(require 'company-elisp)
-  ;; 		(push 'company-elisp company-backends)))
-  ;; via https://github.com/manateelazycat/lazycat-emacs/blob/8f3dee8a6fe724ec52cd2b17155cfc2cefc8066b/site-lisp/config/init-company-mode.el
-
-
-
-
-  ;; { START: company-candidates from abo-abo
-  ;; if candidate list was ("var0" "var1" "var2"), then entering 1 means:
-  ;; select the first candidate (i.e. "var0"), instead of:
-  ;; insert "1", resulting in "var1", i.e. the second candidate
-  ;; via,
-  ;; - https://oremacs.com/2017/12/27/company-numbers/
-  (defun ora-company-number ()
-    "Forward to `company-complete-number'.
-Unless the number is potentially part of the candidate.
-In that case, insert the number."
-    ;; via https://github.com/abo-abo/oremacs/blob/d217e22a3b8dc88d10f715b32a7d1facf1f7ae18/modes/ora-company.el#L22-L39
-    (interactive)
-    (let* ((k (this-command-keys))
-	   (re (concat "^" company-prefix k)))
-      (if (or (cl-find-if (lambda (s) (string-match re s))
-			  company-candidates)
-	      (> (string-to-number k)
-		 (length company-candidates))
-	      (looking-back "[0-9]+\\.[0-9]*" (line-beginning-position)))
-	  (self-insert-command 1)
-	(company-complete-number
-	 (if (equal k "0")
-	     10
-	   (string-to-number k))))))
-
-  (let ((map company-active-map))
-    ;; via https://github.com/abo-abo/oremacs/blob/d217e22a3b8dc88d10f715b32a7d1facf1f7ae18/modes/ora-company.el#L46-L53
-    (mapc (lambda (x) (define-key map (format "%d" x) 'ora-company-number))
-	  (number-sequence 0 9))
-    (define-key map " " (lambda ()
-			  (interactive)
-			  (company-abort)
-			  (self-insert-command 1)))
-    (define-key map (kbd "<return>") nil))
-  ;; END: company-candidates from abo-abo }
   )
 
 
