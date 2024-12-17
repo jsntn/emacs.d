@@ -187,6 +187,11 @@
      :windows-command "npm install -g prettier"
      :message nil ;; No message needed for prettier
      :enabled t)
+    (tidy
+     :linux-command "sudo pacman -S --noconfirm tidy"
+     ;; :windows-command ""
+     :message nil
+     :enabled t)
     (trash-list ;; check trash-list command as the trash-cli is not a valid command for trash-cli
      :linux-command "sudo pacman -S --noconfirm trash-cli"
      :message nil
