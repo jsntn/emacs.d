@@ -219,7 +219,9 @@ Version 2017-03-12"
   (interactive)
   (set (make-variable-buffer-local 'my-hs-hide-block) (not my-hs-hide-block))
   (if my-hs-hide-block
-      (hs-hide-block)
+      (progn
+	(beginning-of-defun)
+	(hs-hide-block))
     (hs-show-block)))
 
 ;; { -- START: default inline image background in Org-mode
