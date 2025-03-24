@@ -50,6 +50,7 @@
     ;; haskell-indent-mode
     ;; haskell-doc-mode
     ;; inf-haskell-mode
+    org-cdlatex-mode
     org-roam-mode
     pangu-spacing-mode
     projectile-mode
