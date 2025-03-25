@@ -25,26 +25,28 @@ Version 2023-10-18"
 (defun my/random-org-item ()
   "Go to a random org heading from all org files in `org-directory`."
   (interactive)
-  (let* ((org-files (directory-files-recursively org-directory "\\.org$"))
-         (random-file (nth (random (length org-files)) org-files)))
-    (find-file random-file) ; open the random org file
-    (org-mode)
-    (org-overview)
-    (goto-char (point-min))
-    (org-next-visible-heading 1) ; move to the first visible heading
-    ;; parse the buffer and collect all headline elements into `headings` list, see,
-    (let* ((headings (org-element-map (org-element-parse-buffer) 'headline 'identity)))
-      (if headings
-	  (progn
-	    ;; generate a random index within the length of `headings`, see,
-	    (let* ((random-index (random (length headings)))
-		   ;; select a random heading from `headings` using the random index, see,
-		   (random-heading (nth random-index headings)))
-	      ;; move the cursor to the beginning of the randomly selected heading. see,
-	      (goto-char (org-element-property :begin random-heading))
-	      (org-show-subtree))) ; expand the selected heading
-	(goto-char (point-min))))) ; if no headings are found, move the cursor to the beginning of the buffer
-  )
+  (unless (boundp 'org-directory)
+    (user-error "`org-directory` is not set"))
+  (let* ((org-files (directory-files-recursively org-directory "\\.org$")))
+    (if (null org-files)
+	(user-error "No Org files found in `org-directory`")
+      (let* ((random-file (nth (random (length org-files)) org-files)))
+	(find-file random-file)
+	(org-mode)
+	;; Ensure the buffer is fully visible
+	(org-show-all) ; Expand all headings in the buffer
+	(goto-char (point-min))
+	;; Parse the buffer and collect all headings
+	(let* ((headings (org-element-map (org-element-parse-buffer) 'headline 'identity)))
+	  (if headings
+	      (let* ((random-index (random (length headings)))
+		     (random-heading (nth random-index headings)))
+		(goto-char (org-element-property :begin random-heading))
+		(org-show-subtree) ; Expand the selected heading
+		(recenter) ; Ensure the selected heading is visible in the window
+		(message "Jumped to random heading in %s" random-file))
+	    (goto-char (point-min))
+	    (message "No headings found in %s" random-file)))))))
 
 
 (defun my/eww-open-local-file ()
