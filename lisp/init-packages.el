@@ -106,7 +106,7 @@
 
 (use-package flycheck)
 
-(use-package general)
+(require 'general)
 
 (use-package git-messenger)
 
