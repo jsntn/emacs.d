@@ -7,6 +7,55 @@
 
 
 
+
+
+(defun my--local-require (pkg)
+  "Require PKG, first trying a standard subdirectory, then searching site-lisp.
+PKG should be a symbol (e.g., 'evil). If the package is not found,
+an error will be signaled with details about the search locations."
+  (unless (featurep pkg)
+    (let* ((pkg-name (symbol-name pkg))
+	   (structured-path
+	    (expand-file-name
+	     (format "%s/%s" pkg-name pkg-name)
+	     site-lisp-dir))
+	   (found-or-loaded
+	    (or (load structured-path t t)
+		(let ((found-path (locate-file pkg-name (list site-lisp-dir) load-suffixes)))
+		  (when found-path
+		    (load found-path t t))))))
+      (unless found-or-loaded
+	(error "Package %s not found in %s or its subdirectories" pkg-name site-lisp-dir)))))
+
+
+
+(defun my--prioritize-load-path (priority-paths)
+  "Reorder `load-path` so that paths matching PRIORITY-PATHS come first.
+PRIORITY-PATHS can be a single string or a list of strings."
+  (let ((paths (if (listp priority-paths) priority-paths (list priority-paths))))
+    (setq load-path
+	  (append (apply #'append
+			 (mapcar (lambda (priority)
+				   (seq-filter (lambda (path)
+						 (string-prefix-p priority path))
+					       load-path))
+				 paths))
+		  (seq-remove (lambda (path)
+				(cl-some (lambda (priority)
+					   (string-prefix-p priority path))
+					 paths))
+			      load-path)))))
+;; Example: Prioritize a **single** path
+;; (my--prioritize-load-path "/path/to/c/")
+;; (my--prioritize-load-path (concat user-emacs-directory "site-lisp/"))
+;; Example: Prioritize **multiple** paths (follows the order provided)
+;; (my--prioritize-load-path '("/path/to/c/" "/path/to/a/" "/path/to/b/"))
+;; (my--prioritize-load-path (list (concat user-emacs-directory "site-lisp/") (concat user-emacs-directory "elpa-30.1/")))
+
+
+
+
+
 (defun my/highlight-selected-text (start end &optional color)
   "Highlight the selected region temporarily with the specified color.
 If color is not provided, the default color is #5F87FF.

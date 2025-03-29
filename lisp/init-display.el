@@ -8,34 +8,34 @@
 
 (use-package diminish)
 
-(use-package doom-themes
-  :config
-  ;; global settings (defaults)
-  (setq doom-themes-enable-bold t) ; if nil, bold is universally disabled
-  ;; corrects (and improves) org-mode's native fontification
-  ;; update: disable this as it is not compatible with org-modern horizontal
-  ;; line, see https://github.com/jsntn/emacs.d/issues/13
-  ;; (doom-themes-org-config)
+(require 'doom-themes)
 
-  ;; theme does not load correctly in daemon mode, see,
-  ;; - https://stackoverflow.com/a/23668935/4274775
-  ;; - https://github.com/cpaulik/emacs-material-theme/issues/45#issuecomment-385247309
-  ;; - https://github.com/nordtheme/emacs/issues/59
-  ;; customization on doom-monokai-classic
-  (defun my-load-theme ()
-    (load-theme 'doom-monokai-classic t)
-    (custom-set-faces
-     `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
-     `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6)))))
-     `(default ((t (:background "black"))))))
-  (if (daemonp)
-      (add-hook 'after-make-frame-functions
-		(lambda (frame)
-		  (with-selected-frame frame
-		    (my-load-theme))))
-    (my-load-theme))
-  )
+;; global settings (defaults)
+(setq doom-themes-enable-bold t) ; if nil, bold is universally disabled
+;; corrects (and improves) org-mode's native fontification
+;; update: disable this as it is not compatible with org-modern horizontal
+;; line, see https://github.com/jsntn/emacs.d/issues/13
+;; (doom-themes-org-config)
 
+;; theme does not load correctly in daemon mode, see,
+;; - https://stackoverflow.com/a/23668935/4274775
+;; - https://github.com/cpaulik/emacs-material-theme/issues/45#issuecomment-385247309
+;; - https://github.com/nordtheme/emacs/issues/59
+;; customization on doom-monokai-classic
+
+(defun my-load-theme ()
+  (load-theme 'doom-monokai-classic t)
+  (custom-set-faces
+   `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
+   `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6)))))
+   `(default ((t (:background "black"))))))
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+	      (lambda (frame)
+		(with-selected-frame frame
+		  (my-load-theme))))
+  (my-load-theme))
 
 ;; { START: hide list of minor modes in mode-line
 ;; from https://emacs.stackexchange.com/a/3928/29715
@@ -49,6 +49,7 @@
     flyspell-mode
     ;; haskell-indent-mode
     ;; haskell-doc-mode
+    highlight-symbol-mode
     ;; inf-haskell-mode
     org-cdlatex-mode
     org-roam-mode
@@ -130,7 +131,12 @@
 (recentf-mode 1)
 
 
+(require 'vline)
+(set-face-background vline-face "#283639")
 
+
+(require 'window-numbering)
+(window-numbering-mode)
 
 
 ;; the default split-screen direction

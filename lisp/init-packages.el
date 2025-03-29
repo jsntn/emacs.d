@@ -77,7 +77,7 @@
 
 ;; M-x elgrep: search a single directory
 ;; C-u M-x elgrep: search the directory recursively
-(use-package elgrep)
+(require 'elgrep)
 
 (use-package elpa-mirror)
 
@@ -224,15 +224,12 @@
 
 ;; automatic and manual symbol highlighting
 ;; cycle through the locations of any symbol at point
-(use-package highlight-symbol
-  :delight
-  :config
-  (add-hook 'prog-mode-hook 'highlight-symbol-mode)
-  (add-hook 'prog-mode-hook 'highlight-symbol-nav-mode)
-  ;; keybindings for navigation in highlight-symbol-nav-mode:
-  ;; M-p highlight-symbol-prev
-  ;; M-n highlight-symbol-next
-  )
+(require 'highlight-symbol)
+(add-hook 'prog-mode-hook 'highlight-symbol-mode)
+(add-hook 'prog-mode-hook 'highlight-symbol-nav-mode)
+;; keybindings for navigation in highlight-symbol-nav-mode:
+;; M-p highlight-symbol-prev
+;; M-n highlight-symbol-next
 
 (use-package hl-todo
   :config
@@ -562,71 +559,70 @@
   (add-to-list 'projectile-globally-ignored-files "_cache")
   )
 
-(use-package pyim
+(require 'pyim)
+
+;; 用 THUOCL：清华大学开放中文词库数据建立的 pyim 输入法的词库
+(use-package pyim-tsinghua-dict
+  :straight (:host github :repo "redguardtoo/pyim-tsinghua-dict" :files ("*.el" "*.pyim"))
   :config
-  ;; 用 THUOCL：清华大学开放中文词库数据建立的 pyim 输入法的词库
-  (use-package pyim-tsinghua-dict
-    :straight (:host github :repo "redguardtoo/pyim-tsinghua-dict" :files ("*.el" "*.pyim"))
-    :config
-    (pyim-tsinghua-dict-enable)
-    )
-
-  (setq default-input-method "pyim")
-
-  (setq pyim-default-scheme 'quanpin)
-
-  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
-  ;; 我自己使用的中英文动态切换规则是：
-  ;; +1. 光标只有在注释里面时，才可以输入中文。+ -> 2021/10/01 commented this `pyim-probe-program-mode` below
-  ;; 2. 光标前是汉字字符时，才能输入中文。
-  ;; 3. 使用 M-i 快捷键，强制将光标前的拼音字符串转换为中文。-> [[./init-keybindings.el::pyim-csap]]
-  (setq-default pyim-english-input-switch-functions
-		'(pyim-probe-dynamic-english
-		  pyim-probe-isearch-mode
-		  ;; pyim-probe-program-mode
-		  pyim-probe-org-structure-template)
-		)
-
-  (setq-default pyim-punctuation-half-width-functions
-		'(pyim-probe-punctuation-line-beginning
-		  pyim-probe-punctuation-after-punctuation)
-		)
-
-  ;; 开启代码搜索中文功能（比如拼音，五笔码等）
-  (pyim-isearch-mode 1)
-  ;; 激活以上这个 mode 后，可以使用下面的方式强制关闭 isearch 搜索框中文输入
-  ;; （即使 在 pyim 激活的时候）。
-  ;; (setq-default pyim-english-input-switch-functions '(pyim-probe-isearch-mode))
-
-  (setq pyim-page-tooltip 'popup) ; 使用 pupup-el 来绘制选词框
-
-  (setq pyim-page-length 9) ; 选词框显示 9 个候选词
-
-  ;; 让 Emacs 启动时自动加载 pyim 词库
-  (add-hook 'emacs-startup-hook
-	    #'(lambda () (pyim-restart-1 t)))
-
-  ;; pyim-indicator-with-cursor-color 这个 indicator 很容易和其它设置 cursor 颜
-  ;; 色的包冲突，因为都调用 set-cursor-color，遇到这种情况后，用户需要自己解决冲
-  ;; 突，pyim-indicator 提供了一个简单的机制：
-  (setq pyim-indicator-list
-	(list #'my-pyim-indicator-with-cursor-color #'pyim-indicator-with-modeline))
-
-  (defun my-pyim-indicator-with-cursor-color (input-method chinese-input-p)
-    (if (not (equal input-method "pyim"))
-	(progn
-	  ;; 用户在这里定义 pyim 未激活时的光标颜色设置语句
-	  (set-cursor-color "green"))
-      (if chinese-input-p
-	  (progn
-	    ;; 用户在这里定义 pyim 输入中文时的光标颜色设置语句
-	    (set-cursor-color "blue"))
-	;; 用户在这里定义 pyim 输入英文时的光标颜色设置语句
-	(set-cursor-color "red"))))
-
-  ;; M-x my-pyim/simp2trad
-  (load-file (concat user-emacs-directory "misc/pyim-simp2trad.el"))
+  (pyim-tsinghua-dict-enable)
   )
+
+(setq default-input-method "pyim")
+
+(setq pyim-default-scheme 'quanpin)
+
+;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+;; 我自己使用的中英文动态切换规则是：
+;; +1. 光标只有在注释里面时，才可以输入中文。+ -> 2021/10/01 commented this `pyim-probe-program-mode` below
+;; 2. 光标前是汉字字符时，才能输入中文。
+;; 3. 使用 M-i 快捷键，强制将光标前的拼音字符串转换为中文。-> [[./init-keybindings.el::pyim-csap]]
+(setq-default pyim-english-input-switch-functions
+	      '(pyim-probe-dynamic-english
+		pyim-probe-isearch-mode
+		;; pyim-probe-program-mode
+		pyim-probe-org-structure-template)
+	      )
+
+(setq-default pyim-punctuation-half-width-functions
+	      '(pyim-probe-punctuation-line-beginning
+		pyim-probe-punctuation-after-punctuation)
+	      )
+
+;; 开启代码搜索中文功能（比如拼音，五笔码等）
+(pyim-isearch-mode 1)
+;; 激活以上这个 mode 后，可以使用下面的方式强制关闭 isearch 搜索框中文输入
+;; （即使 在 pyim 激活的时候）。
+;; (setq-default pyim-english-input-switch-functions '(pyim-probe-isearch-mode))
+
+(setq pyim-page-tooltip 'popup) ; 使用 pupup-el 来绘制选词框
+
+(setq pyim-page-length 9) ; 选词框显示 9 个候选词
+
+;; 让 Emacs 启动时自动加载 pyim 词库
+(add-hook 'emacs-startup-hook
+	  #'(lambda () (pyim-restart-1 t)))
+
+;; pyim-indicator-with-cursor-color 这个 indicator 很容易和其它设置 cursor 颜
+;; 色的包冲突，因为都调用 set-cursor-color，遇到这种情况后，用户需要自己解决冲
+;; 突，pyim-indicator 提供了一个简单的机制：
+(setq pyim-indicator-list
+      (list #'my-pyim-indicator-with-cursor-color #'pyim-indicator-with-modeline))
+
+(defun my-pyim-indicator-with-cursor-color (input-method chinese-input-p)
+  (if (not (equal input-method "pyim"))
+      (progn
+	;; 用户在这里定义 pyim 未激活时的光标颜色设置语句
+	(set-cursor-color "green"))
+    (if chinese-input-p
+	(progn
+	  ;; 用户在这里定义 pyim 输入中文时的光标颜色设置语句
+	  (set-cursor-color "blue"))
+      ;; 用户在这里定义 pyim 输入英文时的光标颜色设置语句
+      (set-cursor-color "red"))))
+
+;; M-x my-pyim/simp2trad
+(load-file (concat user-emacs-directory "misc/pyim-simp2trad.el"))
 
 
 
@@ -678,16 +674,6 @@
 
 (use-package toc-org)
 
-(use-package undo-tree
-  :config
-  (global-undo-tree-mode)
-  (setq undo-tree-auto-save-history t)
-  (setq undo-tree-visualizer-timestamps t)
-  (let ((undo-dir (expand-file-name "undo" user-emacs-directory)))
-    (unless (file-exists-p undo-dir)
-      (make-directory undo-dir t))
-    (setq undo-tree-history-directory-alist `(("." . ,undo-dir)))))
-
 (use-package vertico
   :init
   (vertico-mode))
@@ -702,13 +688,6 @@
   ;; via http://xahlee.info/emacs/misc/emacs_open_large_file_slow.html
   )
 
-(use-package vline
-  ;; make vline package load from local site-lisp folder
-  :load-path (lambda () (symbol-value 'load-path))
-  :config
-  (set-face-background vline-face "#283639")
-  )
-
 (use-package which-key
   :config
   ;; allow C-h to trigger which-key before it is done automatically
@@ -717,10 +696,6 @@
   (which-key-setup-side-window-bottom)
   )
 
-(use-package window-numbering
-  :config
-  (window-numbering-mode)
-  )
 
 (use-package workgroups2
   :config
