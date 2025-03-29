@@ -131,6 +131,23 @@
 (recentf-mode 1)
 
 
+
+(require 'highlight-parentheses)
+(add-hook 'prog-mode-hook 'highlight-parentheses-mode)
+(setq highlight-parentheses-colors
+      '("#3498DB" "#FF9900" "#38761D" "#9900FF"))
+
+;; automatic and manual symbol highlighting
+;; cycle through the locations of any symbol at point
+(require 'highlight-symbol)
+(add-hook 'prog-mode-hook 'highlight-symbol-mode)
+(add-hook 'prog-mode-hook 'highlight-symbol-nav-mode)
+;; keybindings for navigation in highlight-symbol-nav-mode:
+;; M-p highlight-symbol-prev
+;; M-n highlight-symbol-next
+
+
+
 (require 'vline)
 (set-face-background vline-face "#283639")
 
