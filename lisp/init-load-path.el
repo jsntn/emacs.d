@@ -17,9 +17,12 @@
            load-path))))
 
 ;; add both site-lisp and its immediate subdirs to `load-path'
-(let ((symbol-value 'site-lisp-dir))
-  (push site-lisp-dir load-path)
-  (sanityinc/add-subdirs-to-load-path site-lisp-dir))
+(push site-lisp-dir load-path)
+(sanityinc/add-subdirs-to-load-path site-lisp-dir)
+
+;; for `transient special structure
+(let ((transient-lisp-dir (expand-file-name "transient/lisp/" site-lisp-dir)))
+  (push transient-lisp-dir load-path))
 
 
 (provide 'init-load-path)
