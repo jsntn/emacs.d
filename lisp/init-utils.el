@@ -697,7 +697,7 @@ function as a hook, add it to the appropriate hook list, such as
 	  (let ((buf (find-buffer-visiting buf)))
 	    (when buf
 	      (with-current-buffer buf
-		(toggle-read-only t)))))))))
+		(read-only-mode)))))))))
 
 
 (defun my/revert-all-file-buffers ()
