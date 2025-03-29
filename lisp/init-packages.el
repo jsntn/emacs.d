@@ -102,7 +102,7 @@
     )
   )
 
-(use-package expand-region)
+(require 'expand-region)
 
 (use-package flycheck)
 
@@ -291,10 +291,8 @@
   (setq neo-window-fixed-size nil)
   )
 
-(use-package orderless
-  :custom
-  (completion-styles '(orderless basic))
-  )
+(require 'orderless)
+(setq completion-styles '(orderless basic))
 
 (use-package org-bullets
   :config
@@ -329,65 +327,63 @@
    )
   )
 
-(use-package org-super-agenda ; <<org-super-agenda>>
-  :after org-agenda
-  :config
-  (setq org-agenda-compact-blocks t
-	org-agenda-start-day "+0d")
-  (org-super-agenda-mode 1)
+(require 'org-super-agenda) ; <<org-super-agenda>>
 
-  (setq org-agenda-custom-commands
-	;; these org-agenda-custom-commands configurations here cannot be
-	;; included in the org-agenda-mode-hook together with the Eisenhower
-	;; Matrix configuration, as it should be loaded before the hook.
+(setq org-agenda-compact-blocks t
+      org-agenda-start-day "+0d")
+(org-super-agenda-mode 1)
 
-	;; an Emacs configuration reference https://sachachua.com/dotemacs/index.html
-	`(
-	  ("g" "GTD Method - Critical/Priority/Effort"
-	   (
-	    (agenda "" ((org-agenda-overriding-header "")
-			(org-super-agenda-groups
-			 '(
-			   (:name "Time Driven - Critical & High Priority (within 2 days)"
-				  :and (:priority "A" :deadline today :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
-				  :and (:priority "A" :scheduled today :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
-				  :and (:priority "A" :deadline (before
-								 ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 2 86400)))
-								 ) :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
-				  :and (:priority "A" :scheduled (before
-								  ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
-								  ) :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
-				  :order 0)
-			   (:name "Energy Driven - Critical & Low Effort (<= 15 mins)"
-				  :and (:priority "A" :effort< "15" :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
-				  :order 5)
-			   (:name "Critical & High Effort (> 15 mins)"
-				  :and (:priority "A" :effort> "16" :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
-				  :order 10)
-			   (:discard (:habit t))
-			   ;; After the last group, the agenda will display items that didn't
-			   ;; match any of these groups, with the default order position of 99
-			   ))
-			))))
-	  ("h" "Habit Tracker"
-	   (
-	    (agenda "" ((org-agenda-overriding-header "")
-			(org-super-agenda-groups
-			 '(
-			   (:name "Habit(s) to be done today :)"
-				  :and (:scheduled today :habit t :not (:todo ("WAIT" "CANCEL")))
-				  :order 0)
-			   (:name "Habit(s) that missed in the past :("
-				  :and (:scheduled past :habit t :not (:todo ("WAIT" "CANCEL")))
-				  :order 5)
-			   (:discard (:not (:habit t)))
-			   ;; After the last group, the agenda will display items that didn't
-			   ;; match any of these groups, with the default order position of 99
-			   ))
-			))))
+(setq org-agenda-custom-commands
+      ;; these org-agenda-custom-commands configurations here cannot be
+      ;; included in the org-agenda-mode-hook together with the Eisenhower
+      ;; Matrix configuration, as it should be loaded before the hook.
 
-	  ))
-  )
+      ;; an Emacs configuration reference https://sachachua.com/dotemacs/index.html
+      `(
+	("g" "GTD Method - Critical/Priority/Effort"
+	 (
+	  (agenda "" ((org-agenda-overriding-header "")
+		      (org-super-agenda-groups
+		       '(
+			 (:name "Time Driven - Critical & High Priority (within 2 days)"
+				:and (:priority "A" :deadline today :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
+				:and (:priority "A" :scheduled today :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
+				:and (:priority "A" :deadline (before
+							       ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 2 86400)))
+							       ) :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
+				:and (:priority "A" :scheduled (before
+								,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
+								) :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
+				:order 0)
+			 (:name "Energy Driven - Critical & Low Effort (<= 15 mins)"
+				:and (:priority "A" :effort< "15" :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+				:order 5)
+			 (:name "Critical & High Effort (> 15 mins)"
+				:and (:priority "A" :effort> "16" :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+				:order 10)
+			 (:discard (:habit t))
+			 ;; After the last group, the agenda will display items that didn't
+			 ;; match any of these groups, with the default order position of 99
+			 ))
+		      ))))
+	("h" "Habit Tracker"
+	 (
+	  (agenda "" ((org-agenda-overriding-header "")
+		      (org-super-agenda-groups
+		       '(
+			 (:name "Habit(s) to be done today :)"
+				:and (:scheduled today :habit t :not (:todo ("WAIT" "CANCEL")))
+				:order 0)
+			 (:name "Habit(s) that missed in the past :("
+				:and (:scheduled past :habit t :not (:todo ("WAIT" "CANCEL")))
+				:order 5)
+			 (:discard (:not (:habit t)))
+			 ;; After the last group, the agenda will display items that didn't
+			 ;; match any of these groups, with the default order position of 99
+			 ))
+		      ))))
+
+	))
 
 (use-package orglink
   :delight
@@ -461,71 +457,70 @@
   (setq pangu-spacing-real-insert-separtor t)
   )
 
-(use-package pinyinlib
-  :config
-  ;; TL; DR
-  ;; C-s : -> search with pinyin
-  ;; C-s / -> search camel case word
-  ;; this config is via
-  ;; https://app.raindrop.io/my/0/#pinyinlib
-  (defun re-builder-extended-pattern (str)
-    (let* ((len (length str)))
-      (cond
-       ;; do nothing
-       ((<= (length str) 0))
+(require 'pinyinlib)
+;; TL; DR
+;; C-s : -> search with pinyin
+;; C-s / -> search camel case word
+;; this config is via
+;; https://app.raindrop.io/my/0/#pinyinlib
+(defun re-builder-extended-pattern (str)
+  (let* ((len (length str)))
+    (cond
+     ;; do nothing
+     ((<= (length str) 0))
 
-       ;; If the first charater of input in ivy is ":",
-       ;; remaining input is converted into Chinese pinyin regex.
-       ((string= (substring str 0 1) ":")
-	(setq str (pinyinlib-build-regexp-string (substring str 1 len) t)))
+     ;; If the first charater of input in ivy is ":",
+     ;; remaining input is converted into Chinese pinyin regex.
+     ((string= (substring str 0 1) ":")
+      (setq str (pinyinlib-build-regexp-string (substring str 1 len) t)))
 
-       ;; If the first charater of input in ivy is "/",
-       ;; remaining input is converted to pattrn to search camel case word
-       ((string= (substring str 0 1) "/")
-	(let* ((rlt "")
-	       (i 0)
-	       (subs (substring str 1 len))
-	       c)
-	  (when (> len 2)
-	    (setq subs (upcase subs))
-	    (while (< i (length subs))
-	      (setq c (elt subs i))
-	      (setq rlt (concat rlt (cond
-				     ((and (< c ?a) (> c ?z) (< c ?A) (> c ?Z))
-				      (format "%c" c))
-				     (t
-				      (concat (if (= i 0) (format "[%c%c]" (+ c 32) c)
-						(format "%c" c))
-					      "[a-z]+")))))
-	      (setq i (1+ i))))
-	  (setq str rlt))))
-      (ivy--regex-plus str)))
+     ;; If the first charater of input in ivy is "/",
+     ;; remaining input is converted to pattrn to search camel case word
+     ((string= (substring str 0 1) "/")
+      (let* ((rlt "")
+	     (i 0)
+	     (subs (substring str 1 len))
+	     c)
+	(when (> len 2)
+	  (setq subs (upcase subs))
+	  (while (< i (length subs))
+	    (setq c (elt subs i))
+	    (setq rlt (concat rlt (cond
+				   ((and (< c ?a) (> c ?z) (< c ?A) (> c ?Z))
+				    (format "%c" c))
+				   (t
+				    (concat (if (= i 0) (format "[%c%c]" (+ c 32) c)
+					      (format "%c" c))
+					    "[a-z]+")))))
+	    (setq i (1+ i))))
+	(setq str rlt))))
+    (ivy--regex-plus str)))
 
-  (eval-after-load 'ivy
-    '(progn
-       ;; better performance on everything (especially windows), ivy-0.10.0 required
-       ;; @see https://github.com/abo-abo/swiper/issues/1218
-       (setq ivy-dynamic-exhibit-delay-ms 250)
+(eval-after-load 'ivy
+  '(progn
+     ;; better performance on everything (especially windows), ivy-0.10.0 required
+     ;; @see https://github.com/abo-abo/swiper/issues/1218
+     (setq ivy-dynamic-exhibit-delay-ms 250)
 
-       ;; Press C-p and Enter to select current input as candidate
-       ;; https://oremacs.com/2017/11/30/ivy-0.10.0/
-       (setq ivy-use-selectable-prompt t)
+     ;; Press C-p and Enter to select current input as candidate
+     ;; https://oremacs.com/2017/11/30/ivy-0.10.0/
+     (setq ivy-use-selectable-prompt t)
 
-       (setq ivy-re-builders-alist
-	     '((t . re-builder-extended-pattern)))
-       ;; set actions when running C-x b
-       ;; replace "frame" with window to open in new window
-       (ivy-set-actions
-	'ivy-switch-buffer-by-pinyin
-	'(("j" switch-to-buffer-other-frame "other frame")
-	  ("k" kill-buffer "kill")
-	  ("r" ivy--rename-buffer-action "rename")))))
+     (setq ivy-re-builders-alist
+	   '((t . re-builder-extended-pattern)))
+     ;; set actions when running C-x b
+     ;; replace "frame" with window to open in new window
+     (ivy-set-actions
+      'ivy-switch-buffer-by-pinyin
+      '(("j" switch-to-buffer-other-frame "other frame")
+	("k" kill-buffer "kill")
+	("r" ivy--rename-buffer-action "rename")))))
 
-  (with-eval-after-load "swiper-isearch"
-    (setq ivy-re-builders-alist
-	  '((t . re-builder-extended-pattern)
-	    (t . ivy-prescient-re-builder))))
-  )
+(with-eval-after-load "swiper-isearch"
+  (setq ivy-re-builders-alist
+	'((t . re-builder-extended-pattern)
+	  (t . ivy-prescient-re-builder))))
+
 
 (use-package projectile
   :init
@@ -635,8 +630,6 @@
   (setq auto-save-default nil)
   (setq super-save-exclude '(".gpg"))
   )
-
-(use-package swiper)
 
 ;; { -- start: if emacs is running in a terminal
 (unless (display-graphic-p)
