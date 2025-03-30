@@ -49,6 +49,7 @@
     flyspell-mode
     ;; haskell-indent-mode
     ;; haskell-doc-mode
+    highlight-parentheses-mode
     highlight-symbol-mode
     ;; inf-haskell-mode
     org-cdlatex-mode
