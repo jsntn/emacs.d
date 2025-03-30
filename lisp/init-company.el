@@ -172,7 +172,8 @@
 			       company-sort-by-occurrence))
 
   (setq company-backends '(
-			   (company-capf company-keywords company-dabbrev-code)
+			   ;; (company-capf company-keywords company-dabbrev-code)
+			   (company-etags company-keywords company-dabbrev-code)
 			   ;; commented below to speed up the completion
 			   ;; (company-tabnine)
 			   company-files)
