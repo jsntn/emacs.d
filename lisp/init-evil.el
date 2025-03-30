@@ -20,12 +20,16 @@
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
 
-(require 'evil)
-(evil-mode 1)
-
+;; In case you run Emacs in a terminal, you might find that TAB does not work as
+;; expected (being bound to evil-jump-forward instead of org-tab). You can add
+;; this to your configuration to get org-tab instead at the cost of losing C-i
+;; to jump.
 (unless (display-graphic-p)
   (setq evil-want-C-i-jump nil)
   )
+
+(require 'evil)
+(evil-mode 1)
 
 (evil-set-undo-system 'undo-tree) ; https://github.com/emacs-evil/evil/issues/1372#issuecomment-712611291
 
