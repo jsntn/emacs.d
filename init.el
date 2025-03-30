@@ -11,10 +11,10 @@
 ;;; Code:
 
 
-(let ((minver "27.1"))
-  (when (version< emacs-version minver)
-    (error "This Emacs configuration is based on v%s" minver))
-  )
+;; for Emacs 30.1
+(let ((ver "30.1"))
+  (unless (version= emacs-version ver)
+    (error "This Emacs configuration requires v%s" ver)))
 
 
 ;; =============================================================================
