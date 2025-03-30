@@ -44,6 +44,8 @@
     auto-capitalize-mode
     auto-fill-function
     auto-revert-mode
+    company-mode
+    company-posframe-mode
     dired-async-mode
     flycheck-mode
     flyspell-mode
