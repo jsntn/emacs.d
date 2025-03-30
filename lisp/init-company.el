@@ -216,12 +216,9 @@
 
 ;; use this package to fix tooltip alignment issue below,
 ;; https://github.com/company-mode/company-mode/issues/1388
-(use-package company-posframe
-  :delight
-  :straight (:type git :host github :repo "tumashu/company-posframe")
-  :config
-  (company-posframe-mode 1)
-  )
+(require 'company-posframe)
+(with-eval-after-load 'company
+  (company-posframe-mode 1))
 
 
 

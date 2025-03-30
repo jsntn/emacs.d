@@ -29,8 +29,7 @@ Version 2023-08-03"
 ;; END }}
 
 
-(use-package company-english-helper
-  :straight (:host github :repo "jsntn/company-english-helper" :branch "my"))
+(require 'company-english-helper)
 
 (when *is-win*
   ;; only use this on Windows, as I am using
