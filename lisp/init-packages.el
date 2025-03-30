@@ -70,10 +70,8 @@
 
 
 
-(use-package eglot
-  :config
-  (setq eglot-stay-out-of '(company)) ; see https://web.archive.org/web/20240731123602/https://github.com/joaotavora/eglot/issues/324
-  )
+(require 'eglot)
+(setq eglot-stay-out-of '(company)) ; see https://web.archive.org/web/20240731123602/https://github.com/joaotavora/eglot/issues/324
 
 ;; M-x elgrep: search a single directory
 ;; C-u M-x elgrep: search the directory recursively
@@ -284,8 +282,7 @@
   (setq marginalia-field-width 9999999) ; maximize the width of marginalia field
   )
 
-(straight-use-package
- '(mr-poker :type git :host github :repo "jsntn/mr-poker.el"))
+(require 'mr-poker)
 
 (use-package neotree
   :config

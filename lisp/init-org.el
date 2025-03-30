@@ -341,8 +341,7 @@ Version: 2023/09/27"
 				  ))
 
 
-(use-package org-task-scheduler
-  :straight (:host github :repo "jsntn/org-task-scheduler.el"))
+(require 'org-task-scheduler)
 
 
 
