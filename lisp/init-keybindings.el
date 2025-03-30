@@ -28,10 +28,6 @@
  "C-s" 'swiper ; having own history variable allows to get more use of M-p, M-n
 	       ; and C-r.
 
- ;; FIXME: these keybindings does not work on my Arch...
- "C-=" 'er/expand-region
- "C--" 'er/contract-region
-
  ;; 2025/3/30: This is supported by repeat-mode,
  ;; M-x repeat-mode
  ;; C-x ^ ^ ^ ...
@@ -84,6 +80,8 @@
  "bb" 'evil-scroll-page-up ; <<page-up>>
  "br" 'ibuffer
  "SPC" 'my/toggle-hideshow-block
+ "++" 'er/expand-region
+ "--" 'er/contract-region
  ;; ...
  )
 
