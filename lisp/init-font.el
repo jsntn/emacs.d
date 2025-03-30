@@ -5,9 +5,10 @@
 
 (setq inhibit-compacting-font-caches t) ; don't compact font caches during GC.
 
-(use-package cnfonts
-  :if window-system ; only load this package when in graphical Emacs
-  :config
+(require 'cnfonts)
+
+;; only load this package when in graphical Emacs
+(when (display-graphic-p)
   (cnfonts-mode 1)
   (setq cnfonts-profiles
 	'("program" "org-mode" "read-book"))
