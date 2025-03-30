@@ -145,73 +145,71 @@
   ;; (add-to-list 'company-backends #'company-tabnine)
   )
 
-(use-package company
-  :delight
-  :init
-  (global-company-mode)
-  :config
-  (setq company-idle-delay 0.2)
-  ;; number the candidates (use M-1, M-2 etc to select completions).
-  (setq company-show-numbers t)
-  ;; show suggestions after entering 3 character.
-  (setq company-minimum-prefix-length 3)
-  (setq company-dabbrev-downcase nil)
-  (setq company-dabbrev-ignore-case t)
-  (setq company-dabbrev-other-buffers nil)
-  (setq company-tooltip-align-annotations t)
-  ;; when the list of suggestions is shown, and you go through the list of
-  ;; suggestions and reach the end of the list, the end of the list of
-  ;; suggestions does not wrap around to the top of the list again. This is a
-  ;; minor inconvenience that can be solved:
-  (setq company-selection-wrap-around t)
-  ;; use tab key to cycle through suggestions.
-  ;; ('tng' means 'tab and go')
-  (company-tng-configure-default)
+(require 'company)
 
-  (setq company-transformers '(delete-dups
-			       company-sort-by-occurrence))
+(global-company-mode)
 
-  (setq company-backends '(
-			   ;; (company-capf company-keywords company-dabbrev-code)
-			   (company-etags company-keywords company-dabbrev-code)
-			   ;; commented below to speed up the completion
-			   ;; (company-tabnine)
-			   company-files)
-	)
+(setq company-idle-delay 0.2)
+;; number the candidates (use M-1, M-2 etc to select completions).
+(setq company-show-numbers t)
+;; show suggestions after entering 3 character.
+(setq company-minimum-prefix-length 3)
+(setq company-dabbrev-downcase nil)
+(setq company-dabbrev-ignore-case t)
+(setq company-dabbrev-other-buffers nil)
+(setq company-tooltip-align-annotations t)
+;; when the list of suggestions is shown, and you go through the list of
+;; suggestions and reach the end of the list, the end of the list of
+;; suggestions does not wrap around to the top of the list again. This is a
+;; minor inconvenience that can be solved:
+(setq company-selection-wrap-around t)
+;; use tab key to cycle through suggestions.
+;; ('tng' means 'tab and go')
+(company-tng-configure-default)
 
-  ;; add yasnippet support for all company backends.
-  (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
-  (defun company-mode/backend-with-yas (backend)
-    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-	backend
-      (append (if (consp backend) backend (list backend))
-	      '(:with company-yasnippet))))
-  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+(setq company-transformers '(delete-dups
+			     company-sort-by-occurrence))
 
-  ;; set the backends for writing in text related mode
-  (defun my-company-backends-text-mode-hook ()
-    (setq-local company-backends '(
-				   (company-dabbrev company-ispell)
-				   ;; commented below to speed up the completion
-				   ;; (company-tabnine)
-				   company-files)
-		))
-  (dolist (hook '(
+(setq company-backends '(
+			 ;; (company-capf company-keywords company-dabbrev-code)
+			 (company-etags company-keywords company-dabbrev-code)
+			 ;; commented below to speed up the completion
+			 ;; (company-tabnine)
+			 company-files)
+      )
+
+;; add yasnippet support for all company backends.
+(defvar company-mode/enable-yas t
+  "Enable yasnippet for all backends.")
+(defun company-mode/backend-with-yas (backend)
+  (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+      backend
+    (append (if (consp backend) backend (list backend))
+	    '(:with company-yasnippet))))
+(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+
+;; set the backends for writing in text related mode
+(defun my-company-backends-text-mode-hook ()
+  (setq-local company-backends '(
+				 (company-dabbrev company-ispell)
+				 ;; commented below to speed up the completion
+				 ;; (company-tabnine)
+				 company-files)
+	      ))
+(dolist (hook '(
 		markdown-mode-hook
 		org-mode-hook
 		text-mode-hook
 		))
   (add-hook hook 'my-company-backends-text-mode-hook))
 
-  ;; set the backends for shell-mode
-  (defun my-company-backends-shell-mode-hook ()
-    (setq-local company-backends '(
-				   (company-capf company-files company-pcomplete)
-				   )))
-  (add-hook 'shell-mode-hook 'my-company-backends-shell-mode-hook)
+;; set the backends for shell-mode
+(defun my-company-backends-shell-mode-hook ()
+  (setq-local company-backends '(
+				 (company-capf company-files company-pcomplete)
+				 )))
+(add-hook 'shell-mode-hook 'my-company-backends-shell-mode-hook)
 
-  )
 
 
 
