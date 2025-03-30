@@ -3,7 +3,7 @@
 ;;; Code:
 
 
-(use-package ispell)
+(require 'ispell)
 
 (my-check-for-executable "Aspell" "aspell")
 
@@ -14,16 +14,12 @@
   )
 
 
-(use-package auto-capitalize
-  :straight (:host github :repo "yuutayamada/auto-capitalize-el")
-  :config
-  (setq auto-capitalize-words `("I" "English"))
-  ;; this configuration adds capitalized words of .aspell.en.pws
-  (setq auto-capitalize-aspell-file (expand-file-name "misc/aspell.en.pws" user-emacs-directory))
-  (auto-capitalize-setup)
-  ;; (add-hook 'after-change-major-mode-hook 'auto-capitalize-mode)
-  :hook (org-mode .  auto-capitalize-mode)
-  )
+(require 'auto-capitalize)
+(setq auto-capitalize-words `("I" "English"))
+;; this configuration adds capitalized words of .aspell.en.pws
+(setq auto-capitalize-aspell-file (expand-file-name "misc/aspell.en.pws" user-emacs-directory))
+(auto-capitalize-setup)
+(add-hook 'org-mode-hook #'auto-capitalize-mode)
 
 
 (use-package ta
