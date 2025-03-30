@@ -415,7 +415,7 @@
 	    ;; ripgrep (rg) is used for unlinked references below - (executable-find "rg")
 	    ;; #'org-roam-unlinked-references-section
 	    ))
-(org-roam-db-autosync-mode)
+(run-with-idle-timer 30 nil #'org-roam-db-autosync-mode)
 
 
 
