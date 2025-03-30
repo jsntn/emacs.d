@@ -299,14 +299,11 @@
   (setq org-bullets-bullet-list '("◼️" "○" "¶" "►"))
   )
 
-(use-package org-drill
-  :straight (:host github :repo "jsntn/org-drill")
-  :config
-  ;; make all agenda files with any archive files associated with them as the
-  ;; source of items for drill sessions(scope)
-  (setq org-drill-scope 'agenda-with-archives)
-  (setq org-drill-leech-method "warn")
-  )
+(require 'org-drill)
+;; make all agenda files with any archive files associated with them as the
+;; source of items for drill sessions(scope)
+(setq org-drill-scope 'agenda-with-archives)
+(setq org-drill-leech-method "warn")
 
 (use-package org-modern
   :config
