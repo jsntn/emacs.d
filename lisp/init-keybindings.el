@@ -31,11 +31,17 @@
  ;; FIXME: these keybindings does not work on my Arch...
  "C-=" 'er/expand-region
  "C--" 'er/contract-region
- "C-'" 'helm-imenu
- "C-M-<left>" 'shrink-window-horizontally
- "C-M-<right>" 'enlarge-window-horizontally
- "C-M-<down>" 'shrink-window
- "C-M-<up>" 'enlarge-window
+
+ ;; 2025/3/30: This is supported by repeat-mode,
+ ;; M-x repeat-mode
+ ;; C-x ^ ^ ^ ...
+ ;; C-x v v v ...
+ ;; C-x { { { ...
+ ;; C-x } } } ...
+ ;; "C-M-<left>" 'shrink-window-horizontally
+ ;; "C-M-<right>" 'enlarge-window-horizontally
+ ;; "C-M-<down>" 'shrink-window
+ ;; "C-M-<up>" 'enlarge-window
 
  "M-i" 'pyim-convert-string-at-point ; <<pyim-csap>>
  "C-;" 'pyim-delete-word-from-personal-buffer
