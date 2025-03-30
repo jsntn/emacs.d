@@ -214,6 +214,42 @@
 
 
 
+(defvar my--company-backends-list
+  '(("company-abbrev" . "Abbrev expansion")
+    ("company-capf" . "Completion at point function")
+    ("company-dabbrev" . "Dynamic abbreviation expansion")
+    ("company-etags" . "ETags based completion")
+    ("company-files" . "File path completion")
+    ("company-gtags" . "GNU Global tags completion")
+    ("company-ispell" . "Spell checking completion")
+    ("company-keywords" . "Programming language keywords")
+    ("company-nxml" . "XML/HTML completion")
+    ("company-oddmuse" . "Oddmuse wiki completion")
+    ("company-yasnippet" . "Yasnippet template expansion"))
+  "List of company-mode backends to choose from with descriptions.")
+
+(defvar my--company-backends-history nil
+  "History of selected company backends.")
+
+(defun my/set-company-backend ()
+  (interactive)
+  (let* ((sorted-backends (sort (copy-sequence my--company-backends-list)
+				(lambda (a b)
+				  (let ((a-time (cdr (assoc (car a) my--company-backends-history)))
+					(b-time (cdr (assoc (car b) my--company-backends-history))))
+				    (if (and a-time b-time)
+					(> a-time b-time)
+				      (and a-time (not b-time)))))))
+	 (backend-name (completing-read "Choose company backend: "
+					(mapcar (lambda (x) (format "%-20s %s" (car x) (cdr x)))
+						sorted-backends)))
+	 (backend (intern (car (split-string backend-name)))))
+    (setq-local company-backends (list backend))
+    (push (cons backend (float-time)) my--company-backends-history)
+    (message "Set company backend to: %s" backend)))
+
+
+
 ;; use this package to fix tooltip alignment issue below,
 ;; https://github.com/company-mode/company-mode/issues/1388
 (require 'company-posframe)
