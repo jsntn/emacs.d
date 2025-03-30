@@ -65,7 +65,7 @@
 
 
 
-(use-package counsel)
+(require 'counsel)
 
 
 
@@ -266,6 +266,8 @@
   )
 
 (use-package imenu-list)
+
+(require 'ivy)
 
 (use-package keyfreq
   :config
@@ -630,6 +632,8 @@
   (setq auto-save-default nil)
   (setq super-save-exclude '(".gpg"))
   )
+
+(require 'swiper)
 
 ;; { -- start: if emacs is running in a terminal
 (unless (display-graphic-p)
