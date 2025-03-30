@@ -27,8 +27,6 @@
 (general-define-key
  "C-s" 'swiper ; having own history variable allows to get more use of M-p, M-n
 	       ; and C-r.
- "C-=" 'er/expand-region
- "C--" 'er/contract-region
  "C-'" 'helm-imenu
  "C-M-<left>" 'shrink-window-horizontally
  "C-M-<right>" 'enlarge-window-horizontally
@@ -75,6 +73,8 @@
  "bb" 'evil-scroll-page-up ; <<page-up>>
  "br" 'ibuffer
  "SPC" 'my/toggle-hideshow-block
+ "++" 'er/expand-region
+ "--" 'er/contract-region
  ;; ...
  )
 
