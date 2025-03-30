@@ -79,9 +79,6 @@
 
 (use-package elpa-mirror)
 
-(use-package emacsql-sqlite3 ; for org-roam
-  :straight (:host github :repo "cireu/emacsql-sqlite3"))
-
 ;; (use-package elpy
 ;;   :config
 ;;   (elpy-enable)
@@ -411,41 +408,29 @@
     )
   )
 
-(use-package org-roam
-  ;; :if window-system ; for graphical Emacs
-  :after emacsql-sqlite3
-  :config
-  (my-run-after-emacs-startup 'my-activate-org-roam-db-autosync)
-  (setq org-roam-database-connector 'sqlite3)
-  (setq org-roam-mode-sections
-  (list #'org-roam-backlinks-section
+(require 'org-roam)
+(setq org-roam-mode-sections
+      (list #'org-roam-backlinks-section
 	    #'org-roam-reflinks-section
 	    ;; ripgrep (rg) is used for unlinked references below - (executable-find "rg")
 	    ;; #'org-roam-unlinked-references-section
 	    ))
-  )
 
-(defun my-activate-org-roam-db-autosync ()
-  "Activate `org-roam-db-autosync-mode` after a delay"
-  (run-with-idle-timer 7 nil 'org-roam-db-autosync-mode))
 
 
 (my-check-for-executable "ripgrep (rg)" "rg")
 ;; END: Org-roam }
 
-(use-package org-roam-ui
-  :delight
-  :straight (:host github :repo "jsntn/org-roam-ui")
-  :if window-system ; for graphical Emacs
-  :after org-roam
-  :config
-  (setq org-roam-ui-sync-theme t
-	org-roam-ui-follow t
-	org-roam-ui-update-on-save t
-	org-roam-ui-open-on-start nil)
-  ;; [BUG] Org-roam-ui doesn't show the node's text if in a .dir-locals.el
-  ;; location, see https://github.com/org-roam/org-roam-ui/issues/236
-  )
+(require 'org-roam-ui)
+(when (display-graphic-p)
+  (with-eval-after-load 'org-roam
+    (setq org-roam-ui-sync-theme t
+	  org-roam-ui-follow t
+	  org-roam-ui-update-on-save t
+	  org-roam-ui-open-on-start nil)
+    ;; [BUG] Org-roam-ui doesn't show the node's text if in a .dir-locals.el
+    ;; location, see https://github.com/org-roam/org-roam-ui/issues/236
+    ))
 
 (use-package pangu-spacing
   :config
