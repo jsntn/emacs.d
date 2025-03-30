@@ -541,14 +541,11 @@
 
 (require 'pyim)
 
-;; 用 THUOCL：清华大学开放中文词库数据建立的 pyim 输入法的词库
-(use-package pyim-tsinghua-dict
-  :straight (:host github :repo "redguardtoo/pyim-tsinghua-dict" :files ("*.el" "*.pyim"))
-  :config
-  (pyim-tsinghua-dict-enable)
-  )
-
 (setq default-input-method "pyim")
+
+;; 用 THUOCL：清华大学开放中文词库数据建立的 pyim 输入法的词库
+(require 'pyim-tsinghua-dict)
+(pyim-tsinghua-dict-enable)
 
 (setq pyim-default-scheme 'quanpin)
 
@@ -570,6 +567,7 @@
 	      )
 
 ;; 开启代码搜索中文功能（比如拼音，五笔码等）
+(require 'pyim-cregexp-utils)
 (pyim-isearch-mode 1)
 ;; 激活以上这个 mode 后，可以使用下面的方式强制关闭 isearch 搜索框中文输入
 ;; （即使 在 pyim 激活的时候）。
