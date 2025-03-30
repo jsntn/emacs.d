@@ -32,8 +32,34 @@ Version 2023-08-03"
 (use-package company-english-helper
   :straight (:host github :repo "jsntn/company-english-helper" :branch "my"))
 
+(when *is-win*
+  ;; only use this on Windows, as I am using
+  ;; Andy Stewart's sdcv on my ArchLinux
 
-(if *is-linux*
+  (use-package sdcv-pure
+    :straight (:host github :repo "jsntn/sdcv-pure.el")
+    :config
+
+    (defvar sdcv-simple-dict
+      `(,(expand-file-name "misc/stardict-lazyworm-ec-2.4.2" user-emacs-directory))
+      "Dictionary to search")
+
+    (defvar sdcv-multiple-dicts
+      `((,(expand-file-name "misc/stardict-lazyworm-ec-2.4.2" user-emacs-directory))
+	(,(expand-file-name "misc/stardict-langdao-ce-gb-2.4.2" user-emacs-directory))
+	(,(expand-file-name "misc/stardict-langdao-ec-gb-2.4.2" user-emacs-directory))
+	(,(expand-file-name "misc/stardict-cedict-gb-2.4.2" user-emacs-directory))
+	(,(expand-file-name "misc/stardict-quick_eng-zh_CN-2.4.2" user-emacs-directory))
+	(,(expand-file-name "misc/stardict-DrEye4in1-2.4.2" user-emacs-directory))
+	(,(expand-file-name "misc/stardict-ProECCE-2.4.2" user-emacs-directory)))
+      "List of dictionaries to search.")
+
+    (global-set-key (kbd "C-c d") 'sdcv-simple-definition)
+    (global-set-key (kbd "C-c D") 'sdcv-complete-definition)
+    )
+  )
+
+(when *is-linux*
     (use-package sdcv
       :straight (:host github :repo "manateelazycat/sdcv")
       :config
