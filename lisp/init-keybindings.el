@@ -27,6 +27,8 @@
 (general-define-key
  "C-s" 'swiper ; having own history variable allows to get more use of M-p, M-n
 	       ; and C-r.
+
+ ;; FIXME: these keybindings does not work on my Arch...
  "C-=" 'er/expand-region
  "C--" 'er/contract-region
  "C-'" 'helm-imenu
@@ -34,6 +36,7 @@
  "C-M-<right>" 'enlarge-window-horizontally
  "C-M-<down>" 'shrink-window
  "C-M-<up>" 'enlarge-window
+
  "M-i" 'pyim-convert-string-at-point ; <<pyim-csap>>
  "C-;" 'pyim-delete-word-from-personal-buffer
  ;; ...
