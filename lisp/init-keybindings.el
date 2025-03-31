@@ -27,18 +27,20 @@
 (general-define-key
  "C-s" 'swiper ; having own history variable allows to get more use of M-p, M-n
 	       ; and C-r.
-
  ;; 2025/3/30: This is supported by repeat-mode,
  ;; M-x repeat-mode
  ;; C-x ^ ^ ^ ...
  ;; C-x v v v ...
  ;; C-x { { { ...
  ;; C-x } } } ...
- ;; "C-M-<left>" 'shrink-window-horizontally
- ;; "C-M-<right>" 'enlarge-window-horizontally
- ;; "C-M-<down>" 'shrink-window
- ;; "C-M-<up>" 'enlarge-window
-
+ ;; { To support these keybindings below, term-keys package is needed.
+ "C-M-<left>" 'shrink-window-horizontally
+ "C-M-<right>" 'enlarge-window-horizontally
+ "C-M-<down>" 'shrink-window
+ "C-M-<up>" 'enlarge-window
+ "C-=" 'er/expand-region
+ "C--" 'er/contract-region
+ ;; }
  "M-i" 'pyim-convert-string-at-point ; <<pyim-csap>>
  "C-;" 'pyim-delete-word-from-personal-buffer
  ;; ...
@@ -80,8 +82,6 @@
  "bb" 'evil-scroll-page-up ; <<page-up>>
  "br" 'ibuffer
  "SPC" 'my/toggle-hideshow-block
- "++" 'er/expand-region
- "--" 'er/contract-region
  ;; ...
  )
 
@@ -180,7 +180,7 @@
 ;; prefix keybindings
 (general-define-key
  :prefix "C-x"
- "C-r" 'helm-recentf
+ "C-r" 'recentf
  ;; for buffer-move package | <<bm-k>>
  "<up>" 'buf-move-up
  "<down>" 'buf-move-down
