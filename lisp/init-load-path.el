@@ -20,12 +20,18 @@
 (push site-lisp-dir load-path)
 (sanityinc/add-subdirs-to-load-path site-lisp-dir)
 
+
+;; TODO: to be updated...
 ;; for `transient special structure
 (let ((transient-lisp-dir (expand-file-name "transient/lisp/" site-lisp-dir)))
   (push transient-lisp-dir load-path))
 ;; for `notmuch special structure
 (let ((notmuch-emacs-dir (expand-file-name "notmuch/emacs/" site-lisp-dir)))
   (push notmuch-emacs-dir load-path))
+;; for `org-roam special structure
+(let ((org-roam-extentions-dir (expand-file-name "org-roam/extensions/" site-lisp-dir)))
+  (push org-roam-extentions-dir load-path))
+
 
 
 (provide 'init-load-path)
