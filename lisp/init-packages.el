@@ -615,18 +615,15 @@
 
 ;; { -- start: if emacs is running in a terminal
 (unless (display-graphic-p)
-  (use-package term-keys
-    :straight (:type git :host github :repo "CyberShadow/term-keys")
-    :config
-    (term-keys-mode t)
-    ;; to configure alacritty for term-keys, use term-keys/alacritty-config to generate a alacritty.yml fragment:
-    ;; (require 'term-keys-alacritty)
-    ;; (with-temp-buffer
-    ;;   (insert (term-keys/alacritty-config))
-    ;;   (write-region (point-min) (point-max) "~/alacritty-for-term-keys.yml"))
-    ;; then, add the output to your main alacritty.yml file.
-    ;; via https://github.com/CyberShadow/term-keys#alacritty
-    )
+  (require 'term-keys)
+  (term-keys-mode t)
+  ;; to configure alacritty for term-keys, use term-keys/alacritty-config to generate a alacritty.yml fragment:
+  ;; (require 'term-keys-alacritty)
+  ;; (with-temp-buffer
+  ;;   (insert (term-keys/alacritty-config))
+  ;;   (write-region (point-min) (point-max) "~/alacritty-for-term-keys.yml"))
+  ;; then, add the output to your main alacritty.yml file.
+  ;; via https://github.com/CyberShadow/term-keys#alacritty
   )
 ;; -- end: if emacs is running in a terminal }
 
