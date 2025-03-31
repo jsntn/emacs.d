@@ -44,20 +44,8 @@
 (require 'evil-collection)
 (evil-collection-init)
 
-(use-package evil-leader
-  :config
-  (global-evil-leader-mode)
-  )
-
-(use-package evil-surround
-  :config
-  (global-evil-surround-mode 1)
-  )
-
-(use-package evil-visualstar
-  :config
-  (global-evil-visualstar-mode)
-  )
+(require 'evil-surround)
+(global-evil-surround-mode 1)
 
 
 
