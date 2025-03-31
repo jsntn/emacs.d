@@ -23,6 +23,9 @@
 ;; for `transient special structure
 (let ((transient-lisp-dir (expand-file-name "transient/lisp/" site-lisp-dir)))
   (push transient-lisp-dir load-path))
+;; for `notmuch special structure
+(let ((notmuch-emacs-dir (expand-file-name "notmuch/emacs/" site-lisp-dir)))
+  (push notmuch-emacs-dir load-path))
 
 
 (provide 'init-load-path)
