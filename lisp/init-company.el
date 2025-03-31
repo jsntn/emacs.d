@@ -164,8 +164,8 @@
 ;; minor inconvenience that can be solved:
 (setq company-selection-wrap-around t)
 ;; use tab key to cycle through suggestions.
-;; ('tng' means 'tab and go')
-(company-tng-configure-default)
+(require 'company-tng)
+(company-tng-configure-default) ; ('tng' means 'tab and go')
 
 (setq company-transformers '(delete-dups
 			     company-sort-by-occurrence))
