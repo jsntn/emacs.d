@@ -209,56 +209,54 @@
   :hook (prog-mode-hook . highlight-indent-guides-mode)
   )
 
-(use-package hl-todo
-  :config
-  (setq hl-todo-highlight-punctuation ":"
-	hl-todo-keyword-faces
-	`(
-	  ;; align with the org-todo-keyword-faces
-	  ("TODO" :foreground "white" :background "#5F87FF")
-	  ("DONE" :foreground "white" :background "#2E8B57")
-	  ("CLOSED" :foreground "white" :background "#2E8B57")
-	  ("CANCELED" :foreground "white" :background "#95A5A6")
-	  ("WAIT" :foreground "white" :background "#F9BC41")
-	  ("IN-PROGRESS" :foreground "white" :background "#3498DB")
-	  ("REPORT" :foreground "#C0C0C0" :background "#308014" :box (:line-width (-1 . -1)))
-	  ("BUG" :foreground "#E6DB74" :background "black" :box (:line-width (-1 . -1)))
-	  ("KNOWNCAUSE" :foreground "#9C91E4" :background "black" :box (:line-width (-1 . -1)))
-	  ("IMPROVEMENT" :foreground "#FF9900" :background "black" :box (:line-width (-1 . -1)))
-	  ("ENHANCEMENT" :foreground "#9900ff" :background "black" :box (:line-width (-1 . -1)))
-	  ("FEATURE" :foreground "#38761d" :background "black" :box (:line-width (-1 . -1)))
-	  ("FIXED" :foreground "#4B5556" :strike-through t :box (:line-width (-1 . -1)))
-	  ;; my own highlight keywords
-	  ("FIXME" :foreground "white" :background "red")
-	  ("DEBUG" :foreground "#E6DB74" :background "black" :box (:line-width (-1 . -1)))
-	  ("HACK" :foreground "#9C91E4" :background "black" :box (:line-width (-1 . -1)))
-	  ("REVIEW" :foreground "#F02660" :background "black" :box (:line-width (-1 . -1)))
-	  ("NOTE" :foreground "#C0C0C0" :background "#308014" :box (:line-width (-1 . -1)))
-	  ("DEPRECATED" font-lock-doc-face :strike-through t :box (:line-width (-1 . -1)))
-	  ("FOLLOWUP" :foreground "white" :background "#808A87" :box (:line-width (-1 . -1)))
-	  ("ANSWER" :foreground "white" :background "#808A87" :box (:line-width (-1 . -1)))
-	  ("MARK" :foreground "black" :background "#FFFFFF" :box (:line-width (-1 . -1)))
-	  ("IMPROVEMENT" :foreground "white" :background "#FF9900" :box (:line-width (-1 . -1)))
-	  ("ENHANCEMENT" :foreground "white" :background "#9900FF" :box (:line-width (-1 . -1)))
-	  ("FEATURE" :foreground "white" :background "#38761d" :box (:line-width (-1 . -1)))
-	  ("Linode" :foreground "white" :background "#999DF7")
-	  ("GitHub" :foreground "black" :background "#FFFFFF")
-	  ("via" :foreground "#5F87FF" :background "black" :box (:line-width (-1 . -1)))
-	  ("Via" :foreground "#5F87FF" :background "black" :box (:line-width (-1 . -1)))
-	  ("VIA" :foreground "#5F87FF" :background "black" :box (:line-width (-1 . -1)))
-	  ("Jason" :foreground "white" :background "#38761d" :box (:line-width (-1 . -1)))
-	  ("ChatGPT" :foreground "white" :background "#19C37D")
+(require 'hl-todo)
+(setq hl-todo-highlight-punctuation ":"
+      hl-todo-keyword-faces
+      `(
+	;; align with the org-todo-keyword-faces
+	("TODO" :foreground "white" :background "#5F87FF")
+	("DONE" :foreground "white" :background "#2E8B57")
+	("CLOSED" :foreground "white" :background "#2E8B57")
+	("CANCELED" :foreground "white" :background "#95A5A6")
+	("WAIT" :foreground "white" :background "#F9BC41")
+	("IN-PROGRESS" :foreground "white" :background "#3498DB")
+	("REPORT" :foreground "#C0C0C0" :background "#308014" :box (:line-width (-1 . -1)))
+	("BUG" :foreground "#E6DB74" :background "black" :box (:line-width (-1 . -1)))
+	("KNOWNCAUSE" :foreground "#9C91E4" :background "black" :box (:line-width (-1 . -1)))
+	("IMPROVEMENT" :foreground "#FF9900" :background "black" :box (:line-width (-1 . -1)))
+	("ENHANCEMENT" :foreground "#9900ff" :background "black" :box (:line-width (-1 . -1)))
+	("FEATURE" :foreground "#38761d" :background "black" :box (:line-width (-1 . -1)))
+	("FIXED" :foreground "#4B5556" :strike-through t :box (:line-width (-1 . -1)))
+	;; my own highlight keywords
+	("FIXME" :foreground "white" :background "red")
+	("DEBUG" :foreground "#E6DB74" :background "black" :box (:line-width (-1 . -1)))
+	("HACK" :foreground "#9C91E4" :background "black" :box (:line-width (-1 . -1)))
+	("REVIEW" :foreground "#F02660" :background "black" :box (:line-width (-1 . -1)))
+	("NOTE" :foreground "#C0C0C0" :background "#308014" :box (:line-width (-1 . -1)))
+	("DEPRECATED" font-lock-doc-face :strike-through t :box (:line-width (-1 . -1)))
+	("FOLLOWUP" :foreground "white" :background "#808A87" :box (:line-width (-1 . -1)))
+	("ANSWER" :foreground "white" :background "#808A87" :box (:line-width (-1 . -1)))
+	("MARK" :foreground "black" :background "#FFFFFF" :box (:line-width (-1 . -1)))
+	("IMPROVEMENT" :foreground "white" :background "#FF9900" :box (:line-width (-1 . -1)))
+	("ENHANCEMENT" :foreground "white" :background "#9900FF" :box (:line-width (-1 . -1)))
+	("FEATURE" :foreground "white" :background "#38761d" :box (:line-width (-1 . -1)))
+	("Linode" :foreground "white" :background "#999DF7")
+	("GitHub" :foreground "black" :background "#FFFFFF")
+	("via" :foreground "#5F87FF" :background "black" :box (:line-width (-1 . -1)))
+	("Via" :foreground "#5F87FF" :background "black" :box (:line-width (-1 . -1)))
+	("VIA" :foreground "#5F87FF" :background "black" :box (:line-width (-1 . -1)))
+	("Jason" :foreground "white" :background "#38761d" :box (:line-width (-1 . -1)))
+	("ChatGPT" :foreground "white" :background "#19C37D")
 	)
       )
-  ;; global-hl-todo-mode doesn't seem to work
-  ;; https://github.com/tarsius/hl-todo/issues/19
-  ;; https://github.com/tarsius/hl-todo/issues/45
-  (define-globalized-minor-mode my-global-hl-todo-mode hl-todo-mode
-    (lambda ()
-      (when (not (derived-mode-p 'magit-mode))
-	(hl-todo-mode 1))))
-  (my-global-hl-todo-mode 1)
-  )
+;; global-hl-todo-mode doesn't seem to work
+;; https://github.com/tarsius/hl-todo/issues/19
+;; https://github.com/tarsius/hl-todo/issues/45
+(define-globalized-minor-mode my-global-hl-todo-mode hl-todo-mode
+  (lambda ()
+    (when (not (derived-mode-p 'magit-mode))
+      (hl-todo-mode 1))))
+(my-global-hl-todo-mode 1)
 
 (use-package imenu-list)
 
@@ -281,11 +279,9 @@
 
 (require 'mr-poker)
 
-(use-package neotree
-  :config
-  (setq neo-smart-open t)
-  (setq neo-window-fixed-size nil)
-  )
+(require 'neotree)
+(setq neo-smart-open t)
+(setq neo-window-fixed-size nil)
 
 (require 'orderless)
 (setq completion-styles '(orderless basic))
@@ -433,11 +429,9 @@
     ;; location, see https://github.com/org-roam/org-roam-ui/issues/236
     ))
 
-(use-package pangu-spacing
-  :config
-  (global-pangu-spacing-mode 1)
-  (setq pangu-spacing-real-insert-separtor t)
-  )
+(require 'pangu-spacing)
+(global-pangu-spacing-mode 1)
+(setq pangu-spacing-real-insert-separtor t)
 
 (require 'pinyinlib)
 ;; TL; DR
@@ -602,14 +596,11 @@
   (smooth-scrolling-mode 1))
 
 
-(use-package super-save
-  :delight
-  :config
-  (super-save-mode +1)
-  (setq super-save-auto-save-when-idle t)
-  (setq auto-save-default nil)
-  (setq super-save-exclude '(".gpg"))
-  )
+(require 'super-save)
+(super-save-mode +1)
+(setq super-save-auto-save-when-idle t)
+(setq auto-save-default nil)
+(setq super-save-exclude '(".gpg"))
 
 (require 'swiper)
 
@@ -668,16 +659,12 @@
 
 (use-package yaml-mode)
 
-(use-package yasnippet
-  :config
-  (add-to-list 'yas-snippet-dirs (expand-file-name "snippets" user-emacs-directory))
-  (yas-global-mode 1)
-  :hook (after-init . yas-global-mode)
-  )
+(require 'yasnippet)
+(add-to-list 'yas-snippet-dirs (expand-file-name "snippets" user-emacs-directory))
+(yas-global-mode 1)
+(add-hook 'after-init-hook #'yas-global-mode)
 
-(use-package yasnippet-snippets
-  :after (yasnippet)
-  )
+(require 'yasnippet-snippets)
 
 
 (provide 'init-packages)
