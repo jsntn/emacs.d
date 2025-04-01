@@ -46,7 +46,7 @@
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;; swap buffers, keybindings -> [[./init-keybindings.el::bm-k]]
-(use-package buffer-move)
+(require 'buffer-move)
 
 (unless (display-graphic-p)
   (use-package clipetty
@@ -286,11 +286,9 @@
 (require 'orderless)
 (setq completion-styles '(orderless basic))
 
-(use-package org-bullets
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-  (setq org-bullets-bullet-list '("◼️" "○" "¶" "►"))
-  )
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(setq org-bullets-bullet-list '("◼️" "○" "¶" "►"))
 
 (require 'org-drill)
 ;; make all agenda files with any archive files associated with them as the
@@ -298,23 +296,22 @@
 (setq org-drill-scope 'agenda-with-archives)
 (setq org-drill-leech-method "warn")
 
-(use-package org-modern
-  :config
-  (global-org-modern-mode)
-  (set-face-attribute 'org-modern-label nil
-		      :height 0.95) ; adjusted the height, and this style is
-				    ; inherited by many other places
-  (setq
-   org-modern-star nil
-   org-modern-hide-stars nil
-   org-modern-todo nil
-   org-modern-faces nil
-   org-modern-label-border nil
-   org-modern-block-name '("‣ " . "‣ ")
-   ;; for some more parameters configuration, refer to
-   ;; https://github.com/minad/org-modern/blob/main/org-modern.el
-   )
-  )
+(require 'org-modern)
+(add-hook 'org-mode-hook #'org-modern-mode)
+(add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+(set-face-attribute 'org-modern-label nil
+		    :height 0.95) ; adjusted the height, and this style is
+					; inherited by many other places
+(setq
+ org-modern-star nil
+ org-modern-hide-stars nil
+ org-modern-todo nil
+ org-modern-faces nil
+ org-modern-label-border nil
+ org-modern-block-name '("‣ " . "‣ ")
+ ;; for some more parameters configuration, refer to
+ ;; https://github.com/minad/org-modern/blob/main/org-modern.el
+ )
 
 (require 'org-super-agenda) ; <<org-super-agenda>>
 
@@ -634,13 +631,11 @@
   ;; via http://xahlee.info/emacs/misc/emacs_open_large_file_slow.html
   )
 
-(use-package which-key
-  :config
-  ;; allow C-h to trigger which-key before it is done automatically
-  (setq which-key-show-early-on-C-h t)
-  (which-key-mode 1)
-  (which-key-setup-side-window-bottom)
-  )
+(require 'which-key)
+;; allow C-h to trigger which-key before it is done automatically
+(setq which-key-show-early-on-C-h t)
+(which-key-mode 1)
+(which-key-setup-side-window-bottom)
 
 
 (use-package workgroups2
