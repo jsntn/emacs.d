@@ -60,6 +60,7 @@
     projectile-mode
     pyim-isearch-mode
     ;; smooth-scroll-mode
+    super-save-mode
     undo-tree-mode
     which-key-mode
     evil-collection-unimpaired-mode
