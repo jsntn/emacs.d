@@ -257,6 +257,17 @@
 (use-package imenu-list)
 
 (require 'ivy)
+;; better performance on everything (especially windows), ivy-0.10.0 required
+;; @see https://github.com/abo-abo/swiper/issues/1218
+(setq ivy-dynamic-exhibit-delay-ms 250)
+;; Press C-p and Enter to select current input as candidate
+;; https://oremacs.com/2017/11/30/ivy-0.10.0/
+(setq ivy-use-selectable-prompt t)
+(setq ivy-re-builders-alist
+      '((t . orderless-ivy-re-builder)))
+(add-to-list 'ivy-highlight-functions-alist
+	     '(orderless-ivy-re-builder . orderless-ivy-highlight))
+;; from https://github.com/oantolin/orderless/blob/96b74d2450ab4ab1a175d0e86c62f6695c4709b5/README.org#ivy
 
 (require 'keyfreq)
 (keyfreq-mode 1)
@@ -431,6 +442,7 @@
 ;; this config is via
 ;; https://app.raindrop.io/my/0/#pinyinlib
 (defun re-builder-extended-pattern (str)
+  (require 'ivy)
   (let* ((len (length str)))
     (cond
      ;; do nothing
@@ -463,30 +475,6 @@
 	(setq str rlt))))
     (ivy--regex-plus str)))
 
-(eval-after-load 'ivy
-  '(progn
-     ;; better performance on everything (especially windows), ivy-0.10.0 required
-     ;; @see https://github.com/abo-abo/swiper/issues/1218
-     (setq ivy-dynamic-exhibit-delay-ms 250)
-
-     ;; Press C-p and Enter to select current input as candidate
-     ;; https://oremacs.com/2017/11/30/ivy-0.10.0/
-     (setq ivy-use-selectable-prompt t)
-
-     (setq ivy-re-builders-alist
-	   '((t . re-builder-extended-pattern)))
-     ;; set actions when running C-x b
-     ;; replace "frame" with window to open in new window
-     (ivy-set-actions
-      'ivy-switch-buffer-by-pinyin
-      '(("j" switch-to-buffer-other-frame "other frame")
-	("k" kill-buffer "kill")
-	("r" ivy--rename-buffer-action "rename")))))
-
-(with-eval-after-load "swiper-isearch"
-  (setq ivy-re-builders-alist
-	'((t . re-builder-extended-pattern)
-	  (t . ivy-prescient-re-builder))))
 
 
 (use-package projectile
@@ -594,6 +582,12 @@
 (setq super-save-exclude '(".gpg"))
 
 (require 'swiper)
+(defun my/swiper (&optional arg)
+  (interactive "P")
+  (if arg
+      (let ((ivy-re-builders-alist '((t . re-builder-extended-pattern))))
+        (swiper))
+    (swiper)))
 
 ;; { -- start: if emacs is running in a terminal
 (unless (display-graphic-p)

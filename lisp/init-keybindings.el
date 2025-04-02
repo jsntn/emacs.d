@@ -25,7 +25,7 @@
 
 ;; global keybindings
 (general-define-key
- "C-s" 'swiper ; having own history variable allows to get more use of M-p, M-n
+ "C-s" 'my/swiper ; having own history variable allows to get more use of M-p, M-n
 	       ; and C-r.
  ;; 2025/3/30: This is supported by repeat-mode,
  ;; M-x repeat-mode
