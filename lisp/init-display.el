@@ -41,6 +41,7 @@
 ;; from https://emacs.stackexchange.com/a/3928/29715
 (defvar my-hidden-minor-modes
   '(abbrev-mode
+    ace-pinyin-mode
     auto-capitalize-mode
     auto-fill-function
     auto-revert-mode
