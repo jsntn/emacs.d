@@ -33,7 +33,7 @@
 (setq ace-pinyin-use-avy nil) ; do not use `avy' but `ace-jump-mode'
 (ace-pinyin-global-mode +1)
 
-(use-package annotate)
+(require 'annotate)
 
 
 
