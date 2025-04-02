@@ -26,24 +26,20 @@
 ;; keybindings:
 ;; [[./init-keybindings.el::ajm-1]]
 ;; [[./init-keybindings.el::ajm-2]]
-(use-package ace-jump-mode)
+(require 'ace-jump-mode)
 
 ;; jump to Chinese character by pinyin with `avy' or `ace-jump-mode'
-(use-package ace-pinyin
-  :delight
-  :config
-  (setq ace-pinyin-use-avy nil) ; use `ace-jump-mode'
-  (ace-pinyin-global-mode +1)
-  )
+(require 'ace-pinyin)
+(setq ace-pinyin-use-avy nil) ; do not use `avy' but `ace-jump-mode'
+(ace-pinyin-global-mode +1)
 
 (use-package annotate)
 
 
 
-(use-package benchmark-init
-  :config
+(require 'benchmark-init)
   ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+(add-hook 'after-init-hook 'benchmark-init/deactivate)
 
 ;; swap buffers, keybindings -> [[./init-keybindings.el::bm-k]]
 (require 'buffer-move)
@@ -262,13 +258,11 @@
 
 (require 'ivy)
 
-(use-package keyfreq
-  :config
-  (keyfreq-mode 1)
-  (keyfreq-autosave-mode 1)
-  (setq keyfreq-file (expand-file-name ".emacs.keyfreq" user-emacs-directory))
-  (setq keyfreq-file-lock (expand-file-name ".emacs.keyfreq.lock" user-emacs-directory))
-  )
+(require 'keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+(setq keyfreq-file (expand-file-name ".emacs.keyfreq" user-emacs-directory))
+(setq keyfreq-file-lock (expand-file-name ".emacs.keyfreq.lock" user-emacs-directory))
 
 (use-package marginalia
   :init
