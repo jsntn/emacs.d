@@ -85,38 +85,13 @@
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			 ("melpa" . "https://melpa.org/packages/")))
 ;; Official MELPA Mirror, in case necessary.
-;;(add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t) 
+;;(add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t)
 
 (when (string-equal (getenv "ELPA") "local")
   ;; when running on GitHub w/ local elpa Actions config, overwrite above `package-archives'
   (defvar myelpa-url (concat (getenv "GITHUB_WORKSPACE") "/myelpa/"))
   (setq package-archives `(("myelpa" . ,myelpa-url))))
 
-;; install straight.el
-;; https://github.com/radian-software/straight.el#getting-started
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-	(url-retrieve-synchronously
-	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	 'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(when (or (string-equal (getenv "ELPA") "local")
-	  (string-equal (getenv "STRAIGHT") "freeze"))
-  (let ((source (expand-file-name "straight/versions/my.el" user-emacs-directory))
-	(destination (expand-file-name "straight/versions/default.el" user-emacs-directory)))
-    (when (file-exists-p source)
-      (copy-file source destination t))))
-
-;; tell straight.el to not clone Org if it is required,
-;; just use the built-in Org instead,
-(add-to-list 'straight-built-in-pseudo-packages 'org)
 
 (package-initialize)
 (unless package-archive-contents
