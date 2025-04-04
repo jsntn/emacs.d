@@ -263,11 +263,6 @@
 ;; Press C-p and Enter to select current input as candidate
 ;; https://oremacs.com/2017/11/30/ivy-0.10.0/
 (setq ivy-use-selectable-prompt t)
-(setq ivy-re-builders-alist
-      '((t . orderless-ivy-re-builder)))
-(add-to-list 'ivy-highlight-functions-alist
-	     '(orderless-ivy-re-builder . orderless-ivy-highlight))
-;; from https://github.com/oantolin/orderless/blob/96b74d2450ab4ab1a175d0e86c62f6695c4709b5/README.org#ivy
 
 (require 'keyfreq)
 (keyfreq-mode 1)
@@ -289,7 +284,6 @@
 (setq neo-window-fixed-size nil)
 
 (require 'orderless)
-(setq completion-styles '(orderless basic))
 
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
@@ -474,6 +468,8 @@
 	    (setq i (1+ i))))
 	(setq str rlt))))
     (ivy--regex-plus str)))
+(setq ivy-re-builders-alist
+      '((t . re-builder-extended-pattern)))
 
 
 
@@ -568,12 +564,6 @@
 (setq super-save-exclude '(".gpg"))
 
 (require 'swiper)
-(defun my/swiper (&optional arg)
-  (interactive "P")
-  (if arg
-      (let ((ivy-re-builders-alist '((t . re-builder-extended-pattern))))
-        (swiper))
-    (swiper)))
 
 ;; { -- start: if emacs is running in a terminal
 (unless (display-graphic-p)
