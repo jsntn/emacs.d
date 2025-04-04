@@ -521,7 +521,7 @@
 	  (setq str rlt))))
       (ivy--regex-plus str)))
 
-  (eval-after-load 'ivy
+  (with-eval-after-load 'ivy
     '(progn
        ;; better performance on everything (especially windows), ivy-0.10.0 required
        ;; @see https://github.com/abo-abo/swiper/issues/1218
@@ -533,18 +533,11 @@
 
        (setq ivy-re-builders-alist
 	     '((t . re-builder-extended-pattern)))
-       ;; set actions when running C-x b
-       ;; replace "frame" with window to open in new window
-       (ivy-set-actions
-	'ivy-switch-buffer-by-pinyin
-	'(("j" switch-to-buffer-other-frame "other frame")
-	  ("k" kill-buffer "kill")
-	  ("r" ivy--rename-buffer-action "rename")))))
+       ))
 
-  (with-eval-after-load "swiper-isearch"
+  (with-eval-after-load 'swiper
     (setq ivy-re-builders-alist
-	  '((t . re-builder-extended-pattern)
-	    (t . ivy-prescient-re-builder))))
+	  '((t . re-builder-extended-pattern))))
   )
 
 (use-package projectile
