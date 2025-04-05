@@ -6,8 +6,6 @@
 
 (use-package delight)
 
-(use-package diminish)
-
 (require 'doom-themes)
 
 ;; global settings (defaults)

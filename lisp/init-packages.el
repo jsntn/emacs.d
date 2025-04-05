@@ -75,12 +75,7 @@
 
 
 
-(when (memq window-system '(mac ns))
-  (use-package exec-path-from-shell
-    :config
-    (exec-path-from-shell-initialize)
-    )
-  )
+
 
 (require 'expand-region)
 
@@ -363,9 +358,7 @@
 
 
 
-(use-package ox-hugo
-  :after ox
-  )
+
 
 ;; play animated GIF or PNG inline in Org buffers
 ;; M-x org-inline-anim-animate (or C-c C-x m) when the point is on the image
