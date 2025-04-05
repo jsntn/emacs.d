@@ -73,17 +73,6 @@
 ;; C-u M-x elgrep: search the directory recursively
 (require 'elgrep)
 
-(use-package elpa-mirror)
-
-;; (use-package elpy
-;;   :config
-;;   (elpy-enable)
-;;   ;; use flycheck instead of flymake
-;;   (when (load "flycheck" t t)
-;;     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-;;     (add-hook 'elpy-mode-hook 'flycheck-mode))
-;;   )
-
 
 
 (when (memq window-system '(mac ns))
@@ -270,12 +259,9 @@
 (setq keyfreq-file (expand-file-name ".emacs.keyfreq" user-emacs-directory))
 (setq keyfreq-file-lock (expand-file-name ".emacs.keyfreq.lock" user-emacs-directory))
 
-(use-package marginalia
-  :init
-  (marginalia-mode)
-  :config
-  (setq marginalia-field-width 9999999) ; maximize the width of marginalia field
-  )
+(require 'marginalia)
+(marginalia-mode)
+(setq marginalia-field-width 9999999) ; maximize the width of marginalia field
 
 (require 'mr-poker)
 
@@ -474,20 +460,7 @@
 
 
 
-(use-package projectile
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-	      ("C-c p" . projectile-command-map))
-  :config
-  (setq projectile-completion-system 'default)
-  (setq projectile-enable-caching t)
-  ;; the alien indexing method uses external tools (e.g. git, find, etc) to speed up the indexing process.
-  (setq projectile-indexing-method 'alien)
-  (add-to-list 'projectile-globally-ignored-files "node_modules")
-  (add-to-list 'projectile-globally-ignored-files ".cache")
-  (add-to-list 'projectile-globally-ignored-files "_cache")
-  )
+
 
 (require 'pyim)
 
@@ -586,15 +559,7 @@
   :init
   (vertico-mode))
 
-(use-package vlf
-  :config
-  (require 'vlf-setup)
-  ;; without this package,
-  ;; Alt+x global-font-lock-mode and Alt+x global-linum-mode
-  ;; then, open the large file.
-  ;; another way to solve the opening large file problem is by using Alt+x find-file-literally. It'll open the file without syntax coloring, and without interpreting Unicode.
-  ;; via http://xahlee.info/emacs/misc/emacs_open_large_file_slow.html
-  )
+
 
 (require 'which-key)
 ;; allow C-h to trigger which-key before it is done automatically
