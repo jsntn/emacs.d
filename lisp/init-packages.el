@@ -316,7 +316,7 @@
 
 (setq org-agenda-compact-blocks t
       org-agenda-start-day "+0d")
-(org-super-agenda-mode 1)
+(add-hook 'org-agenda-mode-hook #'org-super-agenda-mode)
 
 (setq org-agenda-custom-commands
       ;; these org-agenda-custom-commands configurations here cannot be
@@ -407,7 +407,8 @@
 	    ;; ripgrep (rg) is used for unlinked references below - (executable-find "rg")
 	    ;; #'org-roam-unlinked-references-section
 	    ))
-(run-with-idle-timer 30 nil #'org-roam-db-autosync-mode)
+(with-eval-after-load 'org-roam
+  (run-with-idle-timer 30 nil #'org-roam-db-autosync-mode))
 
 
 
@@ -549,8 +550,8 @@
       (set-cursor-color "red"))))
 
 ;; M-x my-pyim/simp2trad
-(load-file (concat user-emacs-directory "misc/pyim-simp2trad.el"))
-
+(autoload 'my-pyim/simp2trad (concat user-emacs-directory "misc/pyim-simp2trad.el")
+  "Load pyim-simp2trad.el on demand." t)
 
 
 
