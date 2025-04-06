@@ -31,6 +31,9 @@
 ;; for `org-roam special structure
 (let ((org-roam-extentions-dir (expand-file-name "org-roam/extensions/" site-lisp-dir)))
   (push org-roam-extentions-dir load-path))
+;; for `workgroups2 special structure
+(let ((transient-lisp-dir (expand-file-name "workgroups2/src/" site-lisp-dir)))
+  (push transient-lisp-dir load-path))
 
 
 
