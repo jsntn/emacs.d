@@ -89,13 +89,15 @@
     ))
 
 
-(use-package emojify
-  :init
-  (global-emojify-mode)
-  :config
-  (setq emojify-company-tooltips-p t)
-  (setq emojify-display-style 'unicode)
+(setq emojify-set-emoji-styles '(github))
+(if (display-graphic-p)
+    (progn
+      (setq emojify-display-style 'image) ; 'image is the default value
+      (setq emojify-emoji-set "emojione-v2.2.6-22"))
+  (setq emojify-display-style 'unicode) ; make :smile: display correctly
   )
+(require 'emojify)
+(global-emojify-mode)
 ;; END: display the emojis }}
 
 
