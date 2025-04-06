@@ -5,22 +5,20 @@
 
 
 ;; a utility package to collect various Icon Fonts and propertize them within Emacs.
-(use-package all-the-icons
-  :config
-  ;; check if all-the-icons is installed
-  ;; reference
-  ;; https://github.com/domtronn/all-the-icons.el/issues/120
-  (when (display-graphic-p) ; if not in terminal Emacs
-    ;; if not on Windows and all-the-icons is not installed
-    (unless (equal system-type 'windows-nt)
-      (unless (member "all-the-icons" (font-family-list))
-	(all-the-icons-install-fonts t)
-	)
+(require 'all-the-icons)
+;; check if all-the-icons is installed
+;; reference
+;; https://github.com/domtronn/all-the-icons.el/issues/120
+(when (display-graphic-p) ; if not in terminal Emacs
+  ;; if not on Windows and all-the-icons is not installed
+  (unless (equal system-type 'windows-nt)
+    (unless (member "all-the-icons" (font-family-list))
+      (all-the-icons-install-fonts t)
       )
-    ;; all-the-icons configuration
-    (require 'all-the-icons))
-  (setq inhibit-compacting-font-caches t)
-  )
+    )
+  ;; all-the-icons configuration
+  (require 'all-the-icons))
+(setq inhibit-compacting-font-caches t)
 
 ;; a quick cursor jump mode for emacs
 ;; keybindings:
@@ -70,11 +68,11 @@
 
 (require 'expand-region)
 
-(use-package flycheck)
+(require 'flycheck)
 
 (require 'general)
 
-(use-package git-messenger)
+(require 'git-messenger)
 
 (use-package git-timemachine)
 
@@ -342,10 +340,8 @@
 
 	))
 
-(use-package orglink
-  :delight
-  :config
-  (global-orglink-mode))
+(require 'orglink)
+(global-orglink-mode)
 
 
 
@@ -355,10 +351,8 @@
 ;; M-x org-inline-anim-animate (or C-c C-x m) when the point is on the image
 ;; with a single prefix (C-u), the animation will play and loop
 ;; you can stop it with a double prefix (C-u C-u)
-(use-package org-inline-anim
-  :config
-  (add-hook 'org-mode-hook #'org-inline-anim-mode)
-  )
+(require 'org-inline-anim)
+(add-hook 'org-mode-hook #'org-inline-anim-mode)
 
 ;; { START: Org-roam
 (unless (executable-find "rg")
@@ -552,21 +546,16 @@
 (which-key-setup-side-window-bottom)
 
 
-(use-package workgroups2
-  :config
-  (setq wg-session-load-on-start t) ; default: (not (daemonp))
+(require 'workgroups2)
+(setq wg-session-load-on-start t) ; default: (not (daemonp))
+;; change workgroups session file
+(setq wg-session-file
+      (expand-file-name ".emacs_workgroups" user-emacs-directory))
+(workgroups-mode 1)
+;; display workgroups in mode line
+(setq wg-mode-line-display-on t) ; default: (not (featurep 'powerline))
 
-  ;; change workgroups session file
-  (setq wg-session-file
-	(expand-file-name ".emacs_workgroups" user-emacs-directory))
-
-  (workgroups-mode 1)
-
-  ;; display workgroups in mode line
-  (setq wg-mode-line-display-on t) ; default: (not (featurep 'powerline))
-  )
-
-(use-package yaml-mode)
+(require 'yaml-mode)
 
 (require 'yasnippet)
 (add-to-list 'yas-snippet-dirs (expand-file-name "snippets" user-emacs-directory))
