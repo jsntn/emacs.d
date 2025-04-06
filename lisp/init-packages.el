@@ -44,16 +44,7 @@
 ;; swap buffers, keybindings -> [[./init-keybindings.el::bm-k]]
 (require 'buffer-move)
 
-(unless (display-graphic-p)
-  (use-package clipetty
-    ;; clipetty is aiming at sending text that you kill in Emacs to your
-    ;; Operating System's clipboard, but not the reverse,
-    ;; https://github.com/spudlyo/clipetty/issues/10
-    :disabled ; disable for now as I am using Alacritty and it has its own
-	      ; clipboard support
-    :hook (after-init . global-clipetty-mode)
-    )
-  )
+
 
 
 
