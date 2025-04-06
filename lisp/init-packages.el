@@ -533,9 +533,8 @@
 
 
 
-(use-package vertico
-  :init
-  (vertico-mode))
+(require 'vertico)
+(vertico-mode)
 
 
 
