@@ -46,14 +46,20 @@
     company-mode
     company-posframe-mode
     dired-async-mode
+    eldoc-mode
+    evil-collection-unimpaired-mode
     flycheck-mode
     flyspell-mode
     ;; haskell-indent-mode
     ;; haskell-doc-mode
     highlight-parentheses-mode
     highlight-symbol-mode
+    hs-minor-mode
     ;; inf-haskell-mode
+    org-indent-mode
+    orglink-mode
     org-cdlatex-mode
+    org-remark-global-tracking-mode
     org-roam-mode
     pangu-spacing-mode
     projectile-mode
@@ -62,12 +68,7 @@
     super-save-mode
     undo-tree-mode
     which-key-mode
-    evil-collection-unimpaired-mode
-    hs-minor-mode
-    org-remark-global-tracking-mode
     yas-minor-mode
-    eldoc-mode
-    org-indent-mode
     ))
 
 (defun my/purge-minor-modes ()
