@@ -537,7 +537,7 @@
   )
 ;; -- end: if emacs is running in a terminal }
 
-(use-package toc-org)
+
 
 (use-package vertico
   :init
