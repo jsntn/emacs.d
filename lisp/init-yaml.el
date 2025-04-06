@@ -3,6 +3,8 @@
 ;;; Code:
 
 
+(require 'yaml-mode)
+
 (my-check-for-executable "js-yaml" "js-yaml") ; flycheck
 
 (defun my/yaml-mode-config ()

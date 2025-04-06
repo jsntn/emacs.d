@@ -554,7 +554,6 @@
 ;; display workgroups in mode line
 (setq wg-mode-line-display-on t) ; default: (not (featurep 'powerline))
 
-(require 'yaml-mode)
 
 (require 'yasnippet)
 (add-to-list 'yas-snippet-dirs (expand-file-name "snippets" user-emacs-directory))
