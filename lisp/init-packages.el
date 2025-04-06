@@ -227,7 +227,7 @@
       (hl-todo-mode 1))))
 (my-global-hl-todo-mode 1)
 
-(use-package imenu-list)
+(require 'imenu-list)
 
 (require 'ivy)
 ;; better performance on everything (especially windows), ivy-0.10.0 required

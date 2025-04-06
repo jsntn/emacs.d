@@ -66,8 +66,13 @@
  :keymaps 'imenu-list-major-mode-map
  "g" 'evil-goto-first-line
  "G" 'evil-goto-line
- "j" 'evil-next-line
- "k" 'evil-previous-line
+ "j" 'next-line
+ "k" 'previous-line
+ "r" 'imenu-list-refresh
+ "q" 'imenu-list-quit-window
+ "RET" 'imenu-list-ret-dwim
+ "SPC" 'imenu-list-display-dwim
+ "TAB" 'hs-toggle-hiding
  )
 
 (general-define-key
