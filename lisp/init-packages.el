@@ -355,14 +355,6 @@
 (add-hook 'org-mode-hook #'org-inline-anim-mode)
 
 ;; { START: Org-roam
-(unless (executable-find "rg")
-  (when (string= (which-linux-release-info "distributor") "Ubuntu")
-    (if (string< (which-linux-release-info "release") "18.10")
-	(shell-command "sudo curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb && sudo dpkg -i ripgrep_13.0.0_amd64.deb && sudo rm -rf ripgrep_13.0.0_amd64.deb")
-      (shell-command "sudo apt-get install ripgrep")
-      )
-    )
-  )
 
 (require 'org-roam)
 (setq org-roam-mode-sections
@@ -373,8 +365,6 @@
 	    ))
 (with-eval-after-load 'org-roam
   (run-with-idle-timer 30 nil #'org-roam-db-autosync-mode))
-
-
 
 (my-check-for-executable "ripgrep (rg)" "rg")
 ;; END: Org-roam }
