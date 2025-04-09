@@ -57,6 +57,9 @@ Version 2023-08-03"
   (require 'sdcv)
 
   (setq sdcv-dictionary-data-dir "/usr/share/stardict/dic/")
+  (let ((dir sdcv-dictionary-data-dir))
+    (unless (file-exists-p dir)
+      (make-directory dir t)))
   (global-set-key (kbd "C-c d") 'sdcv-search-pointer)
 
   ;; extract my dictionaries of ~/misc/*.bz2 files to stardict dictionary folder
@@ -76,7 +79,7 @@ Version 2023-08-03"
 		(dolist (file files)
 		  (let ((abs-file (concat dir "/" file)))
 		    (shell-command
-		     (format "sudo tar -xjvf %s -C /usr/share/stardict/dic" abs-file)))
+		     (format "sudo tar -xjvf %s -C %s" abs-file sdcv-dictionary-data-dir)))
 		  (with-temp-buffer
 		    (set-buffer-file-coding-system 'utf-8-unix)
 		    (insert file)
