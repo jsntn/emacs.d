@@ -29,6 +29,8 @@ Version 2023-08-03"
 ;; END }}
 
 
+(require 'company-english-helper)
+
 (when *is-win*
   ;; only use this on Windows, as I am using
   ;; Andy Stewart's sdcv on my ArchLinux
