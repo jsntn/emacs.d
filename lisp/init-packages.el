@@ -169,11 +169,20 @@
   )
 ;; -- END -- }
 
-(use-package highlight-indent-guides
-  :config
-  (setq highlight-indent-guides-method 'column)
-  :hook (prog-mode-hook . highlight-indent-guides-mode)
-  )
+(require 'highlight-indent-guides)
+(setq highlight-indent-guides-auto-enabled nil)
+(set-face-background 'highlight-indent-guides-odd-face "darkgray")
+(set-face-background 'highlight-indent-guides-even-face "dimgray")
+(set-face-foreground 'highlight-indent-guides-character-face "#555555")
+(setq highlight-indent-guides-method 'character)
+(add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
+;; In some configurations, the following error might show up when emacs starts:
+;; Error: highlight-indent-guides cannot auto set faces: `default' face is not set properly
+;; This is meant as a warning for when the faces can't be set, but in some
+;; situations the error might show up even when the faces are set properly. If
+;; this happens regularly, the error can be suppressed by,
+;; (setq highlight-indent-guides-suppress-auto-error t)
+
 
 (require 'hl-todo)
 (setq hl-todo-highlight-punctuation ":"
