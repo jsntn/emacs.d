@@ -63,7 +63,6 @@
 
 
 (dolist (my-org-mode-hook-settings '(
-		toc-org-mode
 		my/modify-org-done-face
 		))
   (add-hook 'org-mode-hook my-org-mode-hook-settings))
