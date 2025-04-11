@@ -52,6 +52,7 @@
     flyspell-mode
     ;; haskell-indent-mode
     ;; haskell-doc-mode
+    highlight-indent-guides-mode
     highlight-parentheses-mode
     highlight-symbol-mode
     hs-minor-mode
