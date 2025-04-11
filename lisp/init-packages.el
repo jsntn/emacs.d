@@ -72,9 +72,6 @@
 
 (require 'general)
 
-(require 'git-messenger)
-
-(use-package git-timemachine)
 
 
 ;; { -- START --
