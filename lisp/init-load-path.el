@@ -22,6 +22,9 @@
 
 
 ;; TODO: to be updated...
+;; for `magit special structure
+(let ((magit-lisp-dir (expand-file-name "magit/lisp/" site-lisp-dir)))
+  (push magit-lisp-dir load-path))
 ;; for `transient special structure
 (let ((transient-lisp-dir (expand-file-name "transient/lisp/" site-lisp-dir)))
   (push transient-lisp-dir load-path))
@@ -31,9 +34,12 @@
 ;; for `org-roam special structure
 (let ((org-roam-extentions-dir (expand-file-name "org-roam/extensions/" site-lisp-dir)))
   (push org-roam-extentions-dir load-path))
+;; for `with-editor special structure
+(let ((with-editor-lisp-dir (expand-file-name "with-editor/lisp/" site-lisp-dir)))
+  (push with-editor-lisp-dir load-path))
 ;; for `workgroups2 special structure
-(let ((transient-lisp-dir (expand-file-name "workgroups2/src/" site-lisp-dir)))
-  (push transient-lisp-dir load-path))
+(let ((workgroups2-lisp-dir (expand-file-name "workgroups2/src/" site-lisp-dir)))
+  (push workgroups2-lisp-dir load-path))
 
 
 
