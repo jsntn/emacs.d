@@ -26,6 +26,11 @@
   :program "black"
   :args '("-"))
 
+(my-check-for-executable "Tidy" "tidy")
+(reformatter-define my/xml-format
+  :program "tidy"
+  :args '("-quiet" "-indent" "-xml")
+  )
 ;; END: reformatter config
 
 
