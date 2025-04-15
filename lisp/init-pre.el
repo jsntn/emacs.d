@@ -58,7 +58,7 @@
 
 
 
-(defun my/set-windows-paths (custom-paths-list)
+(defun my--set-windows-paths (custom-paths-list)
   "Set the PATH and exec-path in sync for Windows-NT system type
 based on the given list of paths.
 
@@ -78,7 +78,7 @@ Version: 2023-09-27"
 ;; 	"C:/msys64/mingw64/bin/"
 ;; 	,(symbol-value 'windows-portable-bin-directory)
 ;; 	))
-;; (my/set-windows-paths my-windows-paths)
+;; (my--set-windows-paths my-windows-paths)
 ;; (getenv "PATH")
 
 ;; Difference between exec-path and PATH
