@@ -230,11 +230,13 @@ Version: 2023/09/27"
 					(delete-dups (append org-agenda-files
 							     (when (and org-directory (not (string= org-directory "")))
 							       (directory-files-recursively org-directory "\\.org$")))))
-				  (setq org-agenda-files
-					(delete-dups
-					 (append org-agenda-files
-						 (when (and org-mobile-directory (not (string= org-mobile-directory "")))
-						   (directory-files-recursively org-mobile-directory "\\.org$")))))
+
+				  (when (file-exists-p org-mobile-directory)
+				    (setq org-agenda-files
+					  (delete-dups
+					   (append org-agenda-files
+						   (when (and org-mobile-directory (not (string= org-mobile-directory "")))
+						     (directory-files-recursively org-mobile-directory "\\.org$"))))))
 
 				  ;; remove the duplicates like below,
 				  ;; ("~/abc.org" "/Users/jason/abc.org")
