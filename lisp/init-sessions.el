@@ -70,6 +70,7 @@
         register-alist
         (search-ring              . 20)
         (shell-command-history    . 50)
+	(swiper-history           . 50)
         tags-file-name
         tags-table-list))
 
