@@ -89,7 +89,6 @@
     ))
 
 
-(setq emojify-set-emoji-styles '(github))
 (if (display-graphic-p)
     (progn
       (setq emojify-display-style 'image) ; 'image is the default value
@@ -97,7 +96,7 @@
   (setq emojify-display-style 'unicode) ; make :smile: display correctly
   )
 (require 'emojify)
-(global-emojify-mode)
+(add-hook 'after-init-hook #'global-emojify-mode)
 ;; END: display the emojis }}
 
 
