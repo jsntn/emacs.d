@@ -19,6 +19,32 @@
 
 (my-run-after-emacs-startup 'desktop-read)
 
+
+
+
+;; https://web.archive.org/web/20240509044606/http://xahlee.info/emacs/emacs/emacs_save_command_history.html
+(require 'savehist)
+;; from https://web.archive.org/web/20240509044708/https://emacs-china.org/t/emacs/17606/9
+(setq enable-recursive-minibuffers t ; allow commands in minibuffers
+      history-length 1000
+      savehist-additional-variables '(mark-ring
+				      global-mark-ring
+				      )
+      savehist-autosave-interval 6)
+;; by default, the command histories are saved to ~/.emacs.d/history
+(savehist-mode 1)
+
+
+(add-hook 'after-init-hook 'savehist-mode)
+
+(require 'session)
+(setq session-save-file (locate-user-emacs-file ".session"))
+(setq session-name-disable-regexp "\\(?:\\`'/tmp\\|\\.git/[A-Z_]+\\'\\)")
+(setq session-save-file-coding-system 'utf-8)
+
+
+
+
 ;; save a bunch of variables to the desktop file
 ;; for lists specify the len of the maximal saved data also
 (setq desktop-globals-to-save
@@ -26,7 +52,6 @@
         (compile-history          . 30)
         desktop-missing-file-warning
         (dired-regexp-history     . 20)
-	enable-local-variables
         (extended-command-history . 30)
         (face-name-history        . 20)
         (file-name-history        . 100)
@@ -54,19 +79,7 @@
 ;; via https://web.archive.org/web/20240509044026/http://xahlee.info/emacs/emacs/emacs_save_cursor_position.html
 (save-place-mode 1)
 
-;; https://web.archive.org/web/20240509044606/http://xahlee.info/emacs/emacs/emacs_save_command_history.html
-(require 'savehist)
-;; from https://web.archive.org/web/20240509044708/https://emacs-china.org/t/emacs/17606/9
-(setq enable-recursive-minibuffers t ; allow commands in minibuffers
-      history-length 1000
-      savehist-additional-variables '(mark-ring
-				      global-mark-ring
-				      search-ring
-				      regexp-search-ring
-				      extended-command-history)
-      savehist-autosave-interval 6)
-;; by default, the command histories are saved to ~/.emacs.d/history
-(savehist-mode 1)
+
 
 
 (provide 'init-sessions)
