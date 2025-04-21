@@ -104,14 +104,17 @@ Updated: 2023-10-20"
 
 	 (command-process-name process-name)
 
-	 (ctags-cmd (format "cd %s && ctags --options=%s %s -R --tag-relative=%s %s -f %s *"
+	 (ctags-cmd (format "cd %s && ctags %s %s -R --tag-relative=%s %s -f %s *"
 			    (if (and
 				 (eq system-type 'windows-nt)
 				 (not (string-prefix-p "/d" target-dir-value)))
 				;; On Windows, add "/d " if switching across drives
 				(concat "/d " target-dir-value)
 			      target-dir-value)
-			    (expand-file-name ".ctags" user-emacs-directory)
+			    (let ((ctags-file (expand-file-name ".ctags" user-emacs-directory)))
+			      (if (file-exists-p ctags-file)
+				  (format "--options=%s" ctags-file)
+				""))
 			    tags-format-value
 			    tag-relative-value
 			    append-or-not
