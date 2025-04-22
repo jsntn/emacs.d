@@ -3,6 +3,9 @@
 ;;; Code:
 
 
+(require 'nix-mode)
+
+
 ;; START: reformatter config
 (require 'reformatter)
 
