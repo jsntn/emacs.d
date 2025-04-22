@@ -531,6 +531,12 @@
 
 (require 'vertico)
 (vertico-mode)
+;; Sorting and filtering for `vertico
+(require 'vertico-prescient)
+(vertico-prescient-mode 1)
+;; Save recency and frequency rankings to disk, which let them become better
+;; over time.
+(prescient-persist-mode 1)
 
 
 
