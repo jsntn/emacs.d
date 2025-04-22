@@ -33,13 +33,19 @@
 
 (evil-set-undo-system 'undo-tree) ; https://github.com/emacs-evil/evil/issues/1372#issuecomment-712611291
 
-;; change the cursor color in terms of evil mode
-(setq evil-emacs-state-cursor '("red" box))
-(setq evil-normal-state-cursor '("green" box))
-(setq evil-visual-state-cursor '("orange" box))
-(setq evil-insert-state-cursor '("red" bar))
-(setq evil-replace-state-cursor '("red" bar))
-(setq evil-operator-state-cursor '("red" hollow))
+(if (display-graphic-p)
+    (progn
+      ;; change the cursor color in terms of evil mode
+      (setq evil-emacs-state-cursor '("red" box))
+      (setq evil-normal-state-cursor '("green" box))
+      (setq evil-visual-state-cursor '("orange" box))
+      (setq evil-insert-state-cursor '("red" bar))
+      (setq evil-replace-state-cursor '("red" bar))
+      (setq evil-operator-state-cursor '("red" hollow)))
+  (progn
+    (require 'evil-terminal-cursor-changer)
+    (evil-terminal-cursor-changer-activate)) ; or (etcc-on)
+  )
 
 (require 'evil-collection)
 (evil-collection-init)
