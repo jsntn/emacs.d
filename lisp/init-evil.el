@@ -55,6 +55,23 @@
 
 
 
+
+;; START: MAKE SELECTIONS (BY JUMPING THROUGH SEARCHING) INTUITIVELY
+(defun my-evil-visual-select-to-search-line ()
+  "Select the current line, search forward with `swiper`, and extend selection to include the target line."
+  (interactive)
+  (call-interactively #'swiper)
+  (evil-visual-line))
+(with-eval-after-load 'evil
+  (with-eval-after-load 'swiper
+    (define-key evil-visual-state-map (kbd "C-s") 'my-evil-visual-select-to-search-line)))
+;; END: MAKE SELECTIONS (BY JUMPING THROUGH SEARCHING) INTUITIVELY
+
+
+
+
+
+
 (provide 'init-evil)
 
 ;; Local Variables:
