@@ -17,7 +17,6 @@ The installation result can be checked later manually with ctags command. Contin
 
 (use-package citre
   :disabled
-  :delight
   ;; ctags should be installed first, the Universal Ctags is recommended,
   ;; https://github.com/universal-ctags/ctags
   :defer t
