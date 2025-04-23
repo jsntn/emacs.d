@@ -4,7 +4,7 @@
 
 
 
-(use-package delight)
+
 
 (require 'doom-themes)
 
