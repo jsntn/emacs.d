@@ -33,13 +33,17 @@
  ;; C-x v v v ...
  ;; C-x { { { ...
  ;; C-x } } } ...
- ;; { To support these keybindings below, term-keys package is needed.
+ ;; { For Terminal Emacs, to support these keybindings below, term-keys package
+ ;; is needed.
  "C-M-<left>" 'shrink-window-horizontally
  "C-M-<right>" 'enlarge-window-horizontally
  "C-M-<down>" 'shrink-window
  "C-M-<up>" 'enlarge-window
  ;; "C-=" 'er/expand-region
  ;; "C--" 'er/contract-region
+ ;; Read,
+ ;; - https://web.archive.org/web/20241108165230/https://blog.hiebl.cc/posts/urxvt-and-emacs-ultimate-guide/
+ ;; - https://web.archive.org/web/20250424065828/https://stackoverflow.com/questions/10660060/how-do-i-bind-c-in-emacs
  ;; }
  "M-i" 'pyim-convert-string-at-point ; <<pyim-csap>>
  "C-;" 'pyim-delete-word-from-personal-buffer
