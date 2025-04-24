@@ -38,8 +38,8 @@
  "C-M-<right>" 'enlarge-window-horizontally
  "C-M-<down>" 'shrink-window
  "C-M-<up>" 'enlarge-window
- "C-=" 'er/expand-region
- "C--" 'er/contract-region
+ ;; "C-=" 'er/expand-region
+ ;; "C--" 'er/contract-region
  ;; }
  "M-i" 'pyim-convert-string-at-point ; <<pyim-csap>>
  "C-;" 'pyim-delete-word-from-personal-buffer
@@ -87,6 +87,8 @@
  "bb" 'evil-scroll-page-up ; <<page-up>>
  "br" 'ibuffer
  "SPC" 'my/toggle-hideshow-block
+ "++" 'er/expand-region
+ "--" 'er/contract-region
  ;; ...
  )
 
