@@ -77,13 +77,11 @@
 
 
 ;; uses Dash docsets inside emacs to browse documentation
-(use-package helm-dash
-  :config
-  (setq helm-dash-browser-func 'eww)
-  (setq dash-docs-enable-debugging nil)
-  (setq helm-dash-docsets-path (expand-file-name ".docsets" user-emacs-directory))
-  (my-check-for-executable "sqlite3" "sqlite3") ; sqlite3 is required for `helm-dash'
-  )
+(require 'helm-dash)
+(setq helm-dash-browser-func 'eww)
+(setq dash-docs-enable-debugging nil)
+(setq helm-dash-docsets-path (expand-file-name ".docsets" user-emacs-directory))
+(my-check-for-executable "sqlite3" "sqlite3") ; sqlite3 is required for `helm-dash'
 
 
 
