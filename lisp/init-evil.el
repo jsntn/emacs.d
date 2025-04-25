@@ -43,9 +43,12 @@
       (setq evil-replace-state-cursor '("red" bar))
       (setq evil-operator-state-cursor '("red" hollow)))
   (progn
-    (require 'evil-terminal-cursor-changer)
-    (evil-terminal-cursor-changer-activate)) ; or (etcc-on)
+    (add-hook 'evil-insert-state-entry-hook (lambda () (send-string-to-terminal "\033[5 q")))
+    (add-hook 'evil-insert-state-exit-hook (lambda () (send-string-to-terminal "\033[2 q")))
+    ;; via https://www.reddit.com/r/emacs/comments/4rd44a/how_to_change_cursor_in_evil_mode/
+    )
   )
+
 
 (require 'evil-collection)
 (evil-collection-init)
