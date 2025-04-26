@@ -1,3 +1,357 @@
 [submodule "site-lisp/use-package"]
 	path = site-lisp/use-package
 	url = https://github.com/jwiegley/use-package.git
+[submodule "site-lisp/anki"]
+	path = site-lisp/anki
+	url = https://github.com/chenyanming/anki.el.git
+[submodule "site-lisp/evil"]
+	path = site-lisp/evil
+	url = https://github.com/emacs-evil/evil.git
+[submodule "site-lisp/undo-tree"]
+	path = site-lisp/undo-tree
+	url = https://gitlab.com/tsc25/undo-tree.git
+[submodule "site-lisp/queue"]
+	path = site-lisp/queue
+	url = https://github.com/emacs-straight/queue.git
+[submodule "site-lisp/evil-collection"]
+	path = site-lisp/evil-collection
+	url = https://github.com/emacs-evil/evil-collection.git
+[submodule "site-lisp/themes"]
+	path = site-lisp/themes
+	url = https://github.com/doomemacs/themes.git
+[submodule "site-lisp/elfeed"]
+	path = site-lisp/elfeed
+	url = https://github.com/skeeto/elfeed.git
+[submodule "site-lisp/popup-el"]
+	path = site-lisp/popup-el
+	url = https://github.com/auto-complete/popup-el.git
+[submodule "site-lisp/highlight-symbol"]
+	path = site-lisp/highlight-symbol
+	url = https://github.com/nschum/highlight-symbol.el.git
+[submodule "site-lisp/pyim"]
+	path = site-lisp/pyim
+	url = https://github.com/tumashu/pyim.git
+[submodule "site-lisp/elgrep"]
+	path = site-lisp/elgrep
+	url = https://github.com/TobiasZawada/elgrep.git
+[submodule "site-lisp/highlight-parentheses"]
+	path = site-lisp/highlight-parentheses
+	url = https://git.sr.ht/~tsdh/highlight-parentheses.el
+[submodule "site-lisp/pinyinlib.el"]
+	path = site-lisp/pinyinlib.el
+	url = https://github.com/cute-jumper/pinyinlib.el.git
+[submodule "site-lisp/orderless"]
+	path = site-lisp/orderless
+	url = https://github.com/oantolin/orderless.git
+[submodule "site-lisp/swiper"]
+	path = site-lisp/swiper
+	url = https://github.com/abo-abo/swiper.git
+[submodule "site-lisp/org-super-agenda"]
+	path = site-lisp/org-super-agenda
+	url = https://github.com/alphapapa/org-super-agenda.git
+[submodule "site-lisp/expand-region"]
+	path = site-lisp/expand-region
+	url = https://github.com/magnars/expand-region.el.git
+[submodule "site-lisp/general.el"]
+	path = site-lisp/general.el
+	url = https://github.com/noctuid/general.el.git
+[submodule "site-lisp/xr"]
+	path = site-lisp/xr
+	url = https://github.com/mattiase/xr.git
+[submodule "site-lisp/annalist.el"]
+	path = site-lisp/annalist.el
+	url = https://github.com/noctuid/annalist.el.git
+[submodule "site-lisp/gptel"]
+	path = site-lisp/gptel
+	url = https://github.com/karthink/gptel.git
+[submodule "site-lisp/aidermacs"]
+	path = site-lisp/aidermacs
+	url = https://github.com/MatthewZMD/aidermacs.git
+[submodule "site-lisp/transient"]
+	path = site-lisp/transient
+	url = https://github.com/magit/transient.git
+[submodule "site-lisp/window-numbering.el"]
+	path = site-lisp/window-numbering.el
+	url = https://github.com/nschum/window-numbering.el.git
+[submodule "site-lisp/sdcv-pure.el"]
+	path = site-lisp/sdcv-pure.el
+	url = https://github.com/jsntn/sdcv-pure.el.git
+[submodule "site-lisp/sdcv"]
+	path = site-lisp/sdcv
+	url = https://github.com/manateelazycat/sdcv.git
+[submodule "site-lisp/elysium"]
+	path = site-lisp/elysium
+	url = https://github.com/lanceberge/elysium.git
+[submodule "site-lisp/company-mode"]
+	path = site-lisp/company-mode
+	url = https://github.com/company-mode/company-mode.git
+[submodule "site-lisp/company-posframe"]
+	path = site-lisp/company-posframe
+	url = https://github.com/tumashu/company-posframe.git
+[submodule "site-lisp/posframe"]
+	path = site-lisp/posframe
+	url = https://github.com/tumashu/posframe.git
+[submodule "site-lisp/cnfonts"]
+	path = site-lisp/cnfonts
+	url = https://github.com/tumashu/cnfonts.git
+[submodule "site-lisp/emacs-eat"]
+	path = site-lisp/emacs-eat
+	url = https://codeberg.org/akib/emacs-eat.git
+[submodule "site-lisp/pyim-tsinghua-dict"]
+	path = site-lisp/pyim-tsinghua-dict
+	url = https://github.com/redguardtoo/pyim-tsinghua-dict.git
+[submodule "site-lisp/auto-capitalize-el"]
+	path = site-lisp/auto-capitalize-el
+	url = https://github.com/yuutayamada/auto-capitalize-el.git
+[submodule "site-lisp/org-task-scheduler"]
+	path = site-lisp/org-task-scheduler
+	url = https://github.com/jsntn/org-task-scheduler.el.git
+[submodule "site-lisp/mr-poker"]
+	path = site-lisp/mr-poker
+	url = https://github.com/jsntn/mr-poker.el.git
+[submodule "site-lisp/emacs-async"]
+	path = site-lisp/emacs-async
+	url = https://github.com/jwiegley/emacs-async.git
+[submodule "site-lisp/org-drill"]
+	path = site-lisp/org-drill
+	url = https://github.com/jsntn/org-drill.git
+[submodule "site-lisp/persist"]
+	path = site-lisp/persist
+	url = https://github.com/emacs-straight/persist.git
+[submodule "site-lisp/org-roam-ui"]
+	path = site-lisp/org-roam-ui
+	url = https://github.com/jsntn/org-roam-ui.git
+[submodule "site-lisp/org-roam"]
+	path = site-lisp/org-roam
+	url = https://github.com/org-roam/org-roam.git
+[submodule "site-lisp/simple-httpd"]
+	path = site-lisp/simple-httpd
+	url = https://github.com/skeeto/emacs-web-server.git
+[submodule "site-lisp/emacs-websocket"]
+	path = site-lisp/emacs-websocket
+	url = https://github.com/ahyatt/emacs-websocket.git
+[submodule "site-lisp/consult-company"]
+	path = site-lisp/consult-company
+	url = https://github.com/mohkale/consult-company.git
+[submodule "site-lisp/compat"]
+	path = site-lisp/compat
+	url = https://github.com/emacs-compat/compat.git
+[submodule "site-lisp/notmuch"]
+	path = site-lisp/notmuch
+	url = https://github.com/jsntn/notmuch.git
+[submodule "site-lisp/emacsql"]
+	path = site-lisp/emacsql
+	url = https://github.com/magit/emacsql.git
+[submodule "site-lisp/term-keys"]
+	path = site-lisp/term-keys
+	url = https://github.com/CyberShadow/term-keys.git
+[submodule "site-lisp/evil-surround"]
+	path = site-lisp/evil-surround
+	url = https://github.com/emacs-evil/evil-surround.git
+[submodule "site-lisp/hl-todo"]
+	path = site-lisp/hl-todo
+	url = https://github.com/tarsius/hl-todo.git
+[submodule "site-lisp/neotree"]
+	path = site-lisp/neotree
+	url = https://github.com/jaypei/emacs-neotree.git
+[submodule "site-lisp/super-save"]
+	path = site-lisp/super-save
+	url = https://github.com/bbatsov/super-save.git
+[submodule "site-lisp/pangu-spacing"]
+	path = site-lisp/pangu-spacing
+	url = https://github.com/coldnew/pangu-spacing.git
+[submodule "site-lisp/yasnippet"]
+	path = site-lisp/yasnippet
+	url = https://github.com/joaotavora/yasnippet.git
+[submodule "site-lisp/yasnippet-snippets"]
+	path = site-lisp/yasnippet-snippets
+	url = https://github.com/AndreaCrotti/yasnippet-snippets.git
+[submodule "site-lisp/cal-china-x"]
+	path = site-lisp/cal-china-x
+	url = https://github.com/xwl/cal-china-x.git
+[submodule "site-lisp/org-recent-headings"]
+	path = site-lisp/org-recent-headings
+	url = https://github.com/alphapapa/org-recent-headings.git
+[submodule "site-lisp/markdown-mode"]
+	path = site-lisp/markdown-mode
+	url = https://github.com/jrblevin/markdown-mode.git
+[submodule "site-lisp/org-pomodoro"]
+	path = site-lisp/org-pomodoro
+	url = https://github.com/lolownia/org-pomodoro.git
+[submodule "site-lisp/csv-mode"]
+	path = site-lisp/csv-mode
+	url = https://github.com/emacsmirror/csv-mode.git
+[submodule "site-lisp/buffer-move"]
+	path = site-lisp/buffer-move
+	url = https://github.com/lukhas/buffer-move.git
+[submodule "site-lisp/org-bullets"]
+	path = site-lisp/org-bullets
+	url = https://github.com/sabof/org-bullets.git
+[submodule "site-lisp/org-modern"]
+	path = site-lisp/org-modern
+	url = https://github.com/minad/org-modern.git
+[submodule "site-lisp/alert"]
+	path = site-lisp/alert
+	url = https://github.com/jwiegley/alert.git
+[submodule "site-lisp/frecency.el"]
+	path = site-lisp/frecency.el
+	url = https://github.com/alphapapa/frecency.el.git
+[submodule "site-lisp/a.el"]
+	path = site-lisp/a.el
+	url = https://github.com/plexus/a.el.git
+[submodule "site-lisp/emacs-reformatter"]
+	path = site-lisp/emacs-reformatter
+	url = https://github.com/purcell/emacs-reformatter.git
+[submodule "site-lisp/el-easydraw"]
+	path = site-lisp/el-easydraw
+	url = https://github.com/misohena/el-easydraw.git
+[submodule "site-lisp/fzf.el"]
+	path = site-lisp/fzf.el
+	url = https://github.com/bling/fzf.el.git
+[submodule "site-lisp/ace-jump-mode"]
+	path = site-lisp/ace-jump-mode
+	url = https://github.com/winterTTr/ace-jump-mode.git
+[submodule "site-lisp/ace-pinyin"]
+	path = site-lisp/ace-pinyin
+	url = https://github.com/cute-jumper/ace-pinyin.git
+[submodule "site-lisp/avy"]
+	path = site-lisp/avy
+	url = https://github.com/abo-abo/avy.git
+[submodule "site-lisp/benchmark-init-el"]
+	path = site-lisp/benchmark-init-el
+	url = https://github.com/dholm/benchmark-init-el.git
+[submodule "site-lisp/keyfreq"]
+	path = site-lisp/keyfreq
+	url = https://github.com/dacap/keyfreq.git
+[submodule "site-lisp/annotate"]
+	path = site-lisp/annotate
+	url = https://github.com/bastibe/annotate.el
+[submodule "site-lisp/corfu-english-helper"]
+	path = site-lisp/corfu-english-helper
+	url = https://github.com/jsntn/corfu-english-helper.git
+[submodule "site-lisp/marginalia"]
+	path = site-lisp/marginalia
+	url = https://github.com/minad/marginalia.git
+[submodule "site-lisp/all-the-icons.el"]
+	path = site-lisp/all-the-icons.el
+	url = https://github.com/domtronn/all-the-icons.el
+[submodule "site-lisp/flycheck"]
+	path = site-lisp/flycheck
+	url = https://github.com/flycheck/flycheck.git
+[submodule "site-lisp/orglink"]
+	path = site-lisp/orglink
+	url = https://github.com/tarsius/orglink.git
+[submodule "site-lisp/org-inline-anim.el"]
+	path = site-lisp/org-inline-anim.el
+	url = https://github.com/shg/org-inline-anim.el.git
+[submodule "site-lisp/workgroups2"]
+	path = site-lisp/workgroups2
+	url = https://github.com/pashinin/workgroups2.git
+[submodule "site-lisp/yaml-mode"]
+	path = site-lisp/yaml-mode
+	url = https://github.com/yoshiki/yaml-mode.git
+[submodule "site-lisp/pyvenv"]
+	path = site-lisp/pyvenv
+	url = https://github.com/jorgenschaefer/pyvenv.git
+[submodule "site-lisp/emacs-emojify"]
+	path = site-lisp/emacs-emojify
+	url = https://github.com/iqbalansari/emacs-emojify.git
+[submodule "site-lisp/vertico"]
+	path = site-lisp/vertico
+	url = https://github.com/minad/vertico.git
+[submodule "site-lisp/imenu-list"]
+	path = site-lisp/imenu-list
+	url = https://github.com/bmag/imenu-list.git
+[submodule "site-lisp/dictionary-overlay"]
+	path = site-lisp/dictionary-overlay
+	url = https://github.com/ginqi7/dictionary-overlay.git
+[submodule "site-lisp/websocket-bridge"]
+	path = site-lisp/websocket-bridge
+	url = https://github.com/ginqi7/websocket-bridge.git
+[submodule "site-lisp/nov.el"]
+	path = site-lisp/nov.el
+	url = https://github.com/emacs-pe/nov.el.git
+[submodule "site-lisp/ht.el"]
+	path = site-lisp/ht.el
+	url = https://github.com/Wilfred/ht.el.git
+[submodule "site-lisp/esxml"]
+	path = site-lisp/esxml
+	url = https://github.com/tali713/esxml.git
+[submodule "site-lisp/dash.el"]
+	path = site-lisp/dash.el
+	url = https://github.com/magnars/dash.el.git
+[submodule "site-lisp/s.el"]
+	path = site-lisp/s.el
+	url = https://github.com/magnars/s.el.git
+[submodule "site-lisp/ts.el"]
+	path = site-lisp/ts.el
+	url = https://github.com/alphapapa/ts.el.git
+[submodule "site-lisp/company-english-helper"]
+	path = site-lisp/company-english-helper
+	url = https://github.com/jsntn/company-english-helper.git
+[submodule "site-lisp/magit"]
+	path = site-lisp/magit
+	url = https://github.com/magit/magit.git
+[submodule "site-lisp/highlight-indent-guides"]
+	path = site-lisp/highlight-indent-guides
+	url = https://github.com/DarthFennec/highlight-indent-guides.git
+[submodule "site-lisp/nix-mode"]
+	path = site-lisp/nix-mode
+	url = https://github.com/NixOS/nix-mode.git
+[submodule "site-lisp/cdlatex"]
+	path = site-lisp/cdlatex
+	url = https://github.com/cdominik/cdlatex.git
+[submodule "site-lisp/cursor-undo"]
+	path = site-lisp/cursor-undo
+	url = https://github.com/emacsmirror/cursor-undo.git
+[submodule "site-lisp/hypothesis"]
+	path = site-lisp/hypothesis
+	url = https://github.com/Kungsgeten/hypothesis.git
+[submodule "site-lisp/media-thumbnail"]
+	path = site-lisp/media-thumbnail
+	url = https://github.com/jojojames/media-thumbnail.git
+[submodule "site-lisp/org-link-archive"]
+	path = site-lisp/org-link-archive
+	url = https://github.com/farynaio/org-link-archive.git
+[submodule "site-lisp/copilot.el"]
+	path = site-lisp/copilot.el
+	url = https://github.com/copilot-emacs/copilot.el.git
+[submodule "site-lisp/llama"]
+	path = site-lisp/llama
+	url = https://github.com/tarsius/llama.git
+[submodule "site-lisp/with-editor"]
+	path = site-lisp/with-editor
+	url = https://github.com/magit/with-editor.git
+[submodule "site-lisp/session"]
+	path = site-lisp/session
+	url = https://github.com/emacsattic/session.git
+[submodule "site-lisp/consult"]
+	path = site-lisp/consult
+	url = https://github.com/minad/consult.git
+[submodule "site-lisp/prescient"]
+	path = site-lisp/prescient
+	url = https://github.com/radian-software/prescient.el.git
+[submodule "site-lisp/esh-autosuggest"]
+	path = site-lisp/esh-autosuggest
+	url = https://github.com/dieggsy/esh-autosuggest.git
+[submodule "site-lisp/capf-autosuggest"]
+	path = site-lisp/capf-autosuggest
+	url = https://repo.or.cz/emacs-capf-autosuggest.git
+[submodule "site-lisp/popper"]
+	path = site-lisp/popper
+	url = https://github.com/karthink/popper.git
+[submodule "site-lisp/shackle"]
+	path = site-lisp/shackle
+	url = https://github.com/emacsmirror/shackle.git
+[submodule "site-lisp/helm"]
+	path = site-lisp/helm
+	url = https://github.com/emacs-helm/helm.git
+[submodule "site-lisp/helm-dash"]
+	path = site-lisp/helm-dash
+	url = https://github.com/dash-docs-el/helm-dash.git
+[submodule "site-lisp/tiny"]
+	path = site-lisp/tiny
+	url = https://github.com/abo-abo/tiny.git
+[submodule "site-lisp/dash-docs"]
+	path = site-lisp/dash-docs
+	url = https://github.com/dash-docs-el/dash-docs.git
