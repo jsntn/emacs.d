@@ -139,11 +139,6 @@
 
 
 
-(use-package company-tabnine
-  :config
-  (setq company-tabnine-binaries-folder (expand-file-name ".TabNine/" user-emacs-directory))
-  ;; (add-to-list 'company-backends #'company-tabnine)
-  )
 
 (require 'company)
 
