@@ -27,6 +27,33 @@
 
 
 
+
+
+
+(defun my-normalized-paths-list (paths-list &optional as-directory)
+  "Normalize PATHS-LIST in-place and remove duplicates.
+
+If AS-DIRECTORY is non-nil, ensure each path ends with a slash.
+Modifies PATHS-LIST destructively.
+Version: 2025/04/29"
+  (require 'cl-lib)
+  (setf (symbol-value paths-list)
+        (let ((normalized-paths
+               (mapcar (lambda (path)
+                         (let ((full (expand-file-name path)))
+                           (if as-directory
+                               (file-name-as-directory full)
+                             full)))
+                       (symbol-value paths-list))))
+          (cl-delete-duplicates normalized-paths :test #'string=))))
+;; Example usage:
+;; (setq org-agenda-files-list '("~/abc.org" "/home/nixos/abc.org" "~/xyz.org"))
+;; (my-normalized-paths-list 'org-agenda-files-list)
+
+
+
+
+
 ;; { -- START --
 ;; check Linux distribution
 ;; https://emacs.stackexchange.com/questions/18205/how-can-i-distinguish-between-linux-distributions-in-emacs
