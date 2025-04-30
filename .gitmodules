@@ -349,12 +349,6 @@
 [submodule "site-lisp/dash-docs"]
 	path = site-lisp/dash-docs
 	url = https://github.com/dash-docs-el/dash-docs.git
-[submodule "site-lisp/evil-multiedit"]
-	path = site-lisp/evil-multiedit
-	url = https://github.com/hlissner/evil-multiedit.git
-[submodule "site-lisp/iedit"]
-	path = site-lisp/iedit
-	url = https://github.com/victorhge/iedit.git
 [submodule "site-lisp/hydra"]
 	path = site-lisp/hydra
 	url = https://github.com/abo-abo/hydra.git
