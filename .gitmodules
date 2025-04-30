@@ -355,3 +355,6 @@
 [submodule "site-lisp/iedit"]
 	path = site-lisp/iedit
 	url = https://github.com/victorhge/iedit.git
+[submodule "site-lisp/hydra"]
+	path = site-lisp/hydra
+	url = https://github.com/abo-abo/hydra.git
