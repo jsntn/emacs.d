@@ -349,3 +349,6 @@
 [submodule "site-lisp/dash-docs"]
 	path = site-lisp/dash-docs
 	url = https://github.com/dash-docs-el/dash-docs.git
+[submodule "site-lisp/evil-multiedit"]
+	path = site-lisp/evil-multiedit
+	url = https://github.com/hlissner/evil-multiedit.git
