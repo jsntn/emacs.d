@@ -352,3 +352,6 @@
 [submodule "site-lisp/evil-multiedit"]
 	path = site-lisp/evil-multiedit
 	url = https://github.com/hlissner/evil-multiedit.git
+[submodule "site-lisp/iedit"]
+	path = site-lisp/iedit
+	url = https://github.com/victorhge/iedit.git
