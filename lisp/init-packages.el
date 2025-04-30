@@ -419,6 +419,7 @@
 
 
 
+(require 'sr-speedbar)
 
 
 (require 'super-save)
