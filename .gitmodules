@@ -352,3 +352,6 @@
 [submodule "site-lisp/hydra"]
 	path = site-lisp/hydra
 	url = https://github.com/abo-abo/hydra.git
+[submodule "site-lisp/sr-speedbar"]
+	path = site-lisp/sr-speedbar
+	url = https://github.com/emacsorphanage/sr-speedbar.git
