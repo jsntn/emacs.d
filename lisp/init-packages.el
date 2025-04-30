@@ -350,6 +350,22 @@
 
 
 
+(require 'popper)
+(setq popper-reference-buffers
+      '("\\*Messages\\*"
+	help-mode
+	eat-mode))
+;; Popper popup placement controlled using shackle.el,
+(require 'shackle)
+(setq shackle-rules
+      '((eat-mode :align 'below :select t :size 0.8)
+	(help-mode :select t)))
+(shackle-mode +1)
+(popper-mode +1)
+(setq popper-display-control nil) ; the placement is controlled by shackle.el
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "C-x p") 'popper-toggle))
+
 
 
 (require 'pyim)
