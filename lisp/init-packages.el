@@ -312,39 +312,50 @@
 ;; C-s / -> search camel case word
 ;; this config is via
 ;; https://app.raindrop.io/my/0/#pinyinlib
-(defun my/ivy-extended-pattern (str)
-  "Custom Ivy regex builder that supports:
-- :pinyin search
-- /CamelCase search
-- fallback to orderless search"
+(defun re-builder-extended-pattern (str)
   (require 'ivy)
-  (cond
-   ((string-prefix-p ":" str)
-    (pinyinlib-build-regexp-string (substring str 1) t))
-   ((string-prefix-p "/" str)
-    (let ((subs (upcase (substring str 1)))
-	  (rlt "") c i)
-      (setq i 0)
-      (while (< i (length subs))
-	(setq c (elt subs i))
-	(setq rlt (concat rlt
-			  (cond
-			   ((and (< c ?a) (> c ?z) (< c ?A) (> c ?Z)) (char-to-string c))
-			   (t (concat (if (= i 0) (format "[%c%c]" (+ c 32) c)
-					(char-to-string c))
-				      "[a-z]+")))))
-	(setq i (1+ i)))
-      rlt))
-   (t
-    (orderless-ivy-re-builder str))))
+  (let* ((len (length str)))
+    (cond
+     ;; do nothing
+     ((<= (length str) 0))
 
-(defun my/swiper ()
-  "Call swiper with support for :pinyin and /camelCase, and orderless by default.
-Also enable proper highlight for orderless-style matches."
-  (interactive)
-  (let ((ivy-re-builders-alist '((t . my/ivy-extended-pattern)))
-	(ivy-highlight-functions-alist
-	 '((my/ivy-extended-pattern . orderless-ivy-highlight))))
+     ;; If the first charater of input in ivy is ":",
+     ;; remaining input is converted into Chinese pinyin regex.
+     ((string= (substring str 0 1) ":")
+      (setq str (pinyinlib-build-regexp-string (substring str 1 len) t)))
+
+     ;; If the first charater of input in ivy is "/",
+     ;; remaining input is converted to pattrn to search camel case word
+     ((string= (substring str 0 1) "/")
+      (let* ((rlt "")
+	     (i 0)
+	     (subs (substring str 1 len))
+	     c)
+	(when (> len 2)
+	  (setq subs (upcase subs))
+	  (while (< i (length subs))
+	    (setq c (elt subs i))
+	    (setq rlt (concat rlt (cond
+				   ((and (< c ?a) (> c ?z) (< c ?A) (> c ?Z))
+				    (format "%c" c))
+				   (t
+				    (concat (if (= i 0) (format "[%c%c]" (+ c 32) c)
+					      (format "%c" c))
+					    "[a-z]+")))))
+	    (setq i (1+ i))))
+	(setq str rlt))))
+    (ivy--regex-plus str)))
+
+(defun my/swiper (arg)
+  "Use Swiper with custom regex builder for Pinyin and Camel-case search when called with prefix argument.
+This sets `ivy-re-builders-alist' to use extended pattern matching
+for better Pinyin and Camel-case characters search experience when ARG is non-nil.
+Otherwise, uses default Swiper behavior based on `ivy-re-builders-alist'."
+  (interactive "P")
+  (if arg
+      (let ((ivy-re-builders-alist
+	     '((t . re-builder-extended-pattern))))
+	(swiper))
     (swiper)))
 
 
