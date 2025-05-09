@@ -46,6 +46,7 @@
     (add-hook 'evil-insert-state-entry-hook (lambda () (send-string-to-terminal "\033[5 q")))
     (add-hook 'evil-insert-state-exit-hook (lambda () (send-string-to-terminal "\033[2 q")))
     ;; via https://www.reddit.com/r/emacs/comments/4rd44a/how_to_change_cursor_in_evil_mode/
+    (send-string-to-terminal "\033[2 q") ; the default cursor state
     )
   )
 
