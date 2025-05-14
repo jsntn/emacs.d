@@ -358,12 +358,6 @@
 [submodule "site-lisp/evil-mc"]
 	path = site-lisp/evil-mc
 	url = https://github.com/gabesoft/evil-mc.git
-[submodule "site-lisp/envrc"]
-	path = site-lisp/envrc
-	url = https://github.com/purcell/envrc.git
-[submodule "site-lisp/inheritenv"]
-	path = site-lisp/inheritenv
-	url = https://github.com/purcell/inheritenv.git
 [submodule "site-lisp/request"]
 	path = site-lisp/request
 	url = https://github.com/tkf/emacs-request.git
