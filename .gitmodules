@@ -364,3 +364,6 @@
 [submodule "site-lisp/inheritenv"]
 	path = site-lisp/inheritenv
 	url = https://github.com/purcell/inheritenv.git
+[submodule "site-lisp/request"]
+	path = site-lisp/request
+	url = https://github.com/tkf/emacs-request.git
