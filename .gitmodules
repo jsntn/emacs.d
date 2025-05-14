@@ -361,3 +361,6 @@
 [submodule "site-lisp/envrc"]
 	path = site-lisp/envrc
 	url = https://github.com/purcell/envrc.git
+[submodule "site-lisp/inheritenv"]
+	path = site-lisp/inheritenv
+	url = https://github.com/purcell/inheritenv.git
