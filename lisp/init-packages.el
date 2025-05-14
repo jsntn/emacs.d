@@ -63,7 +63,7 @@
 (require 'elgrep)
 
 
-
+(require 'envrc)
 
 
 (require 'expand-region)
