@@ -53,6 +53,7 @@
 (require 'counsel)
 
 
+(require 'direnv)
 
 
 (require 'eglot)
@@ -63,7 +64,6 @@
 (require 'elgrep)
 
 
-(require 'envrc)
 
 
 (require 'expand-region)
