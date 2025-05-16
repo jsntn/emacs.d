@@ -367,3 +367,6 @@
 [submodule "site-lisp/f.el"]
 	path = site-lisp/f.el
 	url = https://github.com/rejeep/f.el.git
+[submodule "site-lisp/auctex"]
+	path = site-lisp/auctex
+	url = https://github.com/emacs-straight/auctex.git
