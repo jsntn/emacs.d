@@ -364,3 +364,6 @@
 [submodule "site-lisp/emacs-direnv"]
 	path = site-lisp/emacs-direnv
 	url = https://github.com/wbolster/emacs-direnv.git
+[submodule "site-lisp/f.el"]
+	path = site-lisp/f.el
+	url = https://github.com/rejeep/f.el.git
