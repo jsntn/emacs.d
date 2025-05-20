@@ -370,3 +370,6 @@
 [submodule "site-lisp/auctex"]
 	path = site-lisp/auctex
 	url = https://github.com/emacs-straight/auctex.git
+[submodule "site-lisp/org-contrib"]
+	path = site-lisp/org-contrib
+	url = https://github.com/emacsmirror/org-contrib.git
