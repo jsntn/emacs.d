@@ -373,3 +373,6 @@
 [submodule "site-lisp/org-contrib"]
 	path = site-lisp/org-contrib
 	url = https://github.com/emacsmirror/org-contrib.git
+[submodule "site-lisp/org-ql"]
+	path = site-lisp/org-ql
+	url = https://github.com/alphapapa/org-ql.git
