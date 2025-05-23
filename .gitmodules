@@ -379,3 +379,6 @@
 [submodule "site-lisp/ov"]
 	path = site-lisp/ov
 	url = https://github.com/emacsorphanage/ov.git
+[submodule "site-lisp/eglot-booster"]
+	path = site-lisp/eglot-booster
+	url = https://github.com/jdtsmith/eglot-booster.git
