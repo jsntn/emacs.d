@@ -445,7 +445,6 @@ Otherwise, uses default Swiper behavior based on `ivy-re-builders-alist'."
 
 
 
-(require 'sr-speedbar)
 
 
 (require 'super-save)
