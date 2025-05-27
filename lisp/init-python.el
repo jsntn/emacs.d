@@ -30,6 +30,10 @@
   (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
   (auto-fill-mode 1)
   (set (make-local-variable 'electric-indent-mode) nil)
+  ;; Silence the warnings regarding the indentation offset
+  ;; https://stackoverflow.com/a/51966682
+  (setq python-indent-guess-indent-offset t)
+  (setq python-indent-guess-indent-offset-verbose nil)
   )
 
 (add-hook 'python-mode-hook 'my/python-mode-config)
