@@ -400,3 +400,18 @@
 [submodule "site-lisp/consult-yasnippet"]
 	path = site-lisp/consult-yasnippet
 	url = https://github.com/mohkale/consult-yasnippet.git
+[submodule "site-lisp/powerthesaurus"]
+	path = site-lisp/powerthesaurus
+	url = https://github.com/SavchenkoValeriy/emacs-powerthesaurus.git
+[submodule "site-lisp/jeison"]
+	path = site-lisp/jeison
+	url = https://github.com/SavchenkoValeriy/jeison.git
+[submodule "site-lisp/dropbox"]
+	path = site-lisp/dropbox
+	url = https://github.com/pavpanchekha/dropbox.el.git
+[submodule "site-lisp/google-translate"]
+	path = site-lisp/google-translate
+	url = https://github.com/atykhonov/google-translate.git
+[submodule "site-lisp/tldr"]
+	path = site-lisp/tldr
+	url = https://github.com/kuanyui/tldr.el.git
