@@ -9,10 +9,26 @@
 
 ;; only load this package when in graphical Emacs
 (when (display-graphic-p)
-  (cnfonts-mode 1)
-  (setq cnfonts-profiles
-	'("program" "org-mode" "read-book"))
   (setq cnfonts-use-system-type t) ; save profile config across different system-type
+  (defun my--matched-el-files-list-in-dir (dir string)
+    "Search for all .el files in subdirectories of DIR whose path matches STRING.
+Return a list of .el file names (without extension) from each matched directory."
+    (let ((matches '()))
+      (dolist (subdir (directory-files-recursively dir "" t))
+	(when (and (file-directory-p subdir)
+		   (string-match-p string subdir))
+	  (let ((el-files (directory-files subdir nil "\\.el\\'")))
+	    (dolist (file el-files)
+	      (push (file-name-sans-extension file) matches)))))
+      (delete-dups matches)))
+  (setq cnfonts-profiles
+	(my--matched-el-files-list-in-dir
+	 (file-name-as-directory cnfonts-directory)
+	 (if cnfonts-use-system-type
+	     (replace-regexp-in-string
+	      "/" "-" (symbol-name system-type))
+	   "")))
+  (cnfonts-mode 1)
   )
 
 
