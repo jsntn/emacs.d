@@ -59,6 +59,12 @@
 (require 'eglot)
 (setq eglot-stay-out-of '(company)) ; see https://web.archive.org/web/20240731123602/https://github.com/joaotavora/eglot/issues/324
 
+(when *is-linux*
+  (require 'eglot-booster)
+  (with-eval-after-load 'eglot
+    (eglot-booster-mode)))
+
+
 ;; M-x elgrep: search a single directory
 ;; C-u M-x elgrep: search the directory recursively
 (require 'elgrep)
@@ -505,6 +511,12 @@ Otherwise, uses default Swiper behavior based on `ivy-re-builders-alist'."
 (add-hook 'after-init-hook #'yas-global-mode)
 
 (require 'yasnippet-snippets)
+
+(require 'zoom)
+(custom-set-variables
+ '(zoom-mode t)
+ '(zoom-size '(0.618 . 0.618)))
+
 
 
 (provide 'init-packages)
