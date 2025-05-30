@@ -388,3 +388,15 @@
 [submodule "site-lisp/zoom"]
 	path = site-lisp/zoom
 	url = https://github.com/cyrus-and/zoom.git
+[submodule "site-lisp/slime"]
+	path = site-lisp/slime
+	url = https://github.com/slime/slime.git
+[submodule "site-lisp/macrostep"]
+	path = site-lisp/macrostep
+	url = https://github.com/emacsorphanage/macrostep.git
+[submodule "site-lisp/elmacro"]
+	path = site-lisp/elmacro
+	url = https://github.com/Silex/elmacro.git
+[submodule "site-lisp/consult-yasnippet"]
+	path = site-lisp/consult-yasnippet
+	url = https://github.com/mohkale/consult-yasnippet.git
