@@ -70,6 +70,7 @@
     undo-tree-mode
     which-key-mode
     yas-minor-mode
+    zoom-mode
     ))
 
 (defun my/purge-minor-modes ()
