@@ -415,3 +415,9 @@
 [submodule "site-lisp/tldr"]
 	path = site-lisp/tldr
 	url = https://github.com/kuanyui/tldr.el.git
+[submodule "site-lisp/minuet"]
+	path = site-lisp/minuet
+	url = https://github.com/milanglacier/minuet-ai.el.git
+[submodule "site-lisp/plz"]
+	path = site-lisp/plz
+	url = https://github.com/alphapapa/plz.el.git
