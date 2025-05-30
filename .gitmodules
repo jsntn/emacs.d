@@ -385,3 +385,6 @@
 [submodule "site-lisp/emigo"]
 	path = site-lisp/emigo
 	url = https://github.com/MatthewZMD/emigo.git
+[submodule "site-lisp/zoom"]
+	path = site-lisp/zoom
+	url = https://github.com/cyrus-and/zoom.git
