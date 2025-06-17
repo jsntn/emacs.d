@@ -421,3 +421,6 @@
 [submodule "site-lisp/plz"]
 	path = site-lisp/plz
 	url = https://github.com/alphapapa/plz.el.git
+[submodule "site-lisp/emmet-mode"]
+	path = site-lisp/emmet-mode
+	url = https://github.com/smihica/emmet-mode.git
