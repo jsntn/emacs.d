@@ -424,3 +424,6 @@
 [submodule "site-lisp/emmet-mode"]
 	path = site-lisp/emmet-mode
 	url = https://github.com/smihica/emmet-mode.git
+[submodule "site-lisp/focus"]
+	path = site-lisp/focus
+	url = https://github.com/larstvei/Focus.git
