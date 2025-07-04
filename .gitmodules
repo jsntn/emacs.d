@@ -427,3 +427,6 @@
 [submodule "site-lisp/focus"]
 	path = site-lisp/focus
 	url = https://github.com/larstvei/Focus.git
+[submodule "site-lisp/pdftotext.el"]
+	path = site-lisp/pdftotext.el
+	url = https://github.com/tecosaur/pdftotext.el.git
