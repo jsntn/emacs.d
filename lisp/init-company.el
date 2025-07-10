@@ -227,8 +227,7 @@
   "History of selected company backends.")
 
 (defun my/set-company-backend (arg)
-  "Set company backend(s) for the current buffer.
-With C-u ARG, allow selecting multiple backends one at a time.
+  "Set company backend(s) for the current buffer. With C-u ARG, allow selecting multiple backends one at a time.
 Finish selection by choosing a backend that has already been selected."
   (interactive "P")
   (let* ((sorted-backends
