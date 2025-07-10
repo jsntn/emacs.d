@@ -226,22 +226,45 @@
 (defvar my--company-backends-history nil
   "History of selected company backends.")
 
-(defun my/set-company-backend ()
-  (interactive)
-  (let* ((sorted-backends (sort (copy-sequence my--company-backends-list)
-				(lambda (a b)
-				  (let ((a-time (cdr (assoc (car a) my--company-backends-history)))
-					(b-time (cdr (assoc (car b) my--company-backends-history))))
-				    (if (and a-time b-time)
-					(> a-time b-time)
-				      (and a-time (not b-time)))))))
-	 (backend-name (completing-read "Choose company backend: "
-					(mapcar (lambda (x) (format "%-20s %s" (car x) (cdr x)))
-						sorted-backends)))
-	 (backend (intern (car (split-string backend-name)))))
-    (setq-local company-backends (list backend))
-    (push (cons backend (float-time)) my--company-backends-history)
-    (message "Set company backend to: %s" backend)))
+(defun my/set-company-backend (arg)
+  "Set company backend(s) for the current buffer.
+With C-u ARG, allow selecting multiple backends one at a time.
+Finish selection by choosing a backend that has already been selected."
+  (interactive "P")
+  (let* ((sorted-backends
+	  (sort (copy-sequence my--company-backends-list)
+		(lambda (a b)
+		  (let ((a-time (cdr (assoc (car a) my--company-backends-history)))
+			(b-time (cdr (assoc (car b) my--company-backends-history))))
+		    (if (and a-time b-time)
+			(> a-time b-time)
+		      (and a-time (not b-time)))))))
+	 (backend-names (mapcar #'car sorted-backends))
+	 (selected-backends '()))
+    (if arg
+	;; (Workaround) MULTI-SELECTION: finish when user picks a duplicate
+	(let ((done nil))
+	  (while (not done)
+	    (let* ((prompt (if selected-backends
+			       (format "Add backend (already selected: %s): "
+				       (mapconcat #'symbol-name (reverse selected-backends) ", "))
+			     "Choose company backend: "))
+		   (input (completing-read prompt backend-names nil t))
+		   (sym (intern input)))
+	      (if (memq sym selected-backends)
+		  (setq done t)
+		(push sym selected-backends)))))
+      ;; SINGLE selection
+      (let* ((input (completing-read "Choose company backend: " backend-names nil t))
+	     (sym (intern input)))
+	(setq selected-backends (list sym))))
+    ;; Final result
+    (when selected-backends
+      (setq-local company-backends (list (reverse selected-backends)))
+      (dolist (backend selected-backends)
+	(push (cons backend (float-time)) my--company-backends-history))
+      (message "Set company backend(s) to: %s" (reverse selected-backends)))))
+
 
 
 
