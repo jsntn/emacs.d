@@ -430,3 +430,6 @@
 [submodule "site-lisp/pdftotext.el"]
 	path = site-lisp/pdftotext.el
 	url = https://github.com/tecosaur/pdftotext.el.git
+[submodule "site-lisp/vterm"]
+	path = site-lisp/vterm
+	url = https://github.com/akermu/emacs-libvterm.git
