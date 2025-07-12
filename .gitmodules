@@ -433,3 +433,6 @@
 [submodule "site-lisp/vterm"]
 	path = site-lisp/vterm
 	url = https://github.com/akermu/emacs-libvterm.git
+[submodule "site-lisp/pydoc"]
+	path = site-lisp/pydoc
+	url = https://github.com/statmobile/pydoc.git
