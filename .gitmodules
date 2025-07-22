@@ -436,3 +436,6 @@
 [submodule "site-lisp/pydoc"]
 	path = site-lisp/pydoc
 	url = https://github.com/statmobile/pydoc.git
+[submodule "site-lisp/embark"]
+	path = site-lisp/embark
+	url = https://github.com/oantolin/embark.git
