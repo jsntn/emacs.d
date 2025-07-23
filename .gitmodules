@@ -439,3 +439,15 @@
 [submodule "site-lisp/embark"]
 	path = site-lisp/embark
 	url = https://github.com/oantolin/embark.git
+[submodule "site-lisp/emacs-ansible"]
+	path = site-lisp/emacs-ansible
+	url = https://gitlab.com/emacs-ansible/emacs-ansible
+[submodule "site-lisp/ansible-doc"]
+	path = site-lisp/ansible-doc
+	url = https://github.com/lunaryorn/ansible-doc.el
+[submodule "site-lisp/company-ansible"]
+	path = site-lisp/company-ansible
+	url = https://github.com/krzysztof-magosa/company-ansible.git
+[submodule "site-lisp/jinja2-mode"]
+	path = site-lisp/jinja2-mode
+	url = https://github.com/paradoxxxzero/jinja2-mode.git
