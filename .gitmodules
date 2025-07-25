@@ -451,3 +451,15 @@
 [submodule "site-lisp/jinja2-mode"]
 	path = site-lisp/jinja2-mode
 	url = https://github.com/paradoxxxzero/jinja2-mode.git
+[submodule "site-lisp/ellama"]
+	path = site-lisp/ellama
+	url = https://github.com/s-kostyaev/ellama.git
+[submodule "site-lisp/llm"]
+	path = site-lisp/llm
+	url = https://github.com/ahyatt/llm
+[submodule "site-lisp/plz-event-source"]
+	path = site-lisp/plz-event-source
+	url = https://github.com/r0man/plz-event-source
+[submodule "site-lisp/plz-media-type"]
+	path = site-lisp/plz-media-type
+	url = https://github.com/r0man/plz-media-type
