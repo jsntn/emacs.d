@@ -55,20 +55,47 @@ PRIORITY-PATHS can be a single string or a list of strings."
 
 
 
+(defun my/highlight-region (beg end)
+  "Highlight region from BEG to END using the `highlight` face."
+  (interactive "r")
+  (let ((ov (make-overlay beg end)))
+    (overlay-put ov 'face 'highlight)
+    (overlay-put ov 'my-highlight t))) ; tag it so we can remove it later
 
-(defun my/highlight-selected-text (start end &optional color)
-  "Highlight the selected region temporarily with the specified color.
-If color is not provided, the default color is #5F87FF.
+(defvar my--last-highlight-color "#FD971F"
+  "The last color used by `my/highlight-region-with-specified-color`.")
 
-Version 2023-10-18"
-  (interactive "r\nsEnter color (e.g., 'red', press ENTER for default #5F87FF): ")
-  (let* ((overlay (make-overlay start end))
-	 (color (if (string= color "") "#5F87FF" color))
-	 (text-color (if (or (string= color "black") (string= color "#5F87FF"))
-			 "white"
-		       "black")))
-    (overlay-put overlay 'face `((:background ,color :foreground ,text-color)))
-    (add-hook 'before-revert-hook (lambda () (delete-overlay overlay)))))
+(defun my/highlight-region-with-specified-color (beg end &optional color)
+  "Highlight region from BEG to END with a custom background COLOR.
+If COLOR is not provided, reuse the last color stored in `my--last-highlight-color`.
+The overlay is tagged with 'my-highlight so it can be removed later."
+  (interactive
+   (list (region-beginning)
+         (region-end)
+         (read-string
+          (format "Enter color (default: %s): " my--last-highlight-color))))
+  (let* ((color (if (string= color "") my--last-highlight-color color))
+         (text-color (if (or (string= color "black") (string= color "#5F87FF"))
+                         "white"
+                       "black"))
+         (ov (make-overlay beg end)))
+    (setq my--last-highlight-color color) ; store new color for next time
+    (overlay-put ov 'face `((:background ,color :foreground ,text-color)))
+    (overlay-put ov 'my-highlight t)
+    (add-hook 'before-revert-hook (lambda () (delete-overlay ov)))))
+
+(defun my/clear-all-highlights ()
+  "Remove all custom highlights created by `my/highlight-region`."
+  (interactive)
+  (remove-overlays nil nil 'my-highlight t))
+
+(defun my/remove-highlight-at-point ()
+  "Remove highlight overlay at point that was created by `my/highlight-region`."
+  (interactive)
+  (dolist (ov (overlays-at (point)))
+    (when (overlay-get ov 'my-highlight)
+      (delete-overlay ov))))
+
 
 
 (defun my/random-org-item ()
