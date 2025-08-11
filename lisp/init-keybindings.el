@@ -76,7 +76,6 @@
  "ff" 'evil-scroll-page-down ; <<page down>>
  "bb" 'evil-scroll-page-up ; <<page-up>>
  "br" 'ibuffer
- "SPC" 'my/toggle-hideshow-block
  "++" 'er/expand-region
  "--" 'er/contract-region
  ;; ...
