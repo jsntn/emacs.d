@@ -463,3 +463,6 @@
 [submodule "site-lisp/plz-media-type"]
 	path = site-lisp/plz-media-type
 	url = https://github.com/r0man/plz-media-type
+[submodule "site-lisp/immersive-translate"]
+	path = site-lisp/immersive-translate
+	url = https://github.com/Elilif/emacs-immersive-translate.git
