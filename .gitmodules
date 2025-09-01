@@ -466,3 +466,6 @@
 [submodule "site-lisp/immersive-translate"]
 	path = site-lisp/immersive-translate
 	url = https://github.com/Elilif/emacs-immersive-translate.git
+[submodule "site-lisp/gemini-cli.el"]
+	path = site-lisp/gemini-cli.el
+	url = https://github.com/linchen2chris/gemini-cli.el.git
