@@ -472,3 +472,6 @@
 [submodule "site-lisp/org-supertag"]
 	path = site-lisp/org-supertag
 	url = https://github.com/yibie/org-supertag.git
+[submodule "site-lisp/org-kanban"]
+	path = site-lisp/org-kanban
+	url = https://github.com/gizmomogwai/org-kanban.git
