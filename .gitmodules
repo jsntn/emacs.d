@@ -472,3 +472,9 @@
 [submodule "site-lisp/org-kanban"]
 	path = site-lisp/org-kanban
 	url = https://github.com/gizmomogwai/org-kanban.git
+[submodule "site-lisp/ox-hugo"]
+	path = site-lisp/ox-hugo
+	url = https://github.com/kaushalmodi/ox-hugo.git
+[submodule "site-lisp/tomelr"]
+	path = site-lisp/tomelr
+	url = https://github.com/kaushalmodi/tomelr.git
