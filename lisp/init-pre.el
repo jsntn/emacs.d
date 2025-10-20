@@ -282,7 +282,9 @@ PARAMETERS specify additional parameters for the execution.
 SHOW-FLAG is used to control the window display options."
     (if my-enable-w32-shell-execute
 	(w32-shell-execute operation file parameters show-flag)
-      (message "The w32-shell-execute is disabled by me.")))
+      (message "Attempted to %s file '%s', but w32-shell-execute is disabled by wrapped function my-w32-shell-execute in my configuration, see my-w32-shell-execute for details."
+	       operation file)
+      ))
   ;; END: my w32-shell-execute
 
   )
