@@ -478,3 +478,6 @@
 [submodule "site-lisp/tomelr"]
 	path = site-lisp/tomelr
 	url = https://github.com/kaushalmodi/tomelr.git
+[submodule "site-lisp/ahk-mode"]
+	path = site-lisp/ahk-mode
+	url = https://github.com/punassuming/ahk-mode.git
