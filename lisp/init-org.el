@@ -160,6 +160,7 @@
 (defun place-agenda-tags ()
   "Put the agenda tags by the right border of the agenda window."
   ;; http://lists.gnu.org/archive/html/emacs-orgmode//2010-12/msg00410.html
+  (redisplay)
   (setq org-agenda-tags-column (- 10 (window-width)))
   (org-agenda-align-tags)
   )
