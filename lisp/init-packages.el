@@ -212,8 +212,6 @@
 
 (require 'org-super-agenda) ; <<org-super-agenda>>
 
-(setq org-agenda-compact-blocks t
-      org-agenda-start-day "+0d")
 (add-hook 'org-agenda-mode-hook #'org-super-agenda-mode)
 
 (setq org-agenda-custom-commands

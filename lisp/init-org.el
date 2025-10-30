@@ -132,6 +132,8 @@
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-skip-timestamp-if-done t)
 
+(setq org-agenda-compact-blocks t
+      org-agenda-start-day "+0d")
 (setq org-agenda-start-on-weekday 6) ; starting my weeks on Saturday
 ;; (setq org-agenda-start-on-weekday nil) ; agenda starts on the current day
 
