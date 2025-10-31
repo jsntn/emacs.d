@@ -481,3 +481,6 @@
 [submodule "site-lisp/ahk-mode"]
 	path = site-lisp/ahk-mode
 	url = https://github.com/punassuming/ahk-mode.git
+[submodule "site-lisp/mcp.el"]
+	path = site-lisp/mcp.el
+	url = https://github.com/lizqwerscott/mcp.el.git
