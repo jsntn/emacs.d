@@ -161,7 +161,12 @@
   "Put the agenda tags by the right border of the agenda window."
   ;; http://lists.gnu.org/archive/html/emacs-orgmode//2010-12/msg00410.html
   (redisplay)
-  (setq org-agenda-tags-column (- 10 (window-width)))
+  ;; Remove double colons at the end of inherited tags
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "::$" nil t)
+      (replace-match ":" nil nil)))
+  (setq org-agenda-tags-column (- 15 (window-width)))
   (org-agenda-align-tags)
   )
 (add-hook 'org-agenda-finalize-hook 'place-agenda-tags)
