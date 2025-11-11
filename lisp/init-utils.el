@@ -752,7 +752,21 @@ will be killed. nov-mode buffers will be skipped."
 	  (let (kill-buffer-query-functions) ; No query done when killing buffer
 	    (kill-buffer buf)
 	    (message "Killed non-existing/unreadable file buffer: %s" filename))))))
+  ;; Force sync the global mode-line-format to ALL buffers
+  (my-sync-mode-line-to-all-buffers)
   (message "Finished reverting buffers containing unmodified files."))
+
+
+(defun my-sync-mode-line-to-all-buffers ()
+  "Force sync the global mode-line-format to ALL buffers, even customized ones."
+  (let ((global-format (default-value 'mode-line-format)))
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+	(setq mode-line-format global-format)
+	(force-mode-line-update))))
+  (message "Forced mode-line sync to all buffers"))
+
+
 
 
 (defun my/copy-current-buffer-to-another-buffer (target-buffer)
