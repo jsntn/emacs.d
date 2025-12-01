@@ -484,3 +484,6 @@
 [submodule "site-lisp/mcp.el"]
 	path = site-lisp/mcp.el
 	url = https://github.com/lizqwerscott/mcp.el.git
+[submodule "site-lisp/citre"]
+	path = site-lisp/citre
+	url = https://github.com/universal-ctags/citre.git
