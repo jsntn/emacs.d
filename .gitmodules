@@ -487,3 +487,6 @@
 [submodule "site-lisp/citre"]
 	path = site-lisp/citre
 	url = https://github.com/universal-ctags/citre.git
+[submodule "site-lisp/emacs-calfw"]
+	path = site-lisp/emacs-calfw
+	url = https://github.com/kiwanami/emacs-calfw.git
