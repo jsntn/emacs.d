@@ -490,3 +490,6 @@
 [submodule "site-lisp/emacs-calfw"]
 	path = site-lisp/emacs-calfw
 	url = https://github.com/kiwanami/emacs-calfw.git
+[submodule "site-lisp/life-calendar"]
+	path = site-lisp/life-calendar
+	url = https://github.com/vshender/emacs-life-calendar.git
