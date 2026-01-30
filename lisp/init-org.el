@@ -291,32 +291,36 @@
     (setq org-super-agenda-groups
 	  `(
 	    ;; (:name "Scheduled today"
-	    ;; 	 :and (:scheduled today :not (:habit t) :not (:todo ("WAIT" "CANCEL")))
+	    ;; 	 :and (:scheduled today :not (:habit t) :not (:todo ("CLOSED" "CANCEL")))
 	    ;; 	 :order 0)
 	    ;; (format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
-	    (:name "Important and urgent (within 2 days)"
-		   :and (:priority "A" :deadline today :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
-		   :and (:priority "A" :scheduled today :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+	    (:name "🔥 [DO NOW] Important and urgent (within 2 days)"
+		   :and (:priority "A" :deadline today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+		   :and (:priority "A" :scheduled today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :and (:priority "A" :deadline (before
 						  ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 2 86400)))
-						  ) :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+						  ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :and (:priority "A" :scheduled (before
 						   ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
-						   ) :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+						   ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :order 5)
-	    (:name "Important but not urgent in this week"
-		   :and (:priority "A" :deadline (before ,org-end-of-week) :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
-		   :and (:priority "A" :scheduled (before ,org-end-of-week) :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+	    (:name "📅 [SCHEDULE] Important but not urgent in this week"
+		   :and (:priority "A" :deadline (before ,org-end-of-week) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+		   :and (:priority "A" :scheduled (before ,org-end-of-week) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :order 10)
-	    (:name "Urgent (within 2 days) but not important"
-		   :and (:not (:priority "A") :deadline today :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
-		   :and (:not (:priority "A") :scheduled today :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+	    (:name "📅 [SCHEDULE] Important but not urgent"
+		   :and (:priority "A" :deadline future :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+		   :and (:priority "A" :scheduled future :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+		   :order 11)
+	    (:name "📞 [DELEGATE] Urgent (within 2 days) but not important"
+		   :and (:not (:priority "A") :deadline today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+		   :and (:not (:priority "A") :scheduled today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :and (:not (:priority "A") :deadline (before
 							 ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
-							 ) :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+							 ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :and (:not (:priority "A") :scheduled (before
 							  ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
-							  ) :not (:todo ("WAIT" "CANCEL")) :not (:habit t))
+							  ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   ;; Show this section after "Today" and "Important", because
 		   ;; their order is unspecified, defaulting to 0. Sections
 		   ;; are displayed lowest-number-first.
