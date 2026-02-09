@@ -144,6 +144,7 @@
 	("VIA" :foreground "#5F87FF" :background "black" :box (:line-width (-1 . -1)))
 	("Jason" :foreground "white" :background "#38761d" :box (:line-width (-1 . -1)))
 	("ChatGPT" :foreground "white" :background "#19C37D")
+	("TBD" :foreground "black" :background "#FFFF00" :box (:line-width (-1 . -1)))
 	)
       )
 ;; global-hl-todo-mode doesn't seem to work
