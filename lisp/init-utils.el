@@ -357,18 +357,28 @@ Version 2023-07-25"
 
 
 (defun my/review-random-function ()
-  "Review a random function defined in my Emacs configuration."
+  "Review a random function defined in my Emacs setup."
   (interactive)
-  (let* ((config-functions '())
-         (config-files (directory-files-recursively user-emacs-directory "\\.el$")))
+  (let ((functions '())
+	(config-files (directory-files-recursively
+		       user-emacs-directory "\\.el$")))
     (dolist (file config-files)
       (with-temp-buffer
-        (insert-file-contents file)
-        (goto-char (point-min))
-        (while (re-search-forward "(defun \\([^ ]+\\)" nil t)
-          (push (match-string 1) config-functions))))
-    (let* ((command (nth (random (length config-functions)) config-functions)))
-      (describe-function (intern command)))))
+	(insert-file-contents file)
+	(goto-char (point-min))
+	(while (re-search-forward
+		"^(defun \\([^ ]+\\)" nil t)
+	  (push (list :name (match-string 1)
+		      :file file
+		      :pos (match-beginning 0))
+		functions))))
+    (when functions
+      (let* ((choice (nth (random (length functions)) functions))
+	     (file (plist-get choice :file))
+	     (pos  (plist-get choice :pos)))
+	(find-file file)
+	(goto-char pos)
+	(recenter)))))
 
 (defun my--review-random-my-function (prefix)
   "Review a random function that starts with PREFIX in my Emacs configuration."
