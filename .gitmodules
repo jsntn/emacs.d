@@ -493,3 +493,12 @@
 [submodule "site-lisp/life-calendar"]
 	path = site-lisp/life-calendar
 	url = https://github.com/jsntn/emacs-life-calendar.git
+[submodule "site-lisp/agent-shell"]
+	path = site-lisp/agent-shell
+	url = https://github.com/xenodium/agent-shell.git
+[submodule "site-lisp/acp.el"]
+	path = site-lisp/acp.el
+	url = https://github.com/xenodium/acp.el.git
+[submodule "site-lisp/shell-maker"]
+	path = site-lisp/shell-maker
+	url = https://github.com/xenodium/shell-maker.git
