@@ -505,3 +505,6 @@
 [submodule "site-lisp/pulsar"]
 	path = site-lisp/pulsar
 	url = https://github.com/protesilaos/pulsar.git
+[submodule "site-lisp/org-edna-el"]
+	path = site-lisp/org-edna-el
+	url = https://github.com/jsntn/org-edna-el.git
