@@ -35,8 +35,9 @@
 	   (or (x-get-selection 'CLIPBOARD) "")))
       (unless (equal current-clipboard my-clipboard-text)
 	(setq my-clipboard-text current-clipboard)
-	(with-temp-file output-file-path
-	  (insert current-clipboard)))))
+	(let ((coding-system-for-write 'utf-8))
+	  (with-temp-file output-file-path
+	    (insert current-clipboard))))))
 
   (setq my-clipboard-text nil)
   (my-schedule-task-every-x-secs x-seconds 'my-clipboard-monitor-task))
@@ -56,8 +57,9 @@ Updated: 2024-04-24"
 	(let ((current-contents (get-register register-name)))
 	  (unless (equal current-contents my-previous-kill-contents)
 	    (setq my-previous-kill-contents current-contents)
-	    (with-temp-file output-file-path
-	      (insert current-contents))))
+	    (let ((coding-system-for-write 'utf-8))
+	      (with-temp-file output-file-path
+		(insert current-contents)))))
     (error)))
 
   (setq my-previous-kill-contents "")
@@ -95,7 +97,8 @@ Updated: 2024-04-24"
 	     (my-remove-file-suffix (file-name-nondirectory file-path)))
 	    (current-contents (when (file-readable-p file-path)
 				(with-temp-buffer
-				  (insert-file-contents file-path)
+				  (let ((coding-system-for-read 'utf-8))
+				    (insert-file-contents file-path))
 				  (buffer-string))))
 	    (previous-contents (assoc base-filename previous-contents-alist)))
 
@@ -139,7 +142,8 @@ Updated: 2024-04-24"
 		  (my-remove-file-suffix (file-name-nondirectory file-path)))
 		 (current-contents (when (file-readable-p file-path)
 				     (with-temp-buffer
-				       (insert-file-contents file-path)
+				       (let ((coding-system-for-read 'utf-8))
+					 (insert-file-contents file-path))
 				       (buffer-string))))
 		 (previous-contents (assoc base-filename previous-contents-alist)))
 
