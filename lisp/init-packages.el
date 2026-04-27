@@ -207,6 +207,7 @@
  org-modern-faces nil
  org-modern-label-border nil
  org-modern-block-name '("‣ " . "‣ ")
+ org-modern-table nil
  ;; for some more parameters configuration, refer to
  ;; https://github.com/minad/org-modern/blob/main/org-modern.el
  )
