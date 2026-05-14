@@ -291,8 +291,9 @@
 	    ;; ripgrep (rg) is used for unlinked references below - (executable-find "rg")
 	    ;; #'org-roam-unlinked-references-section
 	    ))
-(with-eval-after-load 'org-roam
-  (run-with-idle-timer 30 nil #'org-roam-db-autosync-mode))
+;; Disabled: using org-node (no DB needed) instead of org-roam db sync
+;; (with-eval-after-load 'org-roam
+;;   (run-with-idle-timer 30 nil #'org-roam-db-autosync-mode))
 
 (my-check-for-executable "ripgrep (rg)" "rg")
 ;; END: Org-roam }
