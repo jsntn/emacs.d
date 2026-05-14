@@ -511,3 +511,15 @@
 [submodule "site-lisp/ghostel"]
 	path = site-lisp/ghostel
 	url = https://github.com/dakra/ghostel.git
+[submodule "site-lisp/org-node"]
+	path = site-lisp/org-node
+	url = https://github.com/meedstrom/org-node.git
+[submodule "site-lisp/org-mem"]
+	path = site-lisp/org-mem
+	url = https://github.com/meedstrom/org-mem.git
+[submodule "site-lisp/el-job"]
+	path = site-lisp/el-job
+	url = https://github.com/meedstrom/el-job.git
+[submodule "site-lisp/truename-cache"]
+	path = site-lisp/truename-cache
+	url = https://github.com/meedstrom/truename-cache.git
