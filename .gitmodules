@@ -523,3 +523,6 @@
 [submodule "site-lisp/truename-cache"]
 	path = site-lisp/truename-cache
 	url = https://github.com/meedstrom/truename-cache.git
+[submodule "site-lisp/deft"]
+	path = site-lisp/deft
+	url = https://github.com/jrblevin/deft.git
