@@ -62,7 +62,7 @@ Version 2023-08-03"
   (let ((dir sdcv-dictionary-data-dir))
     (unless (file-exists-p dir)
       (make-directory dir t)))
-  (global-set-key (kbd "C-c d") 'sdcv-search-pointer)
+  (global-set-key (kbd "C-c d") 'sdcv-search-input)
 
   ;; extract my dictionaries of ~/misc/*.bz2 files to stardict dictionary folder
   ;; note: the extraction will not happen if ~/misc/extracted.txt exists
