@@ -194,6 +194,34 @@
 (setq org-drill-scope 'agenda-with-archives)
 (setq org-drill-leech-method "warn")
 
+(defvar org-drill-rating-overlay nil)
+
+(defun org-drill-show-rating-overlay ()
+  "Display quality rating guide as an overlay at end of buffer."
+  (org-drill-remove-rating-overlay)
+  (setq org-drill-rating-overlay (make-overlay (point-max) (point-max)))
+  (overlay-put org-drill-rating-overlay 'after-string
+               (propertize
+                "\n\n─── Quality Rating ───────────────────
+ 0 - Completely forgot
+ 1 - Saw answer, still took a bit to sink in
+ 2 - Saw answer, then remembered
+ 3 - Took a while, but finally remembered
+ 4 - A little thought, then remembered
+ 5 - Remembered easily
+──────────────────────────────────────\n"
+                'face 'font-lock-comment-face)))
+
+(defun org-drill-remove-rating-overlay ()
+  "Remove the rating overlay."
+  (when (overlayp org-drill-rating-overlay)
+    (delete-overlay org-drill-rating-overlay)
+    (setq org-drill-rating-overlay nil)))
+
+(add-hook 'org-drill-display-answer-hook #'org-drill-show-rating-overlay)
+(advice-add 'org-drill-reschedule :after
+            (lambda (&rest _) (org-drill-remove-rating-overlay)))
+
 (require 'org-modern)
 (add-hook 'org-mode-hook #'org-modern-mode)
 (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
