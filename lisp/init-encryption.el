@@ -4,9 +4,19 @@
 
 
 ;; `org-crypt` configurations
-(require 'org-crypt) ; require org-crypt
+(require 'org-crypt)
 
-(org-crypt-use-before-save-magic)
+;; NOTE: We don't use `org-crypt-use-before-save-magic' because it relies on
+;; `org-scan-tags', which skips entries in files with #+filetags: :ARCHIVE:.
+;; Instead, we use a regex-based scan to find :crypt: headings directly.
+(add-hook 'before-save-hook
+          (lambda ()
+            (when (derived-mode-p 'org-mode)
+              (org-with-wide-buffer
+               (goto-char (point-min))
+               (while (re-search-forward
+                       (format "^\\*+ .*:%s:" org-crypt-tag-matcher) nil t)
+                 (org-encrypt-entry))))))
 (setq org-tags-exclude-from-inheritance '("crypt"))
 
 (if (boundp 'org-crypt-key-mail)
