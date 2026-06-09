@@ -111,13 +111,23 @@
     (mapc (lambda (face) (set-face-attribute face nil :strike-through t))
 	  '(org-done org-headline-done))))
 
+(defcustom my-terminal-supports-strike-through 'unknown
+  "Whether the terminal supports strike-through rendering."
+  :type '(choice (const :tag "Yes" t)
+		 (const :tag "No" nil)
+		 (const :tag "Unknown (ask)" unknown)))
+
 (unless noninteractive
   (unless (display-graphic-p)
-    (read-string "Please be informed that on Terminal Emacs, the strike-through might not work on the `org-fontify-done-headline' and `org-modern-horizontal-rule' in this configuration. Press ENTER to continue.")
-    ;; see,
-    ;; https://stackoverflow.com/questions/24185102/emacs-console-mode-org-mode-strike-through-is-not-displayed-as-expected
-    ;; https://emacs.stackexchange.com/questions/43722/emacsclient-nw-and-strikethrough-text-in-org-mode
-    ))
+    (when (eq my-terminal-supports-strike-through 'unknown)
+      (let ((choice (read-char-choice
+		     "Does this terminal support strike-through text? (y)es, (n)o, (u)nknown: "
+		     '(?y ?n ?u))))
+	(pcase choice
+	  (?y (customize-save-variable 'my-terminal-supports-strike-through t))
+	  (?n (customize-save-variable 'my-terminal-supports-strike-through nil)
+	      (message "Note: strike-through text will not render properly in this terminal."))
+	  (?u nil))))))
 
 ;; ===============================================================
 ;; Org agenda settings ｜ <<org-agenda-settings>>
