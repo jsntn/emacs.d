@@ -222,13 +222,16 @@
 
 (defun my-install-dependency (name command)
   "Install a dependency NAME using COMMAND if it is not already installed.
-Display the MESSAGE if installation is skipped."
+Store the selection to skip future prompts."
   (unless (executable-find name)
-    (if (y-or-n-p (format "Install %s? " name))
-	(progn
-	  (message (format "Installing %s..." name))
-	  (shell-command command))
-      (message "Skipping %s installation." name))))
+    (unless (member name my-deps-declined)
+      (if (y-or-n-p (format "Install %s? " name))
+	  (progn
+	    (message (format "Installing %s..." name))
+	    (shell-command command))
+	(customize-save-variable 'my-deps-declined
+				 (cons name my-deps-declined))
+	(message "Skipping %s installation (remembered)." name)))))
 
 (defun my-install-all-deps ()
   "Install enabled Emacs dependencies."
@@ -273,14 +276,19 @@ Display the MESSAGE if installation is skipped."
 	    (message "%s is not considered to install on Windows." name))
 	   ;; for any other condition
 	   (t
-	    (let* ((msg-content
-		    (if msg
-			msg
-		      (format "%s executable is needed in this configuration file,
+	    (unless (member name my-deps-declined)
+	      (let* ((msg-content
+		      (if msg
+			  msg
+			(format "%s executable is needed in this configuration file,
 check/install it manually." name)))
-		   (prompt-msg (concat msg-content " Press ENTER to continue.")))
-	      (when (string= (read-string prompt-msg) "")
-		(message "Continuing..."))
+		     (prompt-msg (concat msg-content " (d)ismiss permanently, or ENTER to continue.")))
+		(if (eq (read-char-choice prompt-msg '(?d ?\r ?\n)) ?d)
+		    (progn
+		      (customize-save-variable 'my-deps-declined
+					       (cons name my-deps-declined))
+		      (message "Dismissed %s permanently." name))
+		  (message "Continuing...")))
 	      ))))))))
 
 

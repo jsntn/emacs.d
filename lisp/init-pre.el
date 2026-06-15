@@ -145,21 +145,29 @@ Updated: 2023-09-26"
 ;; (symbol-value 'org-directory)
 
 
+(defcustom my-deps-declined nil
+  "List of dependency/executable names the user has declined to install."
+  :type '(repeat string)
+  :group 'my)
+
 (defun my-check-for-executable (executable-name executable-file &optional message)
-  "Check if the given EXECUTABLE-FILE is available. If it's not found,
-prompt the user with the optional MESSAGE (or a default message) to install it."
+  "Check if EXECUTABLE-FILE is available, with option to dismiss permanently."
   (let* ((default-message
 	   (format "Please be informed that %s is used in this configuration, \
 but the %s executable file is not found. You need to install it manually."
 		   executable-name executable-file))
 	 (msg (or message default-message))
-	 (noninteractive-msg msg)
-	 (prompt-msg (concat msg " Press ENTER to continue.")))
+	 (prompt-msg (concat msg " (d)ismiss permanently, or ENTER to continue.")))
     (unless (executable-find executable-file)
-      (if noninteractive
-	  (message noninteractive-msg)
-	(when (string= (read-string prompt-msg) "")
-	  (message "Continuing..."))))))
+      (unless (member executable-file my-deps-declined)
+	(if noninteractive
+	    (message msg)
+	  (if (eq (read-char-choice prompt-msg '(?d ?\r ?\n)) ?d)
+	      (progn
+		(customize-save-variable 'my-deps-declined
+					 (cons executable-file my-deps-declined))
+		(message "Dismissed %s permanently." executable-name))
+	    (message "Continuing...")))))))
 
 
 
