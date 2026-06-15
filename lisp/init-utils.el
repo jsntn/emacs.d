@@ -753,6 +753,8 @@ will be killed. nov-mode buffers will be skipped."
 		 (not (buffer-modified-p buf))
 		 (not ; skip nov-mode buffers
 		  (eq (buffer-local-value 'major-mode buf) 'nov-mode))
+		 (not ; skip archive-mode buffers
+		  (eq (buffer-local-value 'major-mode buf) 'archive-mode))
 		 )
 	(if (file-readable-p filename)
 	    ;; If the file exists and is readable, revert the buffer.
