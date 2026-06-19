@@ -37,6 +37,18 @@ Version 2023-08-03"
 
   (require 'sdcv-pure)
 
+  ;; Render HTML-formatted dictionary entries using Emacs's built-in shr
+  (with-eval-after-load 'sdcv-pure
+    (defun sdcv-render-html (str)
+      "Render HTML in STR using shr, or return STR as-is if not HTML."
+      (if (and str (string-match-p "<[a-zA-Z]" str))
+          (with-temp-buffer
+            (insert str)
+            (shr-render-region (point-min) (point-max))
+            (buffer-string))
+        str))
+    (advice-add 'stardict-lookup :filter-return #'sdcv-render-html))
+
   (defvar sdcv-simple-dict
     `(,(expand-file-name "misc/stardict-lazyworm-ec-2.4.2" user-emacs-directory))
     "Dictionary to search")
@@ -45,10 +57,18 @@ Version 2023-08-03"
     `((,(expand-file-name "misc/stardict-lazyworm-ec-2.4.2" user-emacs-directory))
       (,(expand-file-name "misc/stardict-langdao-ce-gb-2.4.2" user-emacs-directory))
       (,(expand-file-name "misc/stardict-langdao-ec-gb-2.4.2" user-emacs-directory))
+      ;; (,(expand-file-name "misc/stardict-cdict-gb-2.4.2" user-emacs-directory)) ; there is display issue
       (,(expand-file-name "misc/stardict-cedict-gb-2.4.2" user-emacs-directory))
       (,(expand-file-name "misc/stardict-quick_eng-zh_CN-2.4.2" user-emacs-directory))
       (,(expand-file-name "misc/stardict-DrEye4in1-2.4.2" user-emacs-directory))
-      (,(expand-file-name "misc/stardict-ProECCE-2.4.2" user-emacs-directory)))
+      (,(expand-file-name "misc/stardict-ProECCE-2.4.2" user-emacs-directory))
+      (,(expand-file-name "misc/stardict-collins5-2.4.2" user-emacs-directory))
+      (,(expand-file-name "misc/stardict-dictd-jargon-2.4.2" user-emacs-directory))
+      (,(expand-file-name "misc/stardict-longman-2.4.2" user-emacs-directory))
+      (,(expand-file-name "misc/stardict-oald-2.4.2" user-emacs-directory))
+      (,(expand-file-name "misc/Chinese-English_Wiktionary_dictionary_stardict" user-emacs-directory))
+      (,(expand-file-name "misc/English-English_Wiktionary_dictionary_stardict" user-emacs-directory))
+      )
     "List of dictionaries to search.")
 
   (global-set-key (kbd "C-c d") 'sdcv-simple-definition)
