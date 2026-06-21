@@ -72,6 +72,7 @@ Version 2023-08-03"
     "List of dictionaries to search.")
 
   (global-set-key (kbd "C-c d") 'sdcv-simple-definition)
+  (global-set-key (kbd "C-c S") 'sdcv-select-definition)
   (global-set-key (kbd "C-c D") 'sdcv-complete-definition)
   )
 
