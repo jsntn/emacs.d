@@ -96,8 +96,9 @@ Return a list of .el file names (without extension) from each matched directory.
   "Advice function to set emoji font when cnfonts-mode is activated."
   (my-set-emoji-font))
 
-;; Advising cnfonts-set-font to include setting emoji font
-(advice-add 'cnfonts-set-font :after 'my-advice-cnfonts-set-font)
+;; Advising cnfonts-set-font to include setting emoji font (Windows only)
+(when *is-win*
+  (advice-add 'cnfonts-set-font :after 'my-advice-cnfonts-set-font))
 
 (when (display-graphic-p)
   (unless (my-emoji-can-display)
