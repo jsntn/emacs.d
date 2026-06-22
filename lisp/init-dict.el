@@ -49,11 +49,10 @@ Version 2023-08-03"
         str))
     (advice-add 'stardict-lookup :filter-return #'sdcv-render-html))
 
-  (defvar sdcv-simple-dict
-    `(,(expand-file-name "misc/stardict-lazyworm-ec-2.4.2" user-emacs-directory))
-    "Dictionary to search")
+  (setq sdcv-simple-dict
+    `(,(expand-file-name "misc/stardict-lazyworm-ec-2.4.2" user-emacs-directory)))
 
-  (defvar sdcv-multiple-dicts
+  (setq sdcv-multiple-dicts
     `((,(expand-file-name "misc/stardict-lazyworm-ec-2.4.2" user-emacs-directory))
       (,(expand-file-name "misc/stardict-langdao-ce-gb-2.4.2" user-emacs-directory))
       (,(expand-file-name "misc/stardict-langdao-ec-gb-2.4.2" user-emacs-directory))
@@ -68,8 +67,7 @@ Version 2023-08-03"
       (,(expand-file-name "misc/stardict-oald-2.4.2" user-emacs-directory))
       (,(expand-file-name "misc/Chinese-English_Wiktionary_dictionary_stardict" user-emacs-directory))
       (,(expand-file-name "misc/English-English_Wiktionary_dictionary_stardict" user-emacs-directory))
-      )
-    "List of dictionaries to search.")
+      ))
 
   (global-set-key (kbd "C-c d") 'sdcv-simple-definition)
   (global-set-key (kbd "C-c S") 'sdcv-select-definition)
