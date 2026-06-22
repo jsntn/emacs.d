@@ -115,9 +115,11 @@
   "Whether the terminal supports strike-through rendering."
   :type '(choice (const :tag "Yes" t)
 		 (const :tag "No" nil)
-		 (const :tag "Unknown (ask)" unknown)))
+		 (const :tag "Unknown (ask)" unknown))
+  :group 'convenience)
 
-(unless noninteractive
+(defun my--check-strike-through-support ()
+  "Prompt about strike-through support if not yet answered."
   (unless (display-graphic-p)
     (when (eq my-terminal-supports-strike-through 'unknown)
       (let ((choice (read-char-choice
@@ -128,6 +130,9 @@
 	  (?n (customize-save-variable 'my-terminal-supports-strike-through nil)
 	      (message "Note: strike-through text will not render properly in this terminal."))
 	  (?u nil))))))
+
+(unless noninteractive
+  (add-hook 'after-init-hook #'my--check-strike-through-support))
 
 ;; ===============================================================
 ;; Org agenda settings ｜ <<org-agenda-settings>>
