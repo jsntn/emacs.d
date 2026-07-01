@@ -118,6 +118,7 @@
 (require 'init-gpg) ; GPG settings
 
 (require 'init-ibuffer) ; IBuffer mode settings
+(require 'init-image-viewer) ; image viewer and image-mode settings
 
 (require 'init-org) ; Org-mode settings
 (require 'init-plantuml) ; PlantUML settings
