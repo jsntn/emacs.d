@@ -150,8 +150,22 @@ Updated: 2023-09-26"
   :type '(repeat string)
   :group 'my)
 
+(defvar my--custom-ensure-attempted nil
+  "Non-nil if custom.el has already been lazily loaded.")
+
+(defun my--ensure-custom-loaded ()
+  "Load custom.el if it hasn't been loaded yet.
+This ensures my-deps-declined has the user's previously dismissed choices."
+  (unless (or (bound-and-true-p custom-loaded)
+	(and (boundp 'my--custom-ensure-attempted) my--custom-ensure-attempted))
+    (setq my--custom-ensure-attempted t)
+    (when (and (boundp 'custom-file) custom-file (file-exists-p custom-file))
+      (load custom-file 'noerror 'nomessage)
+      (setq custom-loaded t))))
+
 (defun my-check-for-executable (executable-name executable-file &optional message)
   "Check if EXECUTABLE-FILE is available, with option to dismiss permanently."
+  (my--ensure-custom-loaded)
   (let* ((default-message
 	   (format "Please be informed that %s is used in this configuration, \
 but the %s executable file is not found. You need to install it manually."
