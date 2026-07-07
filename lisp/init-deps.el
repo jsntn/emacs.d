@@ -292,7 +292,10 @@ check/install it manually." name)))
 	      ))))))))
 
 
-(progn
+(defun my--check-deps-at-startup ()
+  "Check and install dependencies after custom.el is loaded.
+Runs via emacs-startup-hook so my-deps-declined already contains
+the user's previously dismissed choices."
   (when *is-win*
     (my-check-for-executable "Scoop (Windows)" "scoop"))
   (when *is-mac*
@@ -300,6 +303,8 @@ check/install it manually." name)))
   (when *is-linux*
     (my-check-for-executable "npm (macOS/Linux)" "npm"))
   (my-install-all-deps))
+
+(add-hook 'emacs-startup-hook #'my--check-deps-at-startup)
 
 
 (provide 'init-deps)
