@@ -178,8 +178,8 @@ but the %s executable file is not found. You need to install it manually."
 	    (message msg)
 	  (if (eq (read-char-choice prompt-msg '(?d ?\r ?\n)) ?d)
 	      (progn
-		(customize-save-variable 'my-deps-declined
-					 (cons executable-file my-deps-declined))
+		(setq my-deps-declined (cons executable-file my-deps-declined))
+		(customize-save-variable 'my-deps-declined my-deps-declined)
 		(message "Dismissed %s permanently." executable-name))
 	    (message "Continuing...")))))))
 
