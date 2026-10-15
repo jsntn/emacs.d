@@ -10,7 +10,7 @@
 (defun sh/current-time-microseconds ()
   "Return the current time formatted to include microseconds."
   (let* ((nowtime (current-time))
-	 (now-ms (format "%.3s" (nth 2 nowtime)))) ; use "%.3s" to limit to 3 characters
+	 (now-ms (format "%.3s" (nth 2 (time-convert nowtime 'list))))) ; use "%.3s" to limit to 3 characters
     (concat (format-time-string "[%Y-%m-%dT%T" nowtime) (format ".%s]" now-ms))))
 
 (defun sh/ad-timestamp-message (FORMAT-STRING &rest args)

@@ -59,7 +59,7 @@
 (require 'eglot)
 (setq eglot-stay-out-of '(company)) ; see https://web.archive.org/web/20240731123602/https://github.com/joaotavora/eglot/issues/324
 
-(when *is-linux*
+(when (and *is-linux* (executable-find "emacs-lsp-booster"))
   (require 'eglot-booster)
   (with-eval-after-load 'eglot
     (eglot-booster-mode)))
