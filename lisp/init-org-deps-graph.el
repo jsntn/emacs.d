@@ -46,6 +46,13 @@ touching them are dropped (a finished blocker no longer constrains anything)."
 (defvar my--org-deps-graph-source nil
   "Source Org file the current graph was built from.")
 
+(defvar-local my--org-deps-graph-svg nil
+  "Path to the SVG file of the graph currently shown in this buffer.")
+
+(defvar-local my--org-deps-graph-dotfile nil
+  "Path to the Graphviz .dot source of the graph in this buffer.
+Reused to export a PNG for external viewing.")
+
 (defvar my--org-deps-graph-jumps nil
   "Alist (CHAR . TARGET) for the current graph.
 TARGET is (:id ID) or (:task-id TASK-ID) or (:pos POS).")
@@ -354,6 +361,7 @@ Node hint characters are bound dynamically per graph in `my--org-deps-show'.")
   (define-key map (kbd "q")   #'quit-window)
   (define-key map (kbd "g")   #'my/org-deps-graph-refresh)
   (define-key map (kbd "RET") #'my-org-deps-graph-jump-line)
+  (define-key map (kbd "O")   #'my/org-deps-graph-open-external)
   ;; cursor navigation between task lines (vim + emacs)
   (define-key map (kbd "j")   #'my-org-deps-graph-next)
   (define-key map (kbd "k")   #'my-org-deps-graph-prev)
@@ -387,6 +395,15 @@ Falls back to a light gray if the color cannot be resolved."
         (apply #'format "#%02x%02x%02x"
                (mapcar (lambda (c) (/ c 256)) (color-values fg)))
       "#cccccc")))
+
+(defun my--org-deps-theme-bg ()
+  "Return the current theme's default background as a hex string.
+Falls back to white if the color cannot be resolved."
+  (let ((bg (face-attribute 'default :background nil t)))
+    (if (and bg (not (eq bg 'unspecified)))
+        (apply #'format "#%02x%02x%02x"
+               (mapcar (lambda (c) (/ c 256)) (color-values bg)))
+      "#ffffff")))
 
 (defun my--org-deps-font-pt ()
   "Return the current default font size in points, following the live theme.
@@ -422,7 +439,7 @@ it is vector so it stays crisp at any scale."
                               "-Tsvg" dotfile "-o" svg)))
         (unless (and (eq rc 0) (file-exists-p svg))
           (user-error "dot failed (rc=%s); see *org-deps-dot*" rc)))
-      (list :data data :svg svg :hints hints :keys keys))))
+      (list :data data :svg svg :dot dotfile :hints hints :keys keys))))
 
 (defun my--org-deps-todo-face (todo)
   "Return a face spec for TODO keyword from the live theme, or nil."
@@ -438,9 +455,15 @@ it is vector so it stays crisp at any scale."
   (let* ((data (plist-get result :data))
          (nodes (plist-get data :nodes))
          (svg (plist-get result :svg))
+         (dotfile (plist-get result :dot))
          (hints (plist-get result :hints))
          (keys (plist-get result :keys))
          (buf (get-buffer-create "*Org Deps Graph*")))
+    ;; Show the buffer alone in the frame so the graph gets the full frame
+    ;; width (not a split half), then measure that window: the SVG width below
+    ;; needs the real text width of the window the graph ends up in.
+    (pop-to-buffer buf)
+    (delete-other-windows (get-buffer-window buf t))
     (with-current-buffer buf
       (my-org-deps-graph-mode)
       (let ((inhibit-read-only t))
@@ -450,13 +473,25 @@ it is vector so it stays crisp at any scale."
                                      my--org-deps-graph-source))
                             'face 'bold))
         (insert (propertize
-                 "Hint letter: jump · j/k/n/p: move · RET: jump line · g: refresh · q: quit\n\n"
+                 "Hint: jump · j/k/n/p: move · RET: jump · O: open externally · g: refresh · q: quit\n\n"
                  'face 'shadow))
-        ;; vector graph (transparent canvas blends with buffer bg)
-        (insert-image (create-image svg 'svg nil))
+        ;; Vector graph (transparent canvas blends with buffer bg).
+        ;; Scale the graph to exactly fill the window's text width: narrow
+        ;; graphs grow to be legible, wide ones shrink to stay on-screen, so
+        ;; browsing is always vertical.  `:scale 1.0' is pinned so `:width'
+        ;; is the literal target pixel width — otherwise Emacs' HiDPI
+        ;; auto-scale multiplies it and the graph overshoots.  SVG is vector,
+        ;; so both growing and shrinking stay crisp.
+        (insert-image
+         (create-image svg 'svg nil
+                       :width (window-body-width (get-buffer-window buf t) t)
+                       :scale 1.0))
         (insert "\n\n")
         ;; org-style hint list; each line carries its jump target as a text
         ;; property so cursor navigation + RET work, and letters jump directly.
+        ;; remember the generated files so `O' can export/open them externally
+        (setq-local my--org-deps-graph-svg svg)
+        (setq-local my--org-deps-graph-dotfile dotfile)
         (setq-local my--org-deps-graph-jumps nil)
         (dolist (k keys)
           (let* ((ch (cdr (assoc k hints)))
@@ -480,8 +515,7 @@ it is vector so it stays crisp at any scale."
                                    title "\n")))
                 (insert (propertize line 'org-deps-target target)))))))
       (goto-char (point-min))
-      (my--org-deps-move-line 1))     ; land on first task line
-    (pop-to-buffer buf)))
+      (my--org-deps-move-line 1)))) ; land on first task line
 
 (defun my-org-deps-graph-jump-self ()
   "Jump using the hint char that invoked this command."
@@ -491,6 +525,32 @@ it is vector so it stays crisp at any scale."
     (if target
         (my--org-deps-do-jump target)
       (message "No node for hint `%c'" ch))))
+
+(defun my/org-deps-graph-open-external ()
+  "Export the current graph as a PNG and open it externally.
+The in-buffer SVG has a transparent canvas, which many OS image viewers
+render as black or blank; so a PNG whose background matches the current
+Emacs theme background is produced via `dot -Gbgcolor=...' from the saved
+.dot source and opened with the system default image viewer (Windows shell,
+else `browse-url'), so the exported image looks like the in-buffer graph."
+  (interactive)
+  (unless (and my--org-deps-graph-dotfile
+               (file-exists-p my--org-deps-graph-dotfile))
+    (user-error "No graph .dot source for this buffer; regenerate with `g'"))
+  (let* ((png (concat (file-name-sans-extension my--org-deps-graph-dotfile)
+                      ".png"))
+         (rc (call-process my-org-deps-graph-dot nil "*org-deps-dot*" nil
+                           "-Tpng" (format "-Gbgcolor=%s" (my--org-deps-theme-bg))
+                           my--org-deps-graph-dotfile "-o" png)))
+    (unless (and (eq rc 0) (file-exists-p png))
+      (user-error "dot PNG export failed (rc=%s); see *org-deps-dot*" rc))
+    (cond
+     ((fboundp 'w32-shell-execute)
+      (w32-shell-execute "open" (expand-file-name png)))
+     ((eq system-type 'darwin)
+      (call-process "open" nil 0 nil png))
+     (t (browse-url (concat "file://" (expand-file-name png)))))
+    (message "Opened %s" (file-name-nondirectory png))))
 
 ;;;###autoload
 (defun my/org-deps-graph ()
