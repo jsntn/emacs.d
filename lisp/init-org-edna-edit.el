@@ -154,11 +154,69 @@ EXCLUDE-MARKER, if set, is omitted from the candidates."
          (choice (completing-read prompt (mapcar #'car cands) nil t)))
     (cdr (assoc choice cands))))
 
-(defun my--org-edna-read-direction ()
-  "Ask the user for the relation direction.  Return a symbol."
-  (pcase (completing-read "Direction: " '("blocks" "blocked-by") nil t)
-    ("blocks" 'blocks)
-    ("blocked-by" 'blocked-by)))
+(defun my--org-edna-task-summary (marker)
+  "Return a summary plist for the task at MARKER.
+\(:title TITLE :todo TODO :blockers (TITLE ...)), where :blockers lists
+the headings this task is currently blocked by (its :BLOCKER: ids(...)
+resolved to titles; unresolved ids show as \"<unknown ID>\")."
+  (save-excursion
+    (goto-char marker)
+    (let* ((title (org-get-heading t t t t))
+           (todo (org-get-todo-state))
+           (blk (org-entry-get (point) "BLOCKER"))
+           (ids (my--org-edna-parse-ids blk))
+           (blockers
+            (mapcar
+             (lambda (id)
+               (let ((pos (org-find-entry-with-id id)))
+                 (if pos
+                     (save-excursion (goto-char pos) (org-get-heading t t t t))
+                   (format "<unknown %s>" id))))
+             ids)))
+      (list :title title :todo todo :blockers blockers))))
+
+(defun my--org-edna-format-summary (summary)
+  "Render a task SUMMARY plist (from `my--org-edna-task-summary') to text."
+  (let ((title (plist-get summary :title))
+        (todo (plist-get summary :todo))
+        (blockers (plist-get summary :blockers)))
+    (concat
+     (format "  %-6s %s\n" (or todo "") title)
+     (if blockers
+         (mapconcat (lambda (b) (format "         ↑ blocked by: %s\n" b))
+                    blockers "")
+       "         (no blockers)\n"))))
+
+(defun my--org-edna-preview (current other)
+  "Show CURRENT and OTHER task summaries in a temp window.
+Returns the preview buffer so the caller can bury/kill it."
+  (let ((buf (get-buffer-create "*Org Deps Preview*"))
+        (cur-sum (my--org-edna-task-summary current))
+        (other-sum (my--org-edna-task-summary other)))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert "Confirm the relation between these two tasks:\n\n")
+        (insert "current:\n" (my--org-edna-format-summary cur-sum) "\n")
+        (insert "other:\n" (my--org-edna-format-summary other-sum)))
+      (goto-char (point-min))
+      (setq buffer-read-only t))
+    (display-buffer buf '(display-buffer-at-bottom (window-height . 12)))
+    buf))
+
+(defun my--org-edna-read-direction (&optional current other)
+  "Ask the user for the relation direction.  Return a symbol.
+When CURRENT and OTHER markers are given, first show a preview of both
+tasks' TODO state and existing blockers so the user can compare before
+choosing."
+  (let ((buf (when (and current other)
+               (my--org-edna-preview current other))))
+    (unwind-protect
+        (pcase (completing-read "Direction: " '("blocks" "blocked-by") nil t)
+          ("blocks" 'blocks)
+          ("blocked-by" 'blocked-by))
+      (when (buffer-live-p buf)
+        (quit-windows-on buf)))))
 
 (defun my--org-edna-maybe-trigger ()
   "Ask whether to add a TRIGGER.  Return non-nil on yes."
@@ -169,7 +227,7 @@ EXCLUDE-MARKER, if set, is omitted from the candidates."
 (defun my--org-edna-do-add (current)
   "Add a dependency from CURRENT marker via completion + direction."
   (let* ((other (my--org-edna-read-task "Other task: " current))
-         (dir (my--org-edna-read-direction))
+         (dir (my--org-edna-read-direction current other))
          (roles (my--org-edna-resolve-roles current other dir))
          (trigger (my--org-edna-maybe-trigger)))
     (my--org-edna-add-blocker (car roles) (cdr roles) trigger)
@@ -196,7 +254,7 @@ The marked task is resolved to a marker (same buffer by id)."
       (user-error "Marked task %s not found in this buffer"
                   (plist-get my--org-edna-marked :title)))
     (let* ((other (copy-marker mpos))
-           (dir (my--org-edna-read-direction))
+           (dir (my--org-edna-read-direction current other))
            (roles (my--org-edna-resolve-roles current other dir))
            (trigger (my--org-edna-maybe-trigger)))
       (my--org-edna-add-blocker (car roles) (cdr roles) trigger)
