@@ -119,7 +119,11 @@
   :group 'convenience)
 
 (defun my--check-strike-through-support ()
-  "Prompt about strike-through support if not yet answered."
+  "Prompt about strike-through support if not yet answered.
+Only prompts in a real interactive terminal frame.  Under a daemon the
+startup frame has no tty, so defer the question to the first terminal
+client frame via `server-after-make-frame-hook' instead of blocking
+daemon startup."
   (unless (display-graphic-p)
     (when (eq my-terminal-supports-strike-through 'unknown)
       (let ((choice (read-char-choice
@@ -131,8 +135,22 @@
 	      (message "Note: strike-through text will not render properly in this terminal."))
 	  (?u nil))))))
 
+(defun my--maybe-check-strike-through-support ()
+  "Run `my--check-strike-through-support' once a usable frame exists.
+Removes itself from `server-after-make-frame-hook' after it has an
+answer so later client frames are not re-prompted."
+  (when (frame-live-p (selected-frame))
+    (my--check-strike-through-support)
+    (unless (eq my-terminal-supports-strike-through 'unknown)
+      (remove-hook 'server-after-make-frame-hook
+		   #'my--maybe-check-strike-through-support))))
+
 (unless noninteractive
-  (add-hook 'after-init-hook #'my--check-strike-through-support))
+  (if (daemonp)
+      ;; Daemon startup has no tty: ask when a terminal client attaches.
+      (add-hook 'server-after-make-frame-hook
+		#'my--maybe-check-strike-through-support)
+    (add-hook 'after-init-hook #'my--check-strike-through-support)))
 
 ;; ===============================================================
 ;; Org agenda settings ｜ <<org-agenda-settings>>
@@ -313,10 +331,10 @@
 		   :and (:priority "A" :deadline today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :and (:priority "A" :scheduled today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :and (:priority "A" :deadline (before
-						  ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 2 86400)))
+						  ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
 						  ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :and (:priority "A" :scheduled (before
-						   ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
+						   ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
 						   ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :order 5)
 	    (:name "📅 [SCHEDULE] Important but not urgent in this week"
@@ -331,10 +349,10 @@
 		   :and (:not (:priority "A") :deadline today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :and (:not (:priority "A") :scheduled today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :and (:not (:priority "A") :deadline (before
-							 ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
+							 ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
 							 ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   :and (:not (:priority "A") :scheduled (before
-							  ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
+							  ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
 							  ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
 		   ;; Show this section after "Today" and "Important", because
 		   ;; their order is unspecified, defaulting to 0. Sections
