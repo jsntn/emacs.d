@@ -355,6 +355,7 @@ Computed at call time so the date boundaries track the current day."
 (require 'org-task-scheduler)
 
 (require 'init-org-deps-graph) ; task dependency graph (graphviz) + keyboard jump
+(require 'init-org-edna-edit)  ; interactive edna dependency editor (M-x my/org-deps-edit)
 
 
 
