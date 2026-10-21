@@ -458,7 +458,17 @@ it is vector so it stays crisp at any scale."
          (dotfile (plist-get result :dot))
          (hints (plist-get result :hints))
          (keys (plist-get result :keys))
+         (edges (plist-get data :edges))
+         ;; key -> list of keys it blocks / is blocked by, for the per-row
+         ;; relation suffix (shown using the same hint letters as the graph)
+         (blocks (make-hash-table :test 'equal))
+         (blocked-by (make-hash-table :test 'equal))
          (buf (get-buffer-create "*Org Deps Graph*")))
+    ;; build both relation directions from the edges (FROM blocks TO)
+    (dolist (e edges)
+      (let ((f (car e)) (tk (cdr e)))
+        (push tk (gethash f blocks))
+        (push f (gethash tk blocked-by))))
     ;; Show the buffer alone in the frame so the graph gets the full frame
     ;; width (not a split half), then measure that window: the SVG width below
     ;; needs the real text width of the window the graph ends up in.
@@ -509,10 +519,27 @@ it is vector so it stays crisp at any scale."
                                             (or (my--org-deps-todo-face todo) 'org-todo))))
                      (priostr (when (and prio (not (string-empty-p prio)))
                                 (propertize (format "[#%s]" prio) 'face 'org-priority)))
+                     ;; relation suffix: which tasks this one blocks / is
+                     ;; blocked by, by hint letter (matches the graph)
+                     (labelfn (lambda (ks)
+                                (mapconcat
+                                 (lambda (x)
+                                   (let ((c (cdr (assoc x hints))))
+                                     (if c (char-to-string c) (format "%s" x))))
+                                 (sort (copy-sequence ks) #'string<) ", ")))
+                     (bl (gethash k blocks))
+                     (bb (gethash k blocked-by))
+                     (relstr (concat
+                              (when bl (propertize
+                                        (format "  → blocks: %s" (funcall labelfn bl))
+                                        'face 'shadow))
+                              (when bb (propertize
+                                        (format "  ← blocked-by: %s" (funcall labelfn bb))
+                                        'face 'shadow))))
                      (line (concat "  " hintstr " "
                                    (when todostr (concat todostr " "))
                                    (when priostr (concat priostr " "))
-                                   title "\n")))
+                                   title relstr "\n")))
                 (insert (propertize line 'org-deps-target target)))))))
       (goto-char (point-min))
       (my--org-deps-move-line 1)))) ; land on first task line
