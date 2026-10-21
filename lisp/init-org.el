@@ -263,112 +263,91 @@ answer so later client frames are not re-prompted."
   ;; remove the duplicates like below,
   ;; ("~/abc.org" "/Users/jason/abc.org")
   (my-normalized-paths-list 'org-agenda-files)
-
-
-  ;; { -- START --
-  ;; <<4osa-start>> | the link anchor to the end: [[./init-org.el::4osa-end]]
-
-  ;; move all these org-super-agenda
-  ;; configuration here to fix the issue that -
-  ;; "Symbol's value as variable is void"
-  ;; org-super-agenda -> [[./init-packages.el::org-super-agenda]]
-
-  (when (require 'org-super-agenda nil 'noerror) ; https://stackoverflow.com/a/7791820/4274775
-
-    ;; { -- START --
-    ;; <<calculate-date-start>> | the link anchor to the end: [[./init-org.el::calculate-date-end]]
-
-    ;; Return day of week: Sun=0, Mon=1, Tues=2, ..., Sat=6
-    ;; refer to 14.7 org-super-agenda from,
-    ;; https://web.archive.org/web/20220928105159/https://cmower.github.io/dotemacs/Emacs.html
-    ;; https://stackoverflow.com/a/67741229/4274775
-    (defun get-day-from-now (n)
-      (-let*
-	  (((sec minute hour day month year dow dst utcoff)
-	    (decode-time (+ (* n 86400) (float-time)))))
-	dow)) ;; dow <=> day-of-week
-
-    ;; get day of week today
-    (setq day-of-week-today (get-day-from-now 0))
-
-    ;; get date of week end
-    (-let* (((sec minute hour day month year dow dst utcoff) (decode-time (+ (* (- 8 day-of-week-today) 86400) (float-time)))))
-      (setq org-end-of-week (format "%d-%02d-%02d" year month day)))
-
-    ;; USEFUL BUT NOT BEING USED CURRENTLY
-    ;; (-let* (((sec minute hour day month year dow dst utcoff)
-    ;; 	     (let ((d (decode-time)))
-    ;; 	       ;; https://www.reddit.com/r/emacs/comments/xdvbgd/easiest_way_for_the_dates_of_tomorrow_weekstart/
-    ;; 	       (decoded-time-add d (make-decoded-time :day (% (- 8 (decoded-time-weekday d)) 8))))
-    ;; 	     ))
-    ;;   (format "%d-%02d-%02d" year month day))
-
-    ;; USEFUL BUT NOT BEING USED CURRENTLY
-    ;; ;; get date of soon, i.e. 4 days later
-    ;; (-let* (((sec minute hour day month year dow dst utcoff) (decode-time (+ (* 4 86400) (float-time))))) ;; 4 days
-    ;;   (setq org-soon-date (format "%d-%02d-%02d" year month day)))
-
-    ;; USEFUL BUT NOT BEING USED CURRENTLY
-    ;; ;; get date of the day after tomorrow
-    ;; (-let* (((sec minute hour day month year dow dst utcoff) (decode-time (+ (* 2 86400) (float-time))))) ;; 2 days
-    ;;   (setq org-day-after-tomorrow-date (format "%d-%02d-%02d" year month day)))
-
-    ;; USEFUL BUT NOT BEING USED CURRENTLY
-    ;; ;; get date of tomorrow
-    ;; (-let* (((sec minute hour day month year dow dst utcoff) (decode-time (+ (* 1 86400) (float-time))))) ;; 1 days
-    ;;   (setq org-tomorrow-date (format "%d-%02d-%02d" year month day)))
-
-    ;; <<calculate-date-end>> | the link anchor to the start: [[./init-org.el::calculate-date-start]]
-    ;; -- END -- }
-
-    (setq org-super-agenda-groups
-	  `(
-	    ;; (:name "Scheduled today"
-	    ;; 	 :and (:scheduled today :not (:habit t) :not (:todo ("CLOSED" "CANCEL")))
-	    ;; 	 :order 0)
-	    ;; (format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
-	    (:name "🔥 [DO NOW] Important and urgent (within 2 days)"
-		   :and (:priority "A" :deadline today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :and (:priority "A" :scheduled today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :and (:priority "A" :deadline (before
-						  ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
-						  ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :and (:priority "A" :scheduled (before
-						   ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
-						   ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :order 5)
-	    (:name "📅 [SCHEDULE] Important but not urgent in this week"
-		   :and (:priority "A" :deadline (before ,org-end-of-week) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :and (:priority "A" :scheduled (before ,org-end-of-week) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :order 10)
-	    (:name "📅 [SCHEDULE] Important but not urgent"
-		   :and (:priority "A" :deadline future :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :and (:priority "A" :scheduled future :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :order 11)
-	    (:name "📞 [DELEGATE] Urgent (within 2 days) but not important"
-		   :and (:not (:priority "A") :deadline today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :and (:not (:priority "A") :scheduled today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :and (:not (:priority "A") :deadline (before
-							 ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
-							 ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   :and (:not (:priority "A") :scheduled (before
-							  ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
-							  ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
-		   ;; Show this section after "Today" and "Important", because
-		   ;; their order is unspecified, defaulting to 0. Sections
-		   ;; are displayed lowest-number-first.
-		   :order 15)
-	    (:discard (:habit t))
-	    ;; After the last group, the agenda will display items that didn't
-	    ;; match any of these groups, with the default order position of 99
-	    ))
-    )
-  ;; <<4osa-end>> | the link anchor to the start: [[./init-org.el::4osa-start]]
-  ;; -- END -- }
   )
 
 (add-hook 'org-agenda-mode-hook
           'my-org-agenda-mode-hook)
+
+;; Keep the GLOBAL `org-super-agenda-groups' empty so the plain time-line
+;; agenda (`a' / `C-a < a') shows no grouping -- it is a pure day view, per
+;; org-agenda's design. Grouping is opt-in per command via a `let' binding
+;; in the command's settings (see the "u" urgency classifier in init.el and
+;; the "g"/"h" commands in init-packages.el). This line also clears any
+;; value a previous session's hook may have left behind.
+(setq org-super-agenda-groups nil)
+
+;; { -- START --
+;; <<4osa-start>> | the link anchor to the end: [[./init-org.el::4osa-end]]
+;;
+;; org-super-agenda urgency/importance grouping.
+;;
+;; This is NOT hung on `org-agenda-mode-hook' (which would force the
+;; grouping onto every agenda, including the plain time-line view `a').
+;; Following org-agenda's own design, the grouping belongs to a dedicated
+;; TODO-selection command: `org-agenda-list' (span-bound time-line) and a
+;; `alltodo' urgency classifier are different view types.  The custom
+;; command in init.el let-binds `org-super-agenda-groups' to the value
+;; returned here, so `alltodo' pulls ALL todos (span-independent) and the
+;; `before today+Nd' clauses actually match tomorrow/day-after items.
+;; org-super-agenda -> [[./init-packages.el::org-super-agenda]]
+(defun my/urgency-super-agenda-groups ()
+  "Return `org-super-agenda-groups' for the urgency/importance classifier.
+Computed at call time so the date boundaries track the current day."
+  (require 'org-super-agenda)
+  ;; { -- START --
+  ;; <<calculate-date-start>> | the link anchor to the end: [[./init-org.el::calculate-date-end]]
+  ;; Return day of week: Sun=0, Mon=1, Tues=2, ..., Sat=6
+  ;; refer to 14.7 org-super-agenda from,
+  ;; https://web.archive.org/web/20220928105159/https://cmower.github.io/dotemacs/Emacs.html
+  ;; https://stackoverflow.com/a/67741229/4274775
+  (cl-flet ((get-day-from-now (n)
+	      (-let* (((_sec _minute _hour _day _month _year dow _dst _utcoff)
+		       (decode-time (+ (* n 86400) (float-time)))))
+		dow)))             ;; dow <=> day-of-week
+    (let* ((day-of-week-today (get-day-from-now 0))
+	   (org-end-of-week
+	    (-let* (((_sec _minute _hour day month year _dow _dst _utcoff)
+		     (decode-time (+ (* (- 8 day-of-week-today) 86400) (float-time)))))
+	      (format "%d-%02d-%02d" year month day))))
+      ;; <<calculate-date-end>> | the link anchor to the start: [[./init-org.el::calculate-date-start]]
+      `(
+	(:name "🔥 [DO NOW] Important and urgent (within 2 days)"
+	       :and (:priority "A" :deadline today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :and (:priority "A" :scheduled today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :and (:priority "A" :deadline (before
+					      ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
+					      ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :and (:priority "A" :scheduled (before
+					       ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
+					       ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :order 5)
+	(:name "📅 [SCHEDULE] Important but not urgent in this week"
+	       :and (:priority "A" :deadline (before ,org-end-of-week) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :and (:priority "A" :scheduled (before ,org-end-of-week) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :order 10)
+	(:name "📅 [SCHEDULE] Important but not urgent"
+	       :and (:priority "A" :deadline future :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :and (:priority "A" :scheduled future :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :order 11)
+	(:name "📞 [DELEGATE] Urgent (within 2 days) but not important"
+	       :and (:not (:priority "A") :deadline today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :and (:not (:priority "A") :scheduled today :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :and (:not (:priority "A") :deadline (before
+						     ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
+						     ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       :and (:not (:priority "A") :scheduled (before
+						      ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
+						      ) :not (:todo ("CLOSED" "CANCEL")) :not (:habit t))
+	       ;; Show this section after "Today" and "Important", because
+	       ;; their order is unspecified, defaulting to 0. Sections
+	       ;; are displayed lowest-number-first.
+	       :order 15)
+	(:discard (:habit t))
+	;; After the last group, the agenda will display items that didn't
+	;; match any of these groups, with the default order position of 99
+	))))
+;; <<4osa-end>> | the link anchor to the start: [[./init-org.el::4osa-start]]
+;; -- END -- }
 
 
 
