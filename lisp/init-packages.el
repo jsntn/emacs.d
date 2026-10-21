@@ -260,10 +260,10 @@
 				:and (:priority "A" :deadline today :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
 				:and (:priority "A" :scheduled today :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
 				:and (:priority "A" :deadline (before
-							       ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 2 86400)))
+							       ,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
 							       ) :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
 				:and (:priority "A" :scheduled (before
-								,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 1 86400)))
+								,(format-time-string "%Y-%m-%d" (time-add (current-time) (* 3 86400)))
 								) :not (:habit t) :not (:effort> "0") :not (:todo ("WAIT" "CANCEL")))
 				:order 0)
 			 (:name "Energy Driven - Critical & Low Effort (<= 15 mins)"
