@@ -526,3 +526,6 @@
 [submodule "site-lisp/deft"]
 	path = site-lisp/deft
 	url = https://github.com/jrblevin/deft.git
+[submodule "site-lisp/gcmh"]
+	path = site-lisp/gcmh
+	url = https://github.com/emacsmirror/gcmh.git
