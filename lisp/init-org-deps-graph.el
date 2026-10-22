@@ -503,6 +503,13 @@ it is vector so it stays crisp at any scale."
         (setq-local my--org-deps-graph-svg svg)
         (setq-local my--org-deps-graph-dotfile dotfile)
         (setq-local my--org-deps-graph-jumps nil)
+        ;; Bind the per-graph hint letters on a buffer-private COPY of the mode
+        ;; map.  `special-mode' hands every graph buffer the *same* shared
+        ;; `my-org-deps-graph-mode-map' as its local map, so `local-set-key'
+        ;; here would permanently overwrite keys (e.g. a hint `j' clobbering
+        ;; j→next) in that shared map for all buffers.  A fresh copy isolates
+        ;; the hints and keeps j/k/n/p/g/q/RET/O intact.
+        (use-local-map (copy-keymap my-org-deps-graph-mode-map))
         (dolist (k keys)
           (let* ((ch (cdr (assoc k hints)))
                  (v (gethash k nodes))
