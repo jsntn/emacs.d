@@ -75,6 +75,12 @@
 (defvar-local my--org-deps-view-return-point nil
   "Marker of point in the parent window before the view was displayed.")
 
+(defvar-local my--org-deps-view-rendered-width nil
+  "Window body width used for the last render.")
+
+(defvar my--org-deps-view--refreshing nil
+  "Non-nil while `my--org-deps-view--window-size-change' re-renders.")
+
 ;; `my-org-deps-view-mode' runs after these are captured; keep them alive
 ;; across the major-mode change.
 (put 'my--org-deps-view-return-config 'permanent-local t)
@@ -295,6 +301,9 @@ up across the whole buffer."
                  'face 'my-org-deps-view-meta))
         (when (fboundp 'font-lock-ensure)
           (font-lock-ensure))
+        (setq-local my--org-deps-view-rendered-width
+                    (let ((win (get-buffer-window buffer)))
+                      (and (window-live-p win) (window-body-width win))))
         (goto-char (point-min))
         (forward-line (1- line))))))
 
@@ -417,6 +426,24 @@ match the real window width."
   (my--org-deps-view-revert)
   (message "%s completed tasks."
            (if my--org-deps-view-hide-done "Hiding" "Showing")))
+
+(defun my--org-deps-view--window-size-change (frame)
+  "Re-render a visible view whose window width changed.
+The first render can happen before `zoom-mode' resizes the split, so the
+rules would otherwise keep the pre-zoom width until the next refresh."
+  (unless my--org-deps-view--refreshing
+    (let ((my--org-deps-view--refreshing t))
+      (dolist (win (window-list frame 'no-minibuffer))
+        (with-current-buffer (window-buffer win)
+          (when (and (derived-mode-p 'my-org-deps-view-mode)
+                     my--org-deps-view-source
+                     (not (equal my--org-deps-view-rendered-width
+                                 (window-body-width win))))
+            (ignore-errors
+              (my--org-deps-view-render (current-buffer)
+                                        my--org-deps-view-source))))))))
+
+(add-hook 'window-size-change-functions #'my--org-deps-view--window-size-change)
 
 (defun my--org-deps-view-quit ()
   "Close the view, restoring the layout and point from before it opened."
