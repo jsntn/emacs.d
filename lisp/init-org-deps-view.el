@@ -110,14 +110,19 @@ property is removed whenever the region is fontified."
 
 (defun my--org-deps-view-at (marker)
   "Return a plist describing the heading at MARKER.
-Keys: :title :todo :path :when :marker."
+Keys: :title :todo :path :when :marker.
+Every string is stripped of text properties: `org-get-heading' and
+`org-get-outline-path' return propertized strings carrying the source
+buffer's `line-prefix'/`wrap-prefix' (`org-indent-mode') and faces, and
+inserting those into the view would shift columns visually."
   (save-excursion
     (goto-char marker)
     (let ((deadline (org-get-deadline-time (point)))
           (scheduled (org-get-scheduled-time (point))))
-      (list :title (org-get-heading t t t t)
-            :todo (org-get-todo-state)
-            :path (mapconcat #'identity (org-get-outline-path) " / ")
+      (list :title (substring-no-properties (org-get-heading t t t t))
+            :todo (substring-no-properties (or (org-get-todo-state) ""))
+            :path (mapconcat #'substring-no-properties
+                             (org-get-outline-path) " / ")
             :when (cond (deadline (format "deadline %s"
                                           (format-time-string "%m-%d" deadline)))
                         (scheduled (format "scheduled %s"
