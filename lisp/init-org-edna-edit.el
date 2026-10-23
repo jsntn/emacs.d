@@ -303,6 +303,17 @@ Blocked-by candidates come first, then blocking candidates.  TARGET is
               down-cands)))
     (append (nreverse up-cands) (nreverse down-cands))))
 
+(defun my--org-edna-ordered-collection (items)
+  "Return a completion table over ITEMS that keeps their given order.
+The `display-sort-function' metadata pins the order; without it a UI
+sort (Vertico's `vertico-sort-function', prescient, icomplete) would
+reorder by history and length and mix the two dependency groups."
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        '(metadata (display-sort-function . identity)
+                   (cycle-sort-function . identity))
+      (complete-with-action action items string pred))))
+
 (defun my--org-edna-read-picks (prompt candidates)
   "Read any number of picks from CANDIDATES, one RET per accepted pick.
 Each accepted pick is removed from the remaining candidates.  RET on
@@ -312,9 +323,11 @@ empty input applies the picks; C-g cancels all of them.  Return
     (while (and (not done) remaining)
       (let ((input (condition-case nil
                        (completing-read
-                        (format "%s [%d picked; empty RET = apply; C-g = cancel]\n  <- blocked-by (that task blocks this)   -> blocks (this task blocks that): "
+                        (format "%s [%d picked; empty RET = apply; C-g = cancel]\n  <- blocked-by (this task is blocked by below)   -> blocks (this task blocks below): "
                                 prompt (length picks))
-                        (mapcar #'car remaining) nil nil)
+                        (my--org-edna-ordered-collection
+                         (mapcar #'car remaining))
+                        nil nil)
                      (quit (setq aborted t) nil))))
         (cond
          (aborted (setq done t))
