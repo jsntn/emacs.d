@@ -123,18 +123,24 @@ An unresolvable UUID appears as an entry with only :unknown."
 ;;; Rendering
 ;;; ------------------------------------------------------------------
 
-(defun my--org-deps-view-insert-entry (entry)
-  "Insert ENTRY as one Org heading line.
+(defun my--org-deps-view-display-title (entry)
+  "Return ENTRY's title as displayed, substituting an empty title."
+  (let ((title (or (plist-get entry :title) "")))
+    (if (string-empty-p title) "(untitled)" title)))
+
+(defun my--org-deps-view-insert-entry (entry todo-width title-width)
+  "Insert ENTRY as one Org heading line, columns per TODO-WIDTH/TITLE-WIDTH.
 The metadata (date, outline path) is appended to the heading so each
-task occupies a single line."
+task occupies a single line, and every metadata column starts at the
+same offset across all sections."
   (if (plist-get entry :unknown)
-      (insert (propertize (format "  <unknown %s>" (plist-get entry :unknown))
+      (insert (make-string (+ 2 todo-width 1) ?\s)
+              (propertize (format "<unknown %s>" (plist-get entry :unknown))
                           'face 'my-org-deps-view-unknown)
               (propertize "  not in this buffer" 'face 'my-org-deps-view-meta)
               "\n")
-    (let* ((title (let ((t0 (plist-get entry :title)))
-                    (if (string-empty-p t0) "(untitled)" t0)))
-           (todo (plist-get entry :todo))
+    (let* ((title (my--org-deps-view-display-title entry))
+           (todo (or (plist-get entry :todo) ""))
            (path (plist-get entry :path))
            (when-text (plist-get entry :when))
            (meta (mapconcat #'identity
@@ -143,9 +149,15 @@ task occupies a single line."
                                         (and path (not (string-empty-p path)) path)))
                             " · "))
            (start (point)))
-      (insert "* " (if todo (concat todo " ") "") title)
+      (insert "* "
+              (if (string-empty-p todo)
+                  (make-string todo-width ?\s)
+                (concat todo
+                        (make-string (max 0 (- todo-width (string-width todo))) ?\s)))
+              " " title)
       (unless (string-empty-p meta)
-        (insert "   · " meta))
+        (insert (make-string (+ 3 (max 0 (- title-width (string-width title)))) ?\s)
+                "· " meta))
       (insert "\n")
       ;; Plain text with a marker property: Org font-lock owns the faces,
       ;; so the heading looks exactly like a normal Org heading.
@@ -157,14 +169,17 @@ task occupies a single line."
                                 (if (string-empty-p meta) "" (concat "\n" meta))
                                 "\nRET jumps to the task"))))))
 
-(defun my--org-deps-view-insert-section (arrow header hint entries)
-  "Insert a non-empty section with ARROW, HEADER, HINT and ENTRIES."
+(defun my--org-deps-view-insert-section (arrow header hint entries
+                                               todo-width title-width)
+  "Insert a non-empty section with ARROW, HEADER, HINT and ENTRIES.
+TODO-WIDTH and TITLE-WIDTH are shared by every section so columns line
+up across the whole buffer."
   (insert (propertize (format "%s %s (%d)" arrow header (length entries))
                       'face 'my-org-deps-view-section)
           (propertize (format "   %s" hint) 'face 'my-org-deps-view-meta)
           "\n")
   (dolist (entry entries)
-    (my--org-deps-view-insert-entry entry)))
+    (my--org-deps-view-insert-entry entry todo-width title-width)))
 
 (defun my--org-deps-view-rule (buffer)
   "Return a horizontal rule matching BUFFER's window width."
@@ -202,6 +217,17 @@ task occupies a single line."
                      down-all))
              (hidden (+ (- (length up-all) (length up))
                         (- (length down-all) (length down))))
+             (real (cl-remove-if (lambda (e) (plist-get e :unknown))
+                                 (append up down)))
+             (todo-width (apply #'max 0
+                                (mapcar (lambda (e)
+                                          (string-width (or (plist-get e :todo) "")))
+                                        real)))
+             (title-width (apply #'max 0
+                                 (mapcar (lambda (e)
+                                           (string-width
+                                            (my--org-deps-view-display-title e)))
+                                         real)))
              (counts (mapconcat
                       #'identity
                       (append (when up (list (format "%d blocked by" (length up))))
@@ -240,18 +266,20 @@ task occupies a single line."
          (t
           (when up
             (my--org-deps-view-insert-section
-             "<-" "BLOCKED BY" "tasks that block this one" up))
+             "<-" "BLOCKED BY" "tasks that block this one" up
+             todo-width title-width))
           (when (and up down)
             (insert "\n"))
           (when down
             (my--org-deps-view-insert-section
-             "->" "BLOCKS" "tasks that wait for this one" down))))
+             "->" "BLOCKS" "tasks that wait for this one" down
+             todo-width title-width))))
         (insert "\n"
                 (propertize (my--org-deps-view-rule buffer)
                             'face 'my-org-deps-view-meta)
                 "\n"
                 (propertize
-                 (format "RET jump   n/p move   D %s done   g refresh   q close"
+                 (format "RET jump   n/p j/k move   D %s done   g refresh   q close"
                          (if my--org-deps-view-hide-done "show" "hide"))
                  'face 'my-org-deps-view-meta))
         (when (fboundp 'font-lock-ensure)
@@ -392,7 +420,9 @@ match the real window width."
         (define-key map (kbd "RET") #'my--org-deps-view-ret)
         (define-key map [mouse-1] #'my--org-deps-view-mouse-jump)
         (define-key map (kbd "n") #'my--org-deps-view-next)
+        (define-key map (kbd "j") #'my--org-deps-view-next)
         (define-key map (kbd "p") #'my--org-deps-view-prev)
+        (define-key map (kbd "k") #'my--org-deps-view-prev)
         (define-key map (kbd "D") #'my--org-deps-view-toggle-done)
         (define-key map (kbd "g") #'revert-buffer)
         (define-key map (kbd "q") #'quit-window)
