@@ -57,6 +57,17 @@ Reused to export a PNG for external viewing.")
   "Alist (CHAR . TARGET) for the current graph.
 TARGET is (:id ID) or (:task-id TASK-ID) or (:pos POS).")
 
+(defvar-local my--org-deps-graph-image-marker nil
+  "Marker on the display character that shows the graph image.")
+
+(defvar-local my--org-deps-graph-natural nil
+  "Cons (WIDTH . HEIGHT), in pixels, of the chosen SVG at render time.")
+
+(defvar-local my--org-deps-graph-font-height nil
+  "Window font height in pixels when the graph was rendered.
+The image is scaled by the current height over this one, so it tracks
+font-size changes (`cnfonts-increase-fontsize') and text scaling.")
+
 (defun my--org-deps-collect (file)
   "Parse FILE without triggering find-file hooks.
 Return a plist (:nodes HASH :edges LIST).
@@ -552,6 +563,61 @@ layout while a deep chain stays TB.  Ties keep the earlier TB candidate."
           ((and (listp spec) (listp (car spec)) (keywordp (caar spec))) (car spec))
           (t nil))))
 
+(defun my--org-deps-graph-fit-image ()
+  "(Re)display the current SVG, scaled with the frame's font size.
+The image keeps the proportions it had when rendered and is capped by the
+window, so increasing the font grows the graph in step with the text."
+  (when (and my--org-deps-graph-svg
+             my--org-deps-graph-natural
+             my--org-deps-graph-font-height
+             my--org-deps-graph-image-marker)
+    (let ((win (get-buffer-window (current-buffer) t)))
+      (when (and win (marker-position my--org-deps-graph-image-marker))
+        (let* ((charh (window-font-height win))
+               (factor (max 0.1 (/ (float charh)
+                                   (max 1 my--org-deps-graph-font-height))))
+               (w (round (* (car my--org-deps-graph-natural) factor)))
+               (h (round (* (cdr my--org-deps-graph-natural) factor)))
+               (maxw (min w (window-body-width win t)))
+               ;; leave room for the title, the hint line and the first row
+               (maxh (min h (max 120 (- (window-body-height win t)
+                                        (* 4 charh)))))
+               (pos (marker-position my--org-deps-graph-image-marker)))
+          (with-silent-modifications
+            (put-text-property
+             pos (1+ pos) 'display
+             (create-image my--org-deps-graph-svg 'svg nil
+                           :max-width maxw :max-height maxh :scale 1.0))))))))
+
+(defun my--org-deps-graph-refit-windows (&rest _)
+  "Re-fit graph images in every window after a font or frame change.
+Only buffers that are actually displayed are touched, so a hidden graph
+is not regenerated behind the user's back."
+  (dolist (frame (frame-list))
+    (dolist (win (window-list frame t))
+      (with-current-buffer (window-buffer win)
+        (when (derived-mode-p 'my-org-deps-graph-mode)
+          (my--org-deps-graph-fit-image))))))
+
+(defun my--org-deps-graph-refit-soon (&rest _)
+  "Re-fit graph images after the pending font/frame resize is applied.
+Deferred so the implied frame resize that follows a font change is already
+in effect when the window's pixel size is measured."
+  (run-at-time 0 nil #'my--org-deps-graph-refit-windows))
+
+(defun my--org-deps-graph-refit-on-frame-change (&rest _)
+  "Re-fit graph images after a frame or window-size change."
+  (my--org-deps-graph-refit-soon))
+
+;; `cnfonts-increase/decrease-fontsize' resize the default face; the finish
+;; hook runs after the new font is installed.  Frame-size changes are handled
+;; too, because a font step usually resizes the frame around the same text.
+(add-hook 'cnfonts-set-font-finish-hook #'my--org-deps-graph-refit-soon)
+(add-hook 'window-size-change-functions
+          #'my--org-deps-graph-refit-on-frame-change)
+(add-hook 'text-scale-mode-hook
+          #'my--org-deps-graph-refit-on-frame-change)
+
 (defun my--org-deps-show (result)
   "Populate *Org Deps Graph* from RESULT and set up jump keys."
   (let* ((data (plist-get result :data))
@@ -597,13 +663,17 @@ layout while a deep chain stays TB.  Ties keep the earlier TB candidate."
         ;; Vector graph (transparent canvas blends with buffer bg).  The
         ;; orientation was chosen against this window: TB (vertical chains)
         ;; unless the graph is a wide fan-out, where LR keeps the text at full
-        ;; size.  `:max-width'/`:max-height' only shrink, never enlarge, so a
-        ;; small graph keeps its natural 10pt text instead of being blown up
-        ;; past the window.  `:scale 1.0' is pinned so those limits are literal
-        ;; pixels — otherwise Emacs' HiDPI auto-scale multiplies them.
-        (insert-image
-         (create-image svg 'svg nil
-                       :max-width maxw :max-height maxh :scale 1.0))
+        ;; size.  The image itself is placed by `my--org-deps-graph-fit-image',
+        ;; which also re-scales it when the font size changes; `:max-width' /
+        ;; `:max-height' cap it to the window and never enlarge past it.
+        (setq-local my--org-deps-graph-svg svg)
+        (setq-local my--org-deps-graph-natural
+                    (cons (plist-get choice :width) (plist-get choice :height)))
+        (setq-local my--org-deps-graph-font-height (window-font-height win))
+        (let ((start (point)))
+          (insert " ")
+          (setq-local my--org-deps-graph-image-marker (copy-marker start))
+          (my--org-deps-graph-fit-image))
         (insert "\n\n")
         ;; the losing candidates are no longer needed; only the winner is kept
         ;; so `O' and later refreshes do not accumulate temp SVGs/.dot files
@@ -614,7 +684,6 @@ layout while a deep chain stays TB.  Ties keep the earlier TB candidate."
         ;; org-style hint list; each line carries its jump target as a text
         ;; property so cursor navigation + RET work, and letters jump directly.
         ;; remember the generated files so `O' can export/open them externally
-        (setq-local my--org-deps-graph-svg svg)
         (setq-local my--org-deps-graph-dotfile dotfile)
         (setq-local my--org-deps-graph-jumps nil)
         ;; Bind the per-graph hint letters on a buffer-private COPY of the mode
