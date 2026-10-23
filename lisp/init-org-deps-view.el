@@ -6,8 +6,12 @@
 ;;   <- BLOCKED BY   tasks that block this one
 ;;   -> BLOCKS       tasks that wait for this one
 ;;
+;; The buffer is a real Org buffer, so entries are fontified exactly like
+;; normal Org headings: TODO keyword faces, and `org-headline-done' on
+;; completed tasks (which the user's config strikes through).
+;;
 ;; Read-only.  RET/mouse-1 jumps to an entry, n/p move between entries,
-;; g refreshes, q closes the window.
+;; D toggles hiding completed tasks, g refreshes, q closes the window.
 ;;
 ;; The view reads through the same parsers as the editor
 ;; (`my--org-edna-parse-ids', `my--org-edna-reverse-refs'), so it and
@@ -15,8 +19,9 @@
 ;; current buffer, like the editor: `org-find-entry-with-id' and the
 ;; reverse scan are buffer-local.
 ;;
-;; DONE tasks are listed (dimmed) even though `my/org-deps-graph' hides
-;; them, so completed-but-still-wired edges stay visible.
+;; DONE tasks are listed by default, even though `my/org-deps-graph'
+;; hides them, so completed-but-still-wired edges stay visible.  D hides
+;; them without touching the underlying data.
 ;;; Code:
 
 (require 'org)
@@ -60,6 +65,9 @@
 
 (defvar-local my--org-deps-view-source nil
   "Marker of the task whose dependencies this buffer shows.")
+
+(defvar-local my--org-deps-view-hide-done nil
+  "When non-nil, completed tasks are omitted from the view.")
 
 ;;; ------------------------------------------------------------------
 ;;; Data
@@ -106,49 +114,46 @@ An unresolvable UUID appears as an entry with only :unknown."
               :blocked-by (nreverse up)
               :blocks (nreverse down))))))
 
+(defun my--org-deps-view-done-p (entry)
+  "Return non-nil when ENTRY's TODO keyword counts as done."
+  (let ((todo (plist-get entry :todo)))
+    (and todo (member todo org-done-keywords))))
+
 ;;; ------------------------------------------------------------------
 ;;; Rendering
 ;;; ------------------------------------------------------------------
 
-(defun my--org-deps-view-insert-entry (entry title-width when-width todo-width)
-  "Insert one ENTRY, aligning columns to the given widths."
+(defun my--org-deps-view-insert-entry (entry)
+  "Insert ENTRY as an Org heading line plus an optional metadata line."
   (if (plist-get entry :unknown)
-      (insert (make-string (+ 3 todo-width 1) ?\s)
-              (propertize (format "<unknown %s>" (plist-get entry :unknown))
+      (insert (propertize (format "  <unknown %s>" (plist-get entry :unknown))
                           'face 'my-org-deps-view-unknown)
               (propertize "  not in this buffer" 'face 'my-org-deps-view-meta)
               "\n")
-    (let* ((title (plist-get entry :title))
-           (todo (or (plist-get entry :todo) ""))
-           (todo-face (and (not (string-empty-p todo)) (org-get-todo-face todo)))
+    (let* ((title (let ((t0 (plist-get entry :title)))
+                    (if (string-empty-p t0) "(untitled)" t0)))
+           (todo (plist-get entry :todo))
            (path (plist-get entry :path))
            (when-text (plist-get entry :when))
-           (tail (concat
-                  (when (> when-width 0)
-                    (propertize (format (format "%%-%ds" when-width) (or when-text ""))
-                                'face 'my-org-deps-view-meta))
-                  (when (and path (not (string-empty-p path)))
-                    (concat (if (> when-width 0) "  ")
-                            (propertize path 'face 'my-org-deps-view-meta)))))
-           (pad (max 0 (- title-width (string-width title)))))
-      (insert "   "
-              (if (string-empty-p todo)
-                  (make-string todo-width ?\s)
-                (propertize (format (format "%%-%ds" todo-width) todo)
-                            'face todo-face))
-              " ")
+           (meta (mapconcat #'identity
+                            (delq nil
+                                  (list when-text
+                                        (and path (not (string-empty-p path)) path)))
+                            " · ")))
+      (insert "* " (if todo (concat todo " ") ""))
       (insert-text-button title
                           'action #'my--org-deps-view-jump
                           'marker (plist-get entry :marker)
                           'follow-link t
                           'help-echo (concat title
-                                             (if (and path (not (string-empty-p path)))
-                                                 (concat "\n" path)
-                                               "")
+                                             (if (string-empty-p meta)
+                                                 ""
+                                               (concat "\n" meta))
                                              "\nRET jumps to the task"))
-      (unless (string-empty-p tail)
-        (insert (make-string (+ pad 2) ?\s) tail))
-      (insert "\n"))))
+      (insert "\n")
+      (unless (string-empty-p meta)
+        (insert (propertize (concat "  " meta) 'face 'my-org-deps-view-meta)
+                "\n")))))
 
 (defun my--org-deps-view-insert-section (arrow header hint entries)
   "Insert a non-empty section with ARROW, HEADER, HINT and ENTRIES."
@@ -156,24 +161,8 @@ An unresolvable UUID appears as an entry with only :unknown."
                       'face 'my-org-deps-view-section)
           (propertize (format "   %s" hint) 'face 'my-org-deps-view-meta)
           "\n")
-  (let* ((real (cl-remove-if (lambda (e) (plist-get e :unknown)) entries))
-         (title-width (if real
-                          (apply #'max
-                                 (mapcar (lambda (e) (string-width (plist-get e :title)))
-                                         real))
-                        0))
-         (when-width (if (cl-some (lambda (e) (plist-get e :when)) real)
-                         (apply #'max
-                                (mapcar (lambda (e)
-                                          (string-width (or (plist-get e :when) "")))
-                                        real))
-                       0))
-         (todo-width (apply #'max 6
-                            (mapcar (lambda (e)
-                                      (string-width (or (plist-get e :todo) "")))
-                                    real))))
-    (dolist (e entries)
-      (my--org-deps-view-insert-entry e title-width when-width todo-width))))
+  (dolist (entry entries)
+    (my--org-deps-view-insert-entry entry)))
 
 (defun my--org-deps-view-rule (buffer)
   "Return a horizontal rule matching BUFFER's window width."
@@ -186,59 +175,79 @@ An unresolvable UUID appears as an entry with only :unknown."
 (defun my--org-deps-view-render (buffer source)
   "Render SOURCE's dependencies into BUFFER, keeping the current line."
   (with-current-buffer buffer
-    (let* ((line (line-number-at-pos))
-           (inhibit-read-only t)
-           (data (my--org-deps-view-data source))
-           (self (plist-get data :self))
-           (up (plist-get data :blocked-by))
-           (down (plist-get data :blocks))
-           (counts (mapconcat #'identity
-                              (append (when up
-                                        (list (format "%d blocked by" (length up))))
-                                      (when down
-                                        (list (format "%d blocks" (length down)))))
-                              " · ")))
+    (let ((line (line-number-at-pos))
+          (inhibit-read-only t))
       (erase-buffer)
       (unless (derived-mode-p 'my-org-deps-view-mode)
-        (my-org-deps-view-mode))
+        (let ((org-mode-hook nil)
+              (org-inhibit-startup t))
+          (my-org-deps-view-mode)))
       (setq my--org-deps-view-source source)
-      (insert (propertize "Org deps: " 'face 'my-org-deps-view-meta)
-              (propertize (or (plist-get self :title) "") 'face 'bold)
-              (if (plist-get self :todo)
-                  (concat "  " (propertize (format "[%s]" (plist-get self :todo))
-                                           'face (or (org-get-todo-face
-                                                      (plist-get self :todo))
-                                                     'org-todo)))
-                "")
-              (if (plist-get self :when)
-                  (concat "  " (propertize (plist-get self :when)
-                                           'face 'my-org-deps-view-meta))
-                "")
-              (if (string-empty-p counts)
-                  ""
-                (concat "   " (propertize counts 'face 'my-org-deps-view-meta)))
-              "\n"
-              (propertize (my--org-deps-view-rule buffer)
-                          'face 'my-org-deps-view-meta)
-              "\n\n")
-      (cond
-       ((and (null up) (null down))
-        (insert (propertize "  No dependencies in this buffer.\n"
-                            'face 'my-org-deps-view-meta)))
-       (t
-        (when up
-          (my--org-deps-view-insert-section
-           "<-" "BLOCKED BY" "tasks that block this one" up))
-        (when (and up down)
-          (insert "\n"))
-        (when down
-          (my--org-deps-view-insert-section
-           "->" "BLOCKS" "tasks that wait for this one" down))))
-      (insert "\n"
-              (propertize "RET jump   n/p move   g refresh   q close"
-                          'face 'my-org-deps-view-meta))
-      (goto-char (point-min))
-      (forward-line (1- line)))))
+      (let* ((data (my--org-deps-view-data source))
+             (self (plist-get data :self))
+             (up-all (plist-get data :blocked-by))
+             (down-all (plist-get data :blocks))
+             (up (if my--org-deps-view-hide-done
+                     (cl-remove-if #'my--org-deps-view-done-p up-all)
+                   up-all))
+             (down (if my--org-deps-view-hide-done
+                       (cl-remove-if #'my--org-deps-view-done-p down-all)
+                     down-all))
+             (hidden (+ (- (length up-all) (length up))
+                        (- (length down-all) (length down))))
+             (counts (mapconcat
+                      #'identity
+                      (append (when up (list (format "%d blocked by" (length up))))
+                              (when down (list (format "%d blocks" (length down)))))
+                      " · ")))
+        (insert (propertize "Org deps: " 'face 'my-org-deps-view-meta)
+                (propertize (or (plist-get self :title) "") 'face 'bold)
+                (or (when (plist-get self :todo)
+                      (concat "  " (propertize (format "[%s]" (plist-get self :todo))
+                                               'face (or (org-get-todo-face
+                                                          (plist-get self :todo))
+                                                         'org-todo))))
+                    "")
+                (or (when (plist-get self :when)
+                      (concat "  " (propertize (plist-get self :when)
+                                               'face 'my-org-deps-view-meta)))
+                    "")
+                (if (string-empty-p counts)
+                    ""
+                  (concat "   " (propertize counts 'face 'my-org-deps-view-meta)))
+                (if (> hidden 0)
+                    (concat "   " (propertize (format "%d done hidden" hidden)
+                                              'face 'my-org-deps-view-meta))
+                  "")
+                "\n"
+                (propertize (my--org-deps-view-rule buffer)
+                            'face 'my-org-deps-view-meta)
+                "\n\n")
+        (cond
+         ((and (null up) (null down))
+          (insert (propertize (if (> hidden 0)
+                                  (format "  All %d dependencies are completed and hidden.\n"
+                                          hidden)
+                                "  No dependencies in this buffer.\n")
+                              'face 'my-org-deps-view-meta)))
+         (t
+          (when up
+            (my--org-deps-view-insert-section
+             "<-" "BLOCKED BY" "tasks that block this one" up))
+          (when (and up down)
+            (insert "\n"))
+          (when down
+            (my--org-deps-view-insert-section
+             "->" "BLOCKS" "tasks that wait for this one" down))))
+        (insert "\n"
+                (propertize
+                 (format "RET jump   n/p move   D %s done   g refresh   q close"
+                         (if my--org-deps-view-hide-done "show" "hide"))
+                 'face 'my-org-deps-view-meta))
+        (when (fboundp 'font-lock-ensure)
+          (font-lock-ensure))
+        (goto-char (point-min))
+        (forward-line (1- line))))))
 
 (defun my--org-deps-view-display-window (buffer _alist)
   "Display BUFFER in a normal window sized by the view options.
@@ -260,9 +269,9 @@ cannot resize them (`zoom--resize' works on `window-list' and
                    (- (max window-min-width
                            (min my-org-deps-view-width
                                 (- (frame-width) 20))))))
-              (error (display-buffer-pop-up-window buffer nil))))
+              (error (display-buffer-pop-up-window buffer nil)))))
     (set-window-buffer win buffer)
-    win)))
+    win))
 
 (defun my--org-deps-view-display (buffer)
   "Show BUFFER in a normal window: right, or below on a narrow frame."
@@ -302,6 +311,18 @@ match the real window width."
           (org-reveal)
           (recenter))))))
 
+(defun my--org-deps-view-ret ()
+  "Jump to the dependency entry at point."
+  (interactive)
+  (let ((button (button-at (point))))
+    (unless button
+      (let ((pos (next-button (line-beginning-position))))
+        (when (and pos (< pos (line-end-position)))
+          (setq button (button-at pos)))))
+    (if button
+        (my--org-deps-view-jump button)
+      (user-error "No task at point"))))
+
 (defun my--org-deps-view-next ()
   "Move to the next dependency entry."
   (interactive)
@@ -314,6 +335,14 @@ match the real window width."
   (let ((pos (previous-button (point))))
     (if pos (goto-char pos) (message "No previous entry"))))
 
+(defun my--org-deps-view-toggle-done ()
+  "Toggle whether completed tasks are hidden in the view."
+  (interactive)
+  (setq my--org-deps-view-hide-done (not my--org-deps-view-hide-done))
+  (my--org-deps-view-revert)
+  (message "%s completed tasks."
+           (if my--org-deps-view-hide-done "Hiding" "Showing")))
+
 (defun my--org-deps-view-revert (&rest _)
   "Re-render the view from its stored source marker."
   (unless (and (markerp my--org-deps-view-source)
@@ -324,17 +353,22 @@ match the real window width."
 
 (defvar my-org-deps-view-mode-map
   (let ((map (make-sparse-keymap)))
-    (set-keymap-parent map special-mode-map)
+    (set-keymap-parent map org-mode-map)
+    (define-key map (kbd "RET") #'my--org-deps-view-ret)
     (define-key map (kbd "n") #'my--org-deps-view-next)
     (define-key map (kbd "p") #'my--org-deps-view-prev)
+    (define-key map (kbd "D") #'my--org-deps-view-toggle-done)
+    (define-key map (kbd "g") #'revert-buffer)
+    (define-key map (kbd "q") #'quit-window)
     map)
   "Keymap for `my-org-deps-view-mode'.")
 
-(define-derived-mode my-org-deps-view-mode special-mode "OrgDeps"
+(define-derived-mode my-org-deps-view-mode org-mode "OrgDeps"
   "Major mode for the read-only dependency view.
 \\{my-org-deps-view-mode-map}"
   (setq-local truncate-lines t)
-  (setq-local revert-buffer-function #'my--org-deps-view-revert))
+  (setq-local revert-buffer-function #'my--org-deps-view-revert)
+  (setq buffer-read-only t))
 
 ;;;###autoload
 (defun my/org-deps-view ()
