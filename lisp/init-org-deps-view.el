@@ -120,7 +120,8 @@ inserting those into the view would shift columns visually."
     (let ((deadline (org-get-deadline-time (point)))
           (scheduled (org-get-scheduled-time (point))))
       (list :title (substring-no-properties (org-get-heading t t t t))
-            :todo (substring-no-properties (or (org-get-todo-state) ""))
+            :todo (let ((todo (org-get-todo-state)))
+                    (and todo (substring-no-properties todo)))
             :path (mapconcat #'substring-no-properties
                              (org-get-outline-path) " / ")
             :when (cond (deadline (format "deadline %s"
