@@ -141,6 +141,75 @@ Each edge is (FROM-KEY . TO-KEY) meaning FROM blocks TO."
       (puthash (cdr e) t h))
     h))
 
+(defun my--org-deps-order-keys (nodes edges)
+  "Return involved keys grouped by component, then by dependency rank.
+Components are ordered by the earliest source position of their members.
+Inside a component keys are ordered by rank (longest blocker chain), then by
+source position, so `j'/`k' walk chains in dependency order instead of
+hash-table order."
+  (let ((keys '())
+        (blockers (make-hash-table :test 'equal))
+        (rank (make-hash-table :test 'equal))
+        (parent (make-hash-table :test 'equal))
+        (pos (lambda (k)
+               (or (plist-get (gethash k nodes) :pos) most-positive-fixnum))))
+    (dolist (e edges)
+      (let ((f (car e)) (tk (cdr e)))
+        (cl-pushnew f keys :test #'equal)
+        (cl-pushnew tk keys :test #'equal)
+        (push f (gethash tk blockers))
+        (puthash f f parent)
+        (puthash tk tk parent)))
+    (cl-labels ((uf-find (x)
+                  (let ((p (gethash x parent)))
+                    (if (or (null p) (equal p x)) x
+                      (puthash x (uf-find p) parent))))
+                (uf-union (a b)
+                  (let ((ra (uf-find a)) (rb (uf-find b)))
+                    (unless (equal ra rb) (puthash ra rb parent)))))
+      (dolist (e edges) (uf-union (car e) (cdr e)))
+      ;; longest path from a root: rank(k) = 1 + max rank(blockers of k).
+      ;; Bounded by the node count so a cyclic BLOCKER chain cannot spin.
+      (let ((changed t) (rounds 0))
+        (while (and changed (<= rounds (length keys)))
+          (setq changed nil rounds (1+ rounds))
+          (dolist (k keys)
+            (let ((bs (gethash k blockers)))
+              (when bs
+                (let ((r (1+ (apply #'max
+                                    (mapcar (lambda (b) (or (gethash b rank) 0))
+                                            bs)))))
+                  (unless (eq r (gethash k rank))
+                    (puthash k r rank)
+                    (setq changed t))))))))
+      ;; per-component sort anchor: (min position . min key)
+      (let ((comps (make-hash-table :test 'equal)))
+        (dolist (k keys)
+          (let* ((c (uf-find k))
+                 (p (funcall pos k))
+                 (cur (gethash c comps)))
+            (cond ((null cur) (puthash c (cons p (format "%s" k)) comps))
+                  ((or (< p (car cur))
+                       (and (= p (car cur))
+                            (string-lessp (format "%s" k) (cdr cur))))
+                   (puthash c (cons p (format "%s" k)) comps)))))
+        (sort keys
+              (lambda (a b)
+                (let* ((ca (uf-find a)) (cb (uf-find b))
+                       (pa (car (gethash ca comps)))
+                       (pb (car (gethash cb comps)))
+                       (ra (or (gethash a rank) 0))
+                       (rb (or (gethash b rank) 0))
+                       (xa (funcall pos a))
+                       (xb (funcall pos b)))
+                  (cond ((/= pa pb) (< pa pb))
+                        ((not (equal ca cb))
+                         (string-lessp (cdr (gethash ca comps))
+                                       (cdr (gethash cb comps))))
+                        ((/= ra rb) (< ra rb))
+                        ((/= xa xb) (< xa xb))
+                        (t (string-lessp (format "%s" a) (format "%s" b)))))))))))
+
 (defun my--org-deps-assign-hints (keys)
   "Assign single-char hints to KEYS in order.
 Return an alist (KEY . CHAR); unassigned keys (beyond the hint
@@ -241,12 +310,13 @@ Returns a string in graphviz HTML-label syntax (begins `<', ends `>')."
     (format "<<TABLE BORDER=\"0\" CELLBORDER=\"0\" CELLSPACING=\"2\" CELLPADDING=\"1\"><TR>%s</TR></TABLE>>"
             cells)))
 
-(defun my--org-deps-dot (data hints fg pt)
+(defun my--org-deps-dot (data hints fg pt rankdir nodesep ranksep)
   "Build dot source from DATA plist and HINTS alist (key . char).
 Nodes are rendered as org-style TODO rows (HTML-like labels) with colored
-status chips pulled live from the theme.  FG is the theme foreground color
-and PT the default font point size; the canvas is transparent and the
-graph flows top-to-bottom."
+status chips pulled live from the theme.  FG is the theme foreground color,
+PT the default font point size and RANKDIR either \"TB\" or \"LR\".
+NODESEP and RANKSEP are Graphviz spacing in inches; the canvas is transparent
+and disconnected components are packed independently."
   (let* ((nodes (plist-get data :nodes))
          (edges (plist-get data :edges))
          (involved (my--org-deps-involved edges))
@@ -254,9 +324,10 @@ graph flows top-to-bottom."
          (epts (max 6 (round (* pt 0.8))))
          (out (concat "digraph deps {\n"
                       "  bgcolor=\"transparent\";\n"
-                      "  rankdir=TB;\n"
-                      "  nodesep=0.3;\n"
-                      "  ranksep=0.5;\n"
+                      "  pack=true;\n"
+                      (format "  rankdir=%s;\n" rankdir)
+                      (format "  nodesep=%s;\n" nodesep)
+                      (format "  ranksep=%s;\n" ranksep)
                       (format "  node [shape=box style=\"rounded\" fontname=\"Helvetica\" color=\"%s\" penwidth=1];\n" fg)
                       (format "  edge [color=\"%s\" fontcolor=\"%s\" fontsize=%d arrowsize=0.7];\n" fg fg epts))))
     (cl-labels ((nid (k) (format "n%d" (abs (sxhash k)))))
@@ -412,10 +483,12 @@ Falls back to white if the color cannot be resolved."
     (if (integerp h) (/ h 10.0) 10.0)))
 
 (defun my--org-deps-render (file)
-  "Parse FILE, render SVG via dot, return a plist with :svg path.
-The SVG uses the theme foreground color, a transparent canvas, and the
-current default font size (so it matches and tracks the buffer text);
-it is vector so it stays crisp at any scale."
+  "Parse FILE, render SVG via dot, return a plist with :candidates.
+The candidates are the same graph laid out top-to-bottom (\"TB\") and
+left-to-right (\"LR\"); `my--org-deps-show' picks whichever needs the least
+downscaling in the actual window.  The SVG uses the theme foreground color,
+a transparent canvas, and the current default font size (so it matches and
+tracks the buffer text); it is vector so it stays crisp at any scale."
   (unless (file-exists-p my-org-deps-graph-dot)
     (user-error "Graphviz dot not found: %s" my-org-deps-graph-dot))
   (let* ((data (my--org-deps-collect file))
@@ -423,23 +496,52 @@ it is vector so it stays crisp at any scale."
     (when (null edges)
       (user-error "No task dependencies (BLOCKER/blocker) found in %s"
                   (file-name-nondirectory file)))
-    (let* ((involved (my--org-deps-involved edges))
-           (keys (let (ks) (maphash (lambda (k _) (push k ks)) involved)
-                      (nreverse ks)))
+    (let* ((keys (my--org-deps-order-keys (plist-get data :nodes) edges))
            (hints (my--org-deps-assign-hints keys))
            (fg (my--org-deps-theme-fg))
            (pt (my--org-deps-font-pt))
-           (dot (my--org-deps-dot data hints fg pt))
-           (base (make-temp-name
-                  (expand-file-name "org-deps-" temporary-file-directory)))
-           (dotfile (concat base ".dot"))
-           (svg (concat base ".svg")))
-      (with-temp-file dotfile (insert dot))
-      (let ((rc (call-process my-org-deps-graph-dot nil "*org-deps-dot*" nil
-                              "-Tsvg" dotfile "-o" svg)))
-        (unless (and (eq rc 0) (file-exists-p svg))
-          (user-error "dot failed (rc=%s); see *org-deps-dot*" rc)))
-      (list :data data :svg svg :dot dotfile :hints hints :keys keys))))
+           (cands '()))
+      ;; Two orientations x two spacings.  Graphviz layout heuristics are not
+      ;; monotonic in the spacing, so the sizes are measured rather than
+      ;; guessed; the roomier preset comes first so it wins a tie.
+      (dolist (spec '(("TB" 0.3 0.5) ("LR" 0.3 0.5)
+                      ("TB" 0.1 0.35) ("LR" 0.1 0.35)))
+        (let* ((rankdir (nth 0 spec))
+               (nodesep (nth 1 spec))
+               (ranksep (nth 2 spec))
+               (base (make-temp-name
+                      (expand-file-name "org-deps-" temporary-file-directory)))
+               (dotfile (concat base ".dot"))
+               (svg (concat base ".svg")))
+          (with-temp-file dotfile
+            (insert (my--org-deps-dot data hints fg pt rankdir nodesep ranksep)))
+          (let ((rc (call-process my-org-deps-graph-dot nil "*org-deps-dot*" nil
+                                  "-Tsvg" dotfile "-o" svg)))
+            (unless (and (eq rc 0) (file-exists-p svg))
+              (user-error "dot failed (rc=%s); see *org-deps-dot*" rc)))
+          ;; `:scale 1.0' pins HiDPI auto-scaling so the measured size is the
+          ;; SVG's own pixel size, comparable with `window-body-*' pixels.
+          (let ((size (image-size (create-image svg 'svg nil :scale 1.0) t)))
+            (push (list :rankdir rankdir :nodesep nodesep :ranksep ranksep
+                        :svg svg :dot dotfile
+                        :width (car size) :height (cdr size))
+                  cands))))
+      (list :data data :candidates (nreverse cands)
+            :hints hints :keys keys))))
+
+(defun my--org-deps-choose-candidate (cands maxw maxh)
+  "Return the candidate that best fits MAXW x MAXH pixels.
+Each candidate is scaled down only if it exceeds either dimension; the one
+needing the least downscaling wins, so a wide fan-out flips to the LR
+layout while a deep chain stays TB.  Ties keep the earlier TB candidate."
+  (let ((best nil) (best-scale -1.0))
+    (dolist (c cands)
+      (let* ((w (max 1.0 (float (plist-get c :width))))
+             (h (max 1.0 (float (plist-get c :height))))
+             (s (min 1.0 (/ (float maxw) w) (/ (float maxh) h))))
+        (when (> s best-scale)
+          (setq best c best-scale s))))
+    (or best (car cands))))
 
 (defun my--org-deps-todo-face (todo)
   "Return a face spec for TODO keyword from the live theme, or nil."
@@ -454,8 +556,6 @@ it is vector so it stays crisp at any scale."
   "Populate *Org Deps Graph* from RESULT and set up jump keys."
   (let* ((data (plist-get result :data))
          (nodes (plist-get data :nodes))
-         (svg (plist-get result :svg))
-         (dotfile (plist-get result :dot))
          (hints (plist-get result :hints))
          (keys (plist-get result :keys))
          (edges (plist-get data :edges))
@@ -470,13 +570,22 @@ it is vector so it stays crisp at any scale."
         (push tk (gethash f blocks))
         (push f (gethash tk blocked-by))))
     ;; Show the buffer alone in the frame so the graph gets the full frame
-    ;; width (not a split half), then measure that window: the SVG width below
-    ;; needs the real text width of the window the graph ends up in.
+    ;; width (not a split half), then measure that window: the SVG fit below
+    ;; needs the real pixel size of the window the graph ends up in.
     (pop-to-buffer buf)
     (delete-other-windows (get-buffer-window buf t))
     (with-current-buffer buf
       (my-org-deps-graph-mode)
-      (let ((inhibit-read-only t))
+      (let* ((win (get-buffer-window buf t))
+             (maxw (window-body-width win t))
+             ;; leave room for the title, the hint line and the first list row
+             (maxh (max 120 (- (window-body-height win t)
+                               (* 4 (frame-char-height)))))
+             (choice (my--org-deps-choose-candidate
+                      (plist-get result :candidates) maxw maxh))
+             (svg (plist-get choice :svg))
+             (dotfile (plist-get choice :dot))
+             (inhibit-read-only t))
         (erase-buffer)
         (insert (propertize (format "Task dependencies — %s\n"
                                     (file-name-nondirectory
@@ -485,18 +594,23 @@ it is vector so it stays crisp at any scale."
         (insert (propertize
                  "Hint: jump · j/k/n/p: move · RET: jump · O: open externally · g: refresh · q: quit\n\n"
                  'face 'shadow))
-        ;; Vector graph (transparent canvas blends with buffer bg).
-        ;; Scale the graph to exactly fill the window's text width: narrow
-        ;; graphs grow to be legible, wide ones shrink to stay on-screen, so
-        ;; browsing is always vertical.  `:scale 1.0' is pinned so `:width'
-        ;; is the literal target pixel width — otherwise Emacs' HiDPI
-        ;; auto-scale multiplies it and the graph overshoots.  SVG is vector,
-        ;; so both growing and shrinking stay crisp.
+        ;; Vector graph (transparent canvas blends with buffer bg).  The
+        ;; orientation was chosen against this window: TB (vertical chains)
+        ;; unless the graph is a wide fan-out, where LR keeps the text at full
+        ;; size.  `:max-width'/`:max-height' only shrink, never enlarge, so a
+        ;; small graph keeps its natural 10pt text instead of being blown up
+        ;; past the window.  `:scale 1.0' is pinned so those limits are literal
+        ;; pixels — otherwise Emacs' HiDPI auto-scale multiplies them.
         (insert-image
          (create-image svg 'svg nil
-                       :width (window-body-width (get-buffer-window buf t) t)
-                       :scale 1.0))
+                       :max-width maxw :max-height maxh :scale 1.0))
         (insert "\n\n")
+        ;; the losing candidates are no longer needed; only the winner is kept
+        ;; so `O' and later refreshes do not accumulate temp SVGs/.dot files
+        (dolist (c (plist-get result :candidates))
+          (unless (eq c choice)
+            (ignore-errors (delete-file (plist-get c :svg)))
+            (ignore-errors (delete-file (plist-get c :dot)))))
         ;; org-style hint list; each line carries its jump target as a text
         ;; property so cursor navigation + RET work, and letters jump directly.
         ;; remember the generated files so `O' can export/open them externally
