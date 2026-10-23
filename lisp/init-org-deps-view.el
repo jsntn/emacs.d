@@ -69,6 +69,17 @@
 (defvar-local my--org-deps-view-hide-done nil
   "When non-nil, completed tasks are omitted from the view.")
 
+(defvar-local my--org-deps-view-return-config nil
+  "Window configuration from before the view was displayed.")
+
+(defvar-local my--org-deps-view-return-point nil
+  "Marker of point in the parent window before the view was displayed.")
+
+;; `my-org-deps-view-mode' runs after these are captured; keep them alive
+;; across the major-mode change.
+(put 'my--org-deps-view-return-config 'permanent-local t)
+(put 'my--org-deps-view-return-point 'permanent-local t)
+
 ;;; ------------------------------------------------------------------
 ;;; Data
 ;;; ------------------------------------------------------------------
@@ -182,12 +193,12 @@ up across the whole buffer."
     (my--org-deps-view-insert-entry entry todo-width title-width)))
 
 (defun my--org-deps-view-rule (buffer)
-  "Return a horizontal rule matching BUFFER's window width."
+  "Return a horizontal rule filling BUFFER's window width."
   (let* ((win (get-buffer-window buffer))
          (width (if (window-live-p win)
                     (window-body-width win)
                   my-org-deps-view-width)))
-    (make-string (max 20 (- width 2)) ?─)))
+    (make-string (max 20 width) ?─)))
 
 (defun my--org-deps-view-render (buffer source)
   "Render SOURCE's dependencies into BUFFER, keeping the current line."
@@ -279,7 +290,7 @@ up across the whole buffer."
                             'face 'my-org-deps-view-meta)
                 "\n"
                 (propertize
-                 (format "RET jump   n/p j/k move   D %s done   g refresh   q close"
+                 (format "RET jump   j/k move   D %s done   g refresh   q close"
                          (if my--org-deps-view-hide-done "show" "hide"))
                  'face 'my-org-deps-view-meta))
         (when (fboundp 'font-lock-ensure)
@@ -320,6 +331,12 @@ cannot resize them (`zoom--resize' works on `window-list' and
 The buffer is displayed before rendering so the horizontal rule can
 match the real window width."
   (let ((buffer (get-buffer-create my--org-deps-view-name)))
+    (unless (get-buffer-window buffer)
+      (with-current-buffer buffer
+        (setq-local my--org-deps-view-return-config
+                    (current-window-configuration))
+        (setq-local my--org-deps-view-return-point
+                    (copy-marker (window-point (selected-window))))))
     (my--org-deps-view-display buffer)
     (my--org-deps-view-render buffer source)
     buffer))
@@ -401,6 +418,24 @@ match the real window width."
   (message "%s completed tasks."
            (if my--org-deps-view-hide-done "Hiding" "Showing")))
 
+(defun my--org-deps-view-quit ()
+  "Close the view, restoring the layout and point from before it opened."
+  (interactive)
+  (let ((buffer (current-buffer))
+        (config my--org-deps-view-return-config)
+        (origin my--org-deps-view-return-point))
+    (kill-buffer buffer)
+    (if (and config (window-configuration-p config))
+        (progn
+          (set-window-configuration config)
+          (when (and (markerp origin) (marker-buffer origin)
+                     (buffer-live-p (marker-buffer origin)))
+            (let ((win (get-buffer-window (marker-buffer origin) t)))
+              (when win
+                (select-window win)
+                (goto-char origin)))))
+      (quit-window))))
+
 (defun my--org-deps-view-revert (&rest _)
   "Re-render the view from its stored source marker."
   (unless (and (markerp my--org-deps-view-source)
@@ -419,13 +454,11 @@ match the real window width."
         (set-keymap-parent map org-mode-map)
         (define-key map (kbd "RET") #'my--org-deps-view-ret)
         (define-key map [mouse-1] #'my--org-deps-view-mouse-jump)
-        (define-key map (kbd "n") #'my--org-deps-view-next)
         (define-key map (kbd "j") #'my--org-deps-view-next)
-        (define-key map (kbd "p") #'my--org-deps-view-prev)
         (define-key map (kbd "k") #'my--org-deps-view-prev)
         (define-key map (kbd "D") #'my--org-deps-view-toggle-done)
         (define-key map (kbd "g") #'revert-buffer)
-        (define-key map (kbd "q") #'quit-window)
+        (define-key map (kbd "q") #'my--org-deps-view-quit)
         map))
 
 (define-derived-mode my-org-deps-view-mode org-mode "OrgDeps"
