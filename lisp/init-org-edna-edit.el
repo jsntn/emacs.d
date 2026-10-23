@@ -6,7 +6,7 @@
 ;;   [a]dd            pick another task + direction, write :BLOCKER:
 ;;   [m]ark           remember this task (its ID) for a later link
 ;;   [l]ink to marked link the marked task to this one, pick direction
-;;   [d]elete         remove selected blockers from this task
+;;   [d]elete         remove dependencies in either direction, one RET per pick
 ;;
 ;; Direction is user-chosen (blocks / blocked-by). edna's :BLOCKER: always
 ;; lives on the BLOCKED task, so direction decides which heading is edited:
@@ -261,30 +261,95 @@ The marked task is resolved to a marker (same buffer by id)."
       (message "Linked %s (%s)."
                (plist-get my--org-edna-marked :title) dir))))
 
+(defun my--org-edna-reverse-refs (id)
+  "Return ((TITLE . MARKER) ...) for this-buffer headings blocked by ID.
+A heading is blocked by ID when ID appears in its :BLOCKER: ids(...)."
+  (let (hits)
+    (when id
+      (org-with-wide-buffer
+       (goto-char (point-min))
+       (org-map-entries
+        (lambda ()
+          (when (member id (my--org-edna-parse-ids
+                            (org-entry-get nil "BLOCKER")))
+            (push (cons (org-get-heading t t t t) (point-marker)) hits))))))
+    (nreverse hits)))
+
+(defun my--org-edna-delete-candidates (current)
+  "Return ((LABEL . TARGET) ...) for every dependency of CURRENT.
+TARGET is (upstream . UUID) for a task blocking CURRENT, or
+\(downstream . MARKER) for a task CURRENT blocks."
+  (let* ((up (save-excursion
+               (goto-char current)
+               (my--org-edna-parse-ids (org-entry-get nil "BLOCKER"))))
+         (self-id (save-excursion (goto-char current)
+                                  (org-entry-get nil "ID")))
+         (cands '()))
+    (dolist (uuid up)
+      (let ((pos (org-find-entry-with-id uuid)))
+        (push (cons (format "↑ %s"
+                            (if pos
+                                (save-excursion (goto-char pos)
+                                                (org-get-heading t t t t))
+                              (format "<unknown %s>" uuid)))
+                    (cons 'upstream uuid))
+              cands)))
+    (dolist (hit (my--org-edna-reverse-refs self-id))
+      (unless (= (marker-position (cdr hit)) current)
+        (push (cons (format "↓ %s" (car hit))
+                    (cons 'downstream (cdr hit)))
+              cands)))
+    (nreverse cands)))
+
+(defun my--org-edna-read-picks (prompt candidates)
+  "Read any number of picks from CANDIDATES, one RET per accepted pick.
+Each accepted pick is removed from the remaining candidates.  RET on
+empty input applies the picks; C-g cancels all of them.  Return
+\(ABORTED . PICKS)."
+  (let ((remaining candidates) (picks '()) (aborted nil) (done nil))
+    (while (and (not done) remaining)
+      (let ((input (condition-case nil
+                       (completing-read
+                        (format "%s [%d picked; empty RET = apply, C-g = cancel]: "
+                                prompt (length picks))
+                        (mapcar #'car remaining) nil nil)
+                     (quit (setq aborted t) nil))))
+        (cond
+         (aborted (setq done t))
+         ((or (null input) (string-empty-p input)) (setq done t))
+         ((assoc input remaining)
+          (let ((hit (assoc input remaining)))
+            (push hit picks)
+            (setq remaining (delete hit remaining))))
+         (t (message "Not a candidate: %s" input)))))
+    (cons aborted (nreverse picks))))
+
 (defun my--org-edna-do-delete (current)
-  "Delete selected blockers from CURRENT task."
-  (let* ((cur (save-excursion (goto-char current)
-                              (org-entry-get (point) "BLOCKER")))
-         (ids (my--org-edna-parse-ids cur)))
-    (unless ids
-      (user-error "This task has no blockers"))
-    (let* ((labeled (mapcar
-                     (lambda (id)
-                       (let ((pos (org-find-entry-with-id id)))
-                         (cons (if pos
-                                   (save-excursion
-                                     (goto-char pos)
-                                     (org-get-heading t t t t))
-                                 (format "<unknown %s>" id))
-                               id)))
-                     ids))
-           (picks (completing-read-multiple
-                   "Remove blockers (comma-separated): "
-                   (mapcar #'car labeled) nil t))
-           (drop (delq nil (mapcar (lambda (p) (cdr (assoc p labeled)))
-                                   picks))))
-      (my--org-edna-delete-blockers current drop)
-      (message "Removed %d blocker(s)." (length drop)))))
+  "Remove dependencies of CURRENT in both directions, interactively.
+Upstream picks edit CURRENT's :BLOCKER:; downstream picks edit the
+blocking task's :BLOCKER:.  One dependency per RET, C-g cancels."
+  (let ((cands (my--org-edna-delete-candidates current)))
+    (unless cands
+      (user-error "This task has no dependencies"))
+    (pcase-let* ((`(,aborted . ,picks)
+                  (my--org-edna-read-picks "Remove dep: " cands)))
+      (when aborted
+        (user-error "Cancelled"))
+      (unless picks
+        (user-error "Nothing selected"))
+      (let ((up '()) (down '())
+            (self-id (save-excursion (goto-char current)
+                                     (org-entry-get nil "ID"))))
+        (dolist (p picks)
+          (pcase (cdr p)
+            (`(upstream . ,uuid) (push uuid up))
+            (`(downstream . ,marker) (push marker down))))
+        (when up
+          (my--org-edna-delete-blockers current up))
+        (dolist (m down)
+          (my--org-edna-delete-blockers m (list self-id)))
+        (message "Removed %d dependency(ies): %d upstream, %d downstream."
+                 (length picks) (length up) (length down))))))
 
 ;;;###autoload
 (defun my/org-deps-edit ()
