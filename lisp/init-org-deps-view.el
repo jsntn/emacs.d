@@ -169,7 +169,7 @@ An unresolvable UUID appears as an entry with only :unknown."
   (let ((title (or (plist-get entry :title) "")))
     (if (string-empty-p title) "(untitled)" title)))
 
-(defun my--org-deps-view-insert-entry (entry todo-width title-width)
+(defun my--org-deps-view-insert-entry (entry todo-width title-width when-width)
   "Insert ENTRY as one Org heading line, columns per TODO-WIDTH/TITLE-WIDTH.
 The metadata (date, outline path) is appended to the heading so each
 task occupies a single line, and every metadata column starts at the
@@ -187,11 +187,7 @@ same offset across all sections."
            (todo (or (plist-get entry :todo) ""))
            (path (plist-get entry :path))
            (when-text (plist-get entry :when))
-           (meta (mapconcat #'identity
-                            (delq nil
-                                  (list when-text
-                                        (and path (not (string-empty-p path)) path)))
-                            " · "))
+           (path-str (and path (not (string-empty-p path)) path))
            (start (point)))
       (insert "* "
               (if (string-empty-p todo)
@@ -199,9 +195,21 @@ same offset across all sections."
                 (concat todo
                         (make-string (max 0 (- todo-width (string-width todo))) ?\s)))
               " " title)
-      (unless (string-empty-p meta)
+      (when (or when-text path-str)
         (insert (make-string (+ 3 (max 0 (- title-width (string-width title)))) ?\s)
-                "· " meta))
+                "· ")
+        (cond
+         ;; date and path: date column first, then the path column
+         ((and when-text path-str)
+          (insert when-text)
+          (insert (make-string (max 0 (- when-width (string-width when-text))) ?\s)
+                  "   " path-str))
+         ;; date only
+         (when-text (insert when-text))
+         ;; path only: reserve the date column so paths line up
+         ((> when-width 0)
+          (insert (make-string when-width ?\s) "   " path-str))
+         (t (insert path-str))))
       (insert "\n")
       ;; Plain text with a marker property: Org font-lock owns the faces,
       ;; so the heading looks exactly like a normal Org heading.
@@ -210,11 +218,15 @@ same offset across all sections."
        (list 'my-org-deps-marker (plist-get entry :marker)
              'mouse-face 'highlight
              'help-echo (concat title
-                                (if (string-empty-p meta) "" (concat "\n" meta))
+                                (cond ((and when-text path-str)
+                                       (concat "\n" when-text " · " path-str))
+                                      (when-text (concat "\n" when-text))
+                                      (path-str (concat "\n" path-str))
+                                      (t ""))
                                 "\nRET jumps to the task"))))))
 
 (defun my--org-deps-view-insert-section (arrow header hint entries
-                                               todo-width title-width)
+                                               todo-width title-width when-width)
   "Insert a non-empty section with ARROW, HEADER, HINT and ENTRIES.
 TODO-WIDTH and TITLE-WIDTH are shared by every section so columns line
 up across the whole buffer."
@@ -225,7 +237,7 @@ up across the whole buffer."
                                   'my-org-deps-view-meta)
   (insert "\n")
   (dolist (entry entries)
-    (my--org-deps-view-insert-entry entry todo-width title-width)))
+    (my--org-deps-view-insert-entry entry todo-width title-width when-width)))
 
 (defun my--org-deps-view-rule (buffer)
   "Return a horizontal rule filling BUFFER's window width."
@@ -275,6 +287,10 @@ up across the whole buffer."
                                            (string-width
                                             (my--org-deps-view-display-title e)))
                                          real)))
+             (when-width (apply #'max 0
+                                (mapcar (lambda (e)
+                                          (string-width (or (plist-get e :when) "")))
+                                        real)))
              (counts (mapconcat
                       #'identity
                       (append (when up (list (format "%d blocked by" (length up))))
@@ -316,13 +332,13 @@ up across the whole buffer."
           (when up
             (my--org-deps-view-insert-section
              "<-" "BLOCKED BY" "tasks that block this one" up
-             todo-width title-width))
+             todo-width title-width when-width))
           (when (and up down)
             (insert "\n"))
           (when down
             (my--org-deps-view-insert-section
              "->" "BLOCKS" "tasks that wait for this one" down
-             todo-width title-width))))
+             todo-width title-width when-width))))
         (insert "\n")
         (my--org-deps-view-insert-faced (my--org-deps-view-rule buffer)
                                         'my-org-deps-view-meta)
