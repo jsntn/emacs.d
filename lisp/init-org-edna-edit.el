@@ -334,7 +334,7 @@ blocking task's :BLOCKER:.  One dependency per RET, C-g cancels."
     (unless cands
       (user-error "This task has no dependencies"))
     (pcase-let* ((`(,aborted . ,picks)
-                  (my--org-edna-read-picks "Remove dep: " cands)))
+                  (my--org-edna-read-picks "Remove dep:" cands)))
       (when aborted
         (user-error "Cancelled"))
       (unless picks
