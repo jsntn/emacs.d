@@ -277,29 +277,31 @@ A heading is blocked by ID when ID appears in its :BLOCKER: ids(...)."
 
 (defun my--org-edna-delete-candidates (current)
   "Return ((LABEL . TARGET) ...) for every dependency of CURRENT.
-TARGET is (upstream . UUID) for a task blocking CURRENT, or
+Blocked-by candidates come first, then blocking candidates.  TARGET is
+\(upstream . UUID) for a task blocking CURRENT, or
 \(downstream . MARKER) for a task CURRENT blocks."
   (let* ((up (save-excursion
                (goto-char current)
                (my--org-edna-parse-ids (org-entry-get nil "BLOCKER"))))
          (self-id (save-excursion (goto-char current)
                                   (org-entry-get nil "ID")))
-         (cands '()))
+         (up-cands '())
+         (down-cands '()))
     (dolist (uuid up)
       (let ((pos (org-find-entry-with-id uuid)))
-        (push (cons (format "↑ %s"
+        (push (cons (format "<- %s"
                             (if pos
                                 (save-excursion (goto-char pos)
                                                 (org-get-heading t t t t))
                               (format "<unknown %s>" uuid)))
                     (cons 'upstream uuid))
-              cands)))
+              up-cands)))
     (dolist (hit (my--org-edna-reverse-refs self-id))
       (unless (= (marker-position (cdr hit)) current)
-        (push (cons (format "↓ %s" (car hit))
+        (push (cons (format "-> %s" (car hit))
                     (cons 'downstream (cdr hit)))
-              cands)))
-    (nreverse cands)))
+              down-cands)))
+    (append (nreverse up-cands) (nreverse down-cands))))
 
 (defun my--org-edna-read-picks (prompt candidates)
   "Read any number of picks from CANDIDATES, one RET per accepted pick.
@@ -310,7 +312,7 @@ empty input applies the picks; C-g cancels all of them.  Return
     (while (and (not done) remaining)
       (let ((input (condition-case nil
                        (completing-read
-                        (format "%s [%d picked; empty RET = apply, C-g = cancel]: "
+                        (format "%s [%d picked; empty RET = apply; C-g = cancel]\n  <- blocked-by (that task blocks this)   -> blocks (this task blocks that): "
                                 prompt (length picks))
                         (mapcar #'car remaining) nil nil)
                      (quit (setq aborted t) nil))))
@@ -348,7 +350,7 @@ blocking task's :BLOCKER:.  One dependency per RET, C-g cancels."
           (my--org-edna-delete-blockers current up))
         (dolist (m down)
           (my--org-edna-delete-blockers m (list self-id)))
-        (message "Removed %d dependency(ies): %d upstream, %d downstream."
+        (message "Removed %d dependency(ies): %d blocked-by, %d blocks."
                  (length picks) (length up) (length down))))))
 
 ;;;###autoload
