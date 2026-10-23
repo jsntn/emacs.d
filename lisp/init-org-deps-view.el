@@ -251,17 +251,18 @@ cannot resize them (`zoom--resize' works on `window-list' and
       (setq win
             (condition-case nil
                 (if (< (frame-width) my-org-deps-view-narrow-width)
+                    ;; negative SIZE gives it to the new (lower) window
                     (split-window-below
-                     (max window-min-height
-                          (min my-org-deps-view-height
-                               (- (window-height) window-min-height 1))))
+                     (- (max window-min-height
+                             (min my-org-deps-view-height
+                                  (- (window-height) window-min-height 1)))))
                   (split-window-right
-                   (max window-min-width
-                        (min my-org-deps-view-width
-                             (- (frame-width) 20)))))
-              (error (display-buffer-pop-up-window buffer nil)))))
+                   (- (max window-min-width
+                           (min my-org-deps-view-width
+                                (- (frame-width) 20))))))
+              (error (display-buffer-pop-up-window buffer nil))))
     (set-window-buffer win buffer)
-    win))
+    win)))
 
 (defun my--org-deps-view-display (buffer)
   "Show BUFFER in a normal window: right, or below on a narrow frame."
