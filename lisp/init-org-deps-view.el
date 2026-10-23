@@ -124,7 +124,9 @@ An unresolvable UUID appears as an entry with only :unknown."
 ;;; ------------------------------------------------------------------
 
 (defun my--org-deps-view-insert-entry (entry)
-  "Insert ENTRY as an Org heading line plus an optional metadata line."
+  "Insert ENTRY as one Org heading line.
+The metadata (date, outline path) is appended to the heading so each
+task occupies a single line."
   (if (plist-get entry :unknown)
       (insert (propertize (format "  <unknown %s>" (plist-get entry :unknown))
                           'face 'my-org-deps-view-unknown)
@@ -141,7 +143,10 @@ An unresolvable UUID appears as an entry with only :unknown."
                                         (and path (not (string-empty-p path)) path)))
                             " · "))
            (start (point)))
-      (insert "* " (if todo (concat todo " ") "") title "\n")
+      (insert "* " (if todo (concat todo " ") "") title)
+      (unless (string-empty-p meta)
+        (insert "   · " meta))
+      (insert "\n")
       ;; Plain text with a marker property: Org font-lock owns the faces,
       ;; so the heading looks exactly like a normal Org heading.
       (add-text-properties
@@ -150,10 +155,7 @@ An unresolvable UUID appears as an entry with only :unknown."
              'mouse-face 'highlight
              'help-echo (concat title
                                 (if (string-empty-p meta) "" (concat "\n" meta))
-                                "\nRET jumps to the task")))
-      (unless (string-empty-p meta)
-        (insert (propertize (concat "  " meta) 'face 'my-org-deps-view-meta)
-                "\n")))))
+                                "\nRET jumps to the task"))))))
 
 (defun my--org-deps-view-insert-section (arrow header hint entries)
   "Insert a non-empty section with ARROW, HEADER, HINT and ENTRIES."
@@ -182,6 +184,11 @@ An unresolvable UUID appears as an entry with only :unknown."
         (let ((org-mode-hook nil)
               (org-inhibit-startup t))
           (my-org-deps-view-mode)))
+      ;; Re-apply both for buffers created before a reload: the keymap is
+      ;; rebuilt by `setq', and Evil's state maps must stay out of the way.
+      (use-local-map my-org-deps-view-mode-map)
+      (when (fboundp 'evil-local-mode)
+        (evil-local-mode -1))
       (setq my--org-deps-view-source source)
       (let* ((data (my--org-deps-view-data source))
              (self (plist-get data :self))
@@ -240,6 +247,9 @@ An unresolvable UUID appears as an entry with only :unknown."
             (my--org-deps-view-insert-section
              "->" "BLOCKS" "tasks that wait for this one" down))))
         (insert "\n"
+                (propertize (my--org-deps-view-rule buffer)
+                            'face 'my-org-deps-view-meta)
+                "\n"
                 (propertize
                  (format "RET jump   n/p move   D %s done   g refresh   q close"
                          (if my--org-deps-view-hide-done "show" "hide"))
@@ -371,25 +381,34 @@ match the real window width."
     (user-error "Source task is no longer available"))
   (my--org-deps-view-render (current-buffer) my--org-deps-view-source))
 
-(defvar my-org-deps-view-mode-map
-  (let ((map (make-sparse-keymap)))
-    (set-keymap-parent map org-mode-map)
-    (define-key map (kbd "RET") #'my--org-deps-view-ret)
-    (define-key map [mouse-1] #'my--org-deps-view-mouse-jump)
-    (define-key map (kbd "n") #'my--org-deps-view-next)
-    (define-key map (kbd "p") #'my--org-deps-view-prev)
-    (define-key map (kbd "D") #'my--org-deps-view-toggle-done)
-    (define-key map (kbd "g") #'revert-buffer)
-    (define-key map (kbd "q") #'quit-window)
-    map)
+(defvar my-org-deps-view-mode-map nil
   "Keymap for `my-org-deps-view-mode'.")
+
+;; `setq', not `defvar': reloading the file must rebuild the keymap so
+;; newly added keys actually appear in a running Emacs.
+(setq my-org-deps-view-mode-map
+      (let ((map (make-sparse-keymap)))
+        (set-keymap-parent map org-mode-map)
+        (define-key map (kbd "RET") #'my--org-deps-view-ret)
+        (define-key map [mouse-1] #'my--org-deps-view-mouse-jump)
+        (define-key map (kbd "n") #'my--org-deps-view-next)
+        (define-key map (kbd "p") #'my--org-deps-view-prev)
+        (define-key map (kbd "D") #'my--org-deps-view-toggle-done)
+        (define-key map (kbd "g") #'revert-buffer)
+        (define-key map (kbd "q") #'quit-window)
+        map))
 
 (define-derived-mode my-org-deps-view-mode org-mode "OrgDeps"
   "Major mode for the read-only dependency view.
 \\{my-org-deps-view-mode-map}"
   (setq-local truncate-lines t)
   (setq-local revert-buffer-function #'my--org-deps-view-revert)
-  (setq buffer-read-only t))
+  (use-local-map my-org-deps-view-mode-map)
+  (setq buffer-read-only t)
+  ;; Evil's normal-state map would shadow n/p/D/RET; this buffer is a
+  ;; read-only list, so give it plain Emacs keys.
+  (when (fboundp 'evil-local-mode)
+    (evil-local-mode -1)))
 
 ;;;###autoload
 (defun my/org-deps-view ()
