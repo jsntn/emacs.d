@@ -139,18 +139,18 @@ An unresolvable UUID appears as an entry with only :unknown."
                             (delq nil
                                   (list when-text
                                         (and path (not (string-empty-p path)) path)))
-                            " · ")))
-      (insert "* " (if todo (concat todo " ") ""))
-      (insert-text-button title
-                          'action #'my--org-deps-view-jump
-                          'marker (plist-get entry :marker)
-                          'follow-link t
-                          'help-echo (concat title
-                                             (if (string-empty-p meta)
-                                                 ""
-                                               (concat "\n" meta))
-                                             "\nRET jumps to the task"))
-      (insert "\n")
+                            " · "))
+           (start (point)))
+      (insert "* " (if todo (concat todo " ") "") title "\n")
+      ;; Plain text with a marker property: Org font-lock owns the faces,
+      ;; so the heading looks exactly like a normal Org heading.
+      (add-text-properties
+       start (1- (point))
+       (list 'my-org-deps-marker (plist-get entry :marker)
+             'mouse-face 'highlight
+             'help-echo (concat title
+                                (if (string-empty-p meta) "" (concat "\n" meta))
+                                "\nRET jumps to the task")))
       (unless (string-empty-p meta)
         (insert (propertize (concat "  " meta) 'face 'my-org-deps-view-meta)
                 "\n")))))
@@ -290,49 +290,69 @@ match the real window width."
 ;;; Interaction
 ;;; ------------------------------------------------------------------
 
-(defun my--org-deps-view-jump (button)
-  "Jump to the task behind BUTTON."
-  (let ((marker (button-get button 'marker)))
-    (unless (and (markerp marker) (marker-buffer marker)
-                 (buffer-live-p (marker-buffer marker)))
-      (user-error "Task buffer is gone"))
-    (let ((buffer (marker-buffer marker))
-          (win nil))
-      (setq win (or (get-buffer-window buffer 'visible)
-                    (display-buffer
-                     buffer
-                     '((display-buffer-reuse-window
-                        display-buffer-pop-up-window)
-                       (inhibit-same-window . t)))))
-      (when (window-live-p win)
-        (select-window win)
-        (with-current-buffer buffer
-          (goto-char marker)
-          (org-reveal)
-          (recenter))))))
+(defun my--org-deps-view-jump (marker)
+  "Jump to the task at MARKER."
+  (unless (and (markerp marker) (marker-buffer marker)
+               (buffer-live-p (marker-buffer marker)))
+    (user-error "Task buffer is gone"))
+  (let ((buffer (marker-buffer marker))
+        (win nil))
+    (setq win (or (get-buffer-window buffer 'visible)
+                  (display-buffer
+                   buffer
+                   '((display-buffer-reuse-window
+                      display-buffer-pop-up-window)
+                     (inhibit-same-window . t)))))
+    (when (window-live-p win)
+      (select-window win)
+      (with-current-buffer buffer
+        (goto-char marker)
+        (org-reveal)
+        (recenter)))))
+
+(defun my--org-deps-view-marker-at-point ()
+  "Return the task marker for the entry at point, or nil."
+  (or (get-text-property (point) 'my-org-deps-marker)
+      (get-text-property (line-beginning-position) 'my-org-deps-marker)))
 
 (defun my--org-deps-view-ret ()
   "Jump to the dependency entry at point."
   (interactive)
-  (let ((button (button-at (point))))
-    (unless button
-      (let ((pos (next-button (line-beginning-position))))
-        (when (and pos (< pos (line-end-position)))
-          (setq button (button-at pos)))))
-    (if button
-        (my--org-deps-view-jump button)
-      (user-error "No task at point"))))
+  (let ((marker (my--org-deps-view-marker-at-point)))
+    (unless marker
+      (user-error "No task at point"))
+    (my--org-deps-view-jump marker)))
+
+(defun my--org-deps-view-mouse-jump (event)
+  "Jump to the dependency clicked with EVENT."
+  (interactive "e")
+  (mouse-set-point event)
+  (let ((marker (my--org-deps-view-marker-at-point)))
+    (when marker
+      (my--org-deps-view-jump marker))))
+
+(defun my--org-deps-view--entry-line (dir)
+  "Return the start of the next entry line in direction DIR, or nil."
+  (save-excursion
+    (forward-line dir)
+    (while (and (not (eobp))
+                (not (bobp))
+                (null (get-text-property (line-beginning-position)
+                                         'my-org-deps-marker)))
+      (forward-line dir))
+    (when (get-text-property (line-beginning-position) 'my-org-deps-marker)
+      (line-beginning-position))))
 
 (defun my--org-deps-view-next ()
   "Move to the next dependency entry."
   (interactive)
-  (let ((pos (next-button (point))))
+  (let ((pos (my--org-deps-view--entry-line 1)))
     (if pos (goto-char pos) (message "No more entries"))))
 
 (defun my--org-deps-view-prev ()
   "Move to the previous dependency entry."
   (interactive)
-  (let ((pos (previous-button (point))))
+  (let ((pos (my--org-deps-view--entry-line -1)))
     (if pos (goto-char pos) (message "No previous entry"))))
 
 (defun my--org-deps-view-toggle-done ()
@@ -355,6 +375,7 @@ match the real window width."
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map org-mode-map)
     (define-key map (kbd "RET") #'my--org-deps-view-ret)
+    (define-key map [mouse-1] #'my--org-deps-view-mouse-jump)
     (define-key map (kbd "n") #'my--org-deps-view-next)
     (define-key map (kbd "p") #'my--org-deps-view-prev)
     (define-key map (kbd "D") #'my--org-deps-view-toggle-done)
@@ -378,9 +399,8 @@ or refreshes the current one."
   (interactive)
   (cond
    ((derived-mode-p 'my-org-deps-view-mode)
-    (let* ((button (button-at (point)))
-           (marker (or (and button (button-get button 'marker))
-                       my--org-deps-view-source)))
+    (let ((marker (or (my--org-deps-view-marker-at-point)
+                      my--org-deps-view-source)))
       (unless (and (markerp marker) (marker-buffer marker))
         (user-error "No source task"))
       (my--org-deps-view-show marker)))
