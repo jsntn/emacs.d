@@ -59,6 +59,11 @@
   :type 'integer
   :group 'my-org-deps-view)
 
+(defcustom my-org-deps-view-top-margin 1
+  "Number of blank lines above the header line."
+  :type 'integer
+  :group 'my-org-deps-view)
+
 (defcustom my-org-deps-view-narrow-width 100
   "Frame width below which the view splits below instead of to the right."
   :type 'integer
@@ -269,6 +274,7 @@ up across the whole buffer."
                       (append (when up (list (format "%d blocked by" (length up))))
                               (when down (list (format "%d blocks" (length down)))))
                       " · ")))
+        (insert (make-string (max 0 my-org-deps-view-top-margin) ?\n))
         (my--org-deps-view-insert-faced
          (concat " " (or (plist-get self :title) "(untitled)") " ")
          'my-org-deps-view-title)
