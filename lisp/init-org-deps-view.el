@@ -126,7 +126,7 @@ inserting those into the view would shift columns visually."
                              (org-get-outline-path) " / ")
             :when (cond (deadline (format "deadline %s"
                                           (format-time-string "%m-%d" deadline)))
-                        (scheduled (format "scheduled %s"
+                        (scheduled (format "schedule %s"
                                            (format-time-string "%m-%d" scheduled))))
             :marker (copy-marker (point))))))
 
