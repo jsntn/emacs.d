@@ -45,6 +45,10 @@
   '((t :inherit error))
   "Face for UUIDs that do not resolve in the current buffer.")
 
+(defface my-org-deps-view-title
+  '((t :inherit bold :box (:line-width 1)))
+  "Face for the source task title in the header line.")
+
 (defcustom my-org-deps-view-width 62
   "Width in columns of the view window when it splits to the right."
   :type 'integer
@@ -59,6 +63,15 @@
   "Frame width below which the view splits below instead of to the right."
   :type 'integer
   :group 'my-org-deps-view)
+
+(defun my--org-deps-view-insert-faced (text face)
+  "Insert TEXT with FACE as an overlay.
+Overlays survive `font-lock-ensure' and jit-lock; a plain `face' text
+property is removed whenever the region is fontified."
+  (when (and text (not (string-empty-p text)))
+    (let ((start (point)))
+      (insert text)
+      (overlay-put (make-overlay start (point) (current-buffer)) 'face face))))
 
 (defconst my--org-deps-view-name "*Org Deps*"
   "Buffer name of the dependency view.")
@@ -151,11 +164,14 @@ The metadata (date, outline path) is appended to the heading so each
 task occupies a single line, and every metadata column starts at the
 same offset across all sections."
   (if (plist-get entry :unknown)
-      (insert (make-string (+ 2 todo-width 1) ?\s)
-              (propertize (format "<unknown %s>" (plist-get entry :unknown))
-                          'face 'my-org-deps-view-unknown)
-              (propertize "  not in this buffer" 'face 'my-org-deps-view-meta)
-              "\n")
+      (progn
+        (insert (make-string (+ 2 todo-width 1) ?\s))
+        (my--org-deps-view-insert-faced
+         (format "<unknown %s>" (plist-get entry :unknown))
+         'my-org-deps-view-unknown)
+        (my--org-deps-view-insert-faced "  not in this buffer"
+                                        'my-org-deps-view-meta)
+        (insert "\n"))
     (let* ((title (my--org-deps-view-display-title entry))
            (todo (or (plist-get entry :todo) ""))
            (path (plist-get entry :path))
@@ -191,10 +207,12 @@ same offset across all sections."
   "Insert a non-empty section with ARROW, HEADER, HINT and ENTRIES.
 TODO-WIDTH and TITLE-WIDTH are shared by every section so columns line
 up across the whole buffer."
-  (insert (propertize (format "%s %s (%d)" arrow header (length entries))
-                      'face 'my-org-deps-view-section)
-          (propertize (format "   %s" hint) 'face 'my-org-deps-view-meta)
-          "\n")
+  (my--org-deps-view-insert-faced
+   (format "%s %s (%d)" arrow header (length entries))
+   'my-org-deps-view-section)
+  (my--org-deps-view-insert-faced (format "   %s" hint)
+                                  'my-org-deps-view-meta)
+  (insert "\n")
   (dolist (entry entries)
     (my--org-deps-view-insert-entry entry todo-width title-width)))
 
@@ -211,6 +229,7 @@ up across the whole buffer."
   (with-current-buffer buffer
     (let ((line (line-number-at-pos))
           (inhibit-read-only t))
+      (delete-all-overlays)
       (erase-buffer)
       (unless (derived-mode-p 'my-org-deps-view-mode)
         (let ((org-mode-hook nil)
@@ -250,36 +269,37 @@ up across the whole buffer."
                       (append (when up (list (format "%d blocked by" (length up))))
                               (when down (list (format "%d blocks" (length down)))))
                       " · ")))
-        (insert (propertize "Org deps: " 'face 'my-org-deps-view-meta)
-                (propertize (or (plist-get self :title) "") 'face 'bold)
-                (or (when (plist-get self :todo)
-                      (concat "  " (propertize (format "[%s]" (plist-get self :todo))
-                                               'face (or (org-get-todo-face
-                                                          (plist-get self :todo))
-                                                         'org-todo))))
-                    "")
-                (or (when (plist-get self :when)
-                      (concat "  " (propertize (plist-get self :when)
-                                               'face 'my-org-deps-view-meta)))
-                    "")
-                (if (string-empty-p counts)
-                    ""
-                  (concat "   " (propertize counts 'face 'my-org-deps-view-meta)))
-                (if (> hidden 0)
-                    (concat "   " (propertize (format "%d done hidden" hidden)
-                                              'face 'my-org-deps-view-meta))
-                  "")
-                "\n"
-                (propertize (my--org-deps-view-rule buffer)
-                            'face 'my-org-deps-view-meta)
-                "\n\n")
+        (my--org-deps-view-insert-faced
+         (concat " " (or (plist-get self :title) "(untitled)") " ")
+         'my-org-deps-view-title)
+        (when (plist-get self :todo)
+          (insert "  ")
+          (my--org-deps-view-insert-faced
+           (format "[%s]" (plist-get self :todo))
+           (or (org-get-todo-face (plist-get self :todo)) 'org-todo)))
+        (when (plist-get self :when)
+          (insert "  ")
+          (my--org-deps-view-insert-faced (plist-get self :when)
+                                          'my-org-deps-view-meta))
+        (unless (string-empty-p counts)
+          (insert "   ")
+          (my--org-deps-view-insert-faced counts 'my-org-deps-view-meta))
+        (when (> hidden 0)
+          (insert "   ")
+          (my--org-deps-view-insert-faced
+           (format "%d done hidden" hidden) 'my-org-deps-view-meta))
+        (insert "\n")
+        (my--org-deps-view-insert-faced (my--org-deps-view-rule buffer)
+                                        'my-org-deps-view-meta)
+        (insert "\n\n")
         (cond
          ((and (null up) (null down))
-          (insert (propertize (if (> hidden 0)
-                                  (format "  All %d dependencies are completed and hidden.\n"
-                                          hidden)
-                                "  No dependencies in this buffer.\n")
-                              'face 'my-org-deps-view-meta)))
+          (my--org-deps-view-insert-faced
+           (if (> hidden 0)
+               (format "  All %d dependencies are completed and hidden." hidden)
+             "  No dependencies in this buffer.")
+           'my-org-deps-view-meta)
+          (insert "\n"))
          (t
           (when up
             (my--org-deps-view-insert-section
@@ -291,14 +311,14 @@ up across the whole buffer."
             (my--org-deps-view-insert-section
              "->" "BLOCKS" "tasks that wait for this one" down
              todo-width title-width))))
-        (insert "\n"
-                (propertize (my--org-deps-view-rule buffer)
-                            'face 'my-org-deps-view-meta)
-                "\n"
-                (propertize
-                 (format "RET jump   j/k move   D %s done   g refresh   q close"
-                         (if my--org-deps-view-hide-done "show" "hide"))
-                 'face 'my-org-deps-view-meta))
+        (insert "\n")
+        (my--org-deps-view-insert-faced (my--org-deps-view-rule buffer)
+                                        'my-org-deps-view-meta)
+        (insert "\n")
+        (my--org-deps-view-insert-faced
+         (format "RET jump   j/k move   D %s done   g refresh   q close"
+                 (if my--org-deps-view-hide-done "show" "hide"))
+         'my-org-deps-view-meta)
         (when (fboundp 'font-lock-ensure)
           (font-lock-ensure))
         (setq-local my--org-deps-view-rendered-width
