@@ -41,12 +41,17 @@
   "Face for UUIDs that do not resolve in the current buffer.")
 
 (defcustom my-org-deps-view-width 62
-  "Width in columns of the right side window."
+  "Width in columns of the view window when it splits to the right."
+  :type 'integer
+  :group 'my-org-deps-view)
+
+(defcustom my-org-deps-view-height 14
+  "Height in lines of the view window when the frame is narrow."
   :type 'integer
   :group 'my-org-deps-view)
 
 (defcustom my-org-deps-view-narrow-width 100
-  "Frame width below which the view goes to a bottom window instead."
+  "Frame width below which the view splits below instead of to the right."
   :type 'integer
   :group 'my-org-deps-view)
 
@@ -108,12 +113,14 @@ An unresolvable UUID appears as an entry with only :unknown."
 (defun my--org-deps-view-insert-entry (entry title-width when-width todo-width)
   "Insert one ENTRY, aligning columns to the given widths."
   (if (plist-get entry :unknown)
-      (insert (make-string (+ 2 todo-width 1) ?\s)
+      (insert (make-string (+ 3 todo-width 1) ?\s)
               (propertize (format "<unknown %s>" (plist-get entry :unknown))
                           'face 'my-org-deps-view-unknown)
+              (propertize "  not in this buffer" 'face 'my-org-deps-view-meta)
               "\n")
     (let* ((title (plist-get entry :title))
            (todo (or (plist-get entry :todo) ""))
+           (todo-face (and (not (string-empty-p todo)) (org-get-todo-face todo)))
            (path (plist-get entry :path))
            (when-text (plist-get entry :when))
            (tail (concat
@@ -124,11 +131,11 @@ An unresolvable UUID appears as an entry with only :unknown."
                     (concat (if (> when-width 0) "  ")
                             (propertize path 'face 'my-org-deps-view-meta)))))
            (pad (max 0 (- title-width (string-width title)))))
-      (insert "  "
+      (insert "   "
               (if (string-empty-p todo)
                   (make-string todo-width ?\s)
                 (propertize (format (format "%%-%ds" todo-width) todo)
-                            'face 'org-todo))
+                            'face todo-face))
               " ")
       (insert-text-button title
                           'action #'my--org-deps-view-jump
@@ -144,31 +151,37 @@ An unresolvable UUID appears as an entry with only :unknown."
       (insert "\n"))))
 
 (defun my--org-deps-view-insert-section (arrow header hint entries)
-  "Insert a section with ARROW, HEADER, HINT and ENTRIES."
-  (insert (propertize (format "%s %s" arrow header) 'face 'my-org-deps-view-section)
-          (propertize (format "  %s" hint) 'face 'my-org-deps-view-meta)
+  "Insert a non-empty section with ARROW, HEADER, HINT and ENTRIES."
+  (insert (propertize (format "%s %s (%d)" arrow header (length entries))
+                      'face 'my-org-deps-view-section)
+          (propertize (format "   %s" hint) 'face 'my-org-deps-view-meta)
           "\n")
-  (if (null entries)
-      (insert (propertize "  (none)\n" 'face 'my-org-deps-view-meta))
-    (let* ((real (cl-remove-if (lambda (e) (plist-get e :unknown)) entries))
-           (title-width (if real
-                            (apply #'max
-                                   (mapcar (lambda (e) (string-width (plist-get e :title)))
-                                           real))
-                          0))
-           (when-width (if (cl-some (lambda (e) (plist-get e :when)) real)
-                           (apply #'max
-                                  (mapcar (lambda (e)
-                                            (string-width (or (plist-get e :when) "")))
-                                          real))
-                         0))
-           (todo-width (apply #'max 6
-                              (mapcar (lambda (e)
-                                        (string-width (or (plist-get e :todo) "")))
-                                      real))))
-      (dolist (e entries)
-        (my--org-deps-view-insert-entry e title-width when-width todo-width))))
-  (insert "\n"))
+  (let* ((real (cl-remove-if (lambda (e) (plist-get e :unknown)) entries))
+         (title-width (if real
+                          (apply #'max
+                                 (mapcar (lambda (e) (string-width (plist-get e :title)))
+                                         real))
+                        0))
+         (when-width (if (cl-some (lambda (e) (plist-get e :when)) real)
+                         (apply #'max
+                                (mapcar (lambda (e)
+                                          (string-width (or (plist-get e :when) "")))
+                                        real))
+                       0))
+         (todo-width (apply #'max 6
+                            (mapcar (lambda (e)
+                                      (string-width (or (plist-get e :todo) "")))
+                                    real))))
+    (dolist (e entries)
+      (my--org-deps-view-insert-entry e title-width when-width todo-width))))
+
+(defun my--org-deps-view-rule (buffer)
+  "Return a horizontal rule matching BUFFER's window width."
+  (let* ((win (get-buffer-window buffer))
+         (width (if (window-live-p win)
+                    (window-body-width win)
+                  my-org-deps-view-width)))
+    (make-string (max 20 (- width 2)) ?─)))
 
 (defun my--org-deps-view-render (buffer source)
   "Render SOURCE's dependencies into BUFFER, keeping the current line."
@@ -176,7 +189,15 @@ An unresolvable UUID appears as an entry with only :unknown."
     (let* ((line (line-number-at-pos))
            (inhibit-read-only t)
            (data (my--org-deps-view-data source))
-           (self (plist-get data :self)))
+           (self (plist-get data :self))
+           (up (plist-get data :blocked-by))
+           (down (plist-get data :blocks))
+           (counts (mapconcat #'identity
+                              (append (when up
+                                        (list (format "%d blocked by" (length up))))
+                                      (when down
+                                        (list (format "%d blocks" (length down)))))
+                              " · ")))
       (erase-buffer)
       (unless (derived-mode-p 'my-org-deps-view-mode)
         (my-org-deps-view-mode))
@@ -185,48 +206,74 @@ An unresolvable UUID appears as an entry with only :unknown."
               (propertize (or (plist-get self :title) "") 'face 'bold)
               (if (plist-get self :todo)
                   (concat "  " (propertize (format "[%s]" (plist-get self :todo))
-                                           'face 'org-todo))
+                                           'face (or (org-get-todo-face
+                                                      (plist-get self :todo))
+                                                     'org-todo)))
                 "")
               (if (plist-get self :when)
                   (concat "  " (propertize (plist-get self :when)
                                            'face 'my-org-deps-view-meta))
                 "")
-              (propertize (format "   %d blocked by · %d blocks"
-                                  (length (plist-get data :blocked-by))
-                                  (length (plist-get data :blocks)))
+              (if (string-empty-p counts)
+                  ""
+                (concat "   " (propertize counts 'face 'my-org-deps-view-meta)))
+              "\n"
+              (propertize (my--org-deps-view-rule buffer)
                           'face 'my-org-deps-view-meta)
               "\n\n")
-      (my--org-deps-view-insert-section
-       "<-" "BLOCKED BY" "tasks that block this one"
-       (plist-get data :blocked-by))
-      (my--org-deps-view-insert-section
-       "->" "BLOCKS" "tasks that wait for this one"
-       (plist-get data :blocks))
-      (insert (propertize "g refresh · RET jump · n/p move · q close"
+      (cond
+       ((and (null up) (null down))
+        (insert (propertize "  No dependencies in this buffer.\n"
+                            'face 'my-org-deps-view-meta)))
+       (t
+        (when up
+          (my--org-deps-view-insert-section
+           "<-" "BLOCKED BY" "tasks that block this one" up))
+        (when (and up down)
+          (insert "\n"))
+        (when down
+          (my--org-deps-view-insert-section
+           "->" "BLOCKS" "tasks that wait for this one" down))))
+      (insert "\n"
+              (propertize "RET jump   n/p move   g refresh   q close"
                           'face 'my-org-deps-view-meta))
       (goto-char (point-min))
       (forward-line (1- line)))))
 
+(defun my--org-deps-view-display-window (buffer _alist)
+  "Display BUFFER in a normal window sized by the view options.
+A normal window, not a side window: side windows are outside the main
+window tree, so `delete-other-windows' ignores them and `zoom-mode'
+cannot resize them (`zoom--resize' works on `window-list' and
+`balance-windows')."
+  (let ((win (get-buffer-window buffer 'visible)))
+    (unless (window-live-p win)
+      (setq win
+            (condition-case nil
+                (if (< (frame-width) my-org-deps-view-narrow-width)
+                    (split-window-below
+                     (max window-min-height
+                          (min my-org-deps-view-height
+                               (- (window-height) window-min-height 1))))
+                  (split-window-right
+                   (max window-min-width
+                        (min my-org-deps-view-width
+                             (- (frame-width) 20)))))
+              (error (display-buffer-pop-up-window buffer nil)))))
+    (set-window-buffer win buffer)
+    win))
+
 (defun my--org-deps-view-display (buffer)
-  "Show BUFFER on the right, or at the bottom on a narrow frame."
-  (display-buffer
-   buffer
-   (if (< (frame-width) my-org-deps-view-narrow-width)
-       (list (list 'display-buffer-in-side-window)
-             (cons 'side 'bottom)
-             (cons 'slot 1)
-             (cons 'window-height 14))
-     (list (list 'display-buffer-in-side-window)
-           (cons 'side 'right)
-           (cons 'slot 1)
-           (cons 'window-width my-org-deps-view-width)
-           (cons 'preserve-size '(t . nil))))))
+  "Show BUFFER in a normal window: right, or below on a narrow frame."
+  (display-buffer buffer '((my--org-deps-view-display-window))))
 
 (defun my--org-deps-view-show (source)
-  "Render and display the dependencies of SOURCE.  Return the buffer."
+  "Render and display the dependencies of SOURCE.  Return the buffer.
+The buffer is displayed before rendering so the horizontal rule can
+match the real window width."
   (let ((buffer (get-buffer-create my--org-deps-view-name)))
-    (my--org-deps-view-render buffer source)
     (my--org-deps-view-display buffer)
+    (my--org-deps-view-render buffer source)
     buffer))
 
 ;;; ------------------------------------------------------------------
