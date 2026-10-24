@@ -170,7 +170,7 @@ Returns nil when point is not inside a headline."
     (save-excursion
       (org-back-to-heading-or-point-min)
       (when (org-at-heading-p)
-        (let* ((title (org-get-heading t t t t))
+        (let* ((title (substring-no-properties (org-get-heading t t t t)))
                (level (org-current-level))
                (leaf (save-excursion (not (org-goto-first-child))))
                (keys '()))
