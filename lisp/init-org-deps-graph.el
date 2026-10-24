@@ -11,6 +11,11 @@
 ;; `M-x my/org-deps-graph' in an Org buffer opens *Org Deps Graph* showing the
 ;; SVG plus a hint list; press a node's letter to jump to that heading, `q' to
 ;; quit, `g' to regenerate.
+;;
+;; `C-u M-x my/org-deps-graph' restricts the graph to the subtree at point:
+;; a leaf task shows the tasks it blocks and is blocked by, a parent headline
+;; shows the graph of the tasks inside it.  Dependencies that cross the
+;; subtree boundary are kept, with the outside endpoint drawn dashed.
 ;;; Code:
 
 (require 'org)
@@ -46,6 +51,11 @@ touching them are dropped (a finished blocker no longer constrains anything)."
 (defvar my--org-deps-graph-source nil
   "Source Org file the current graph was built from.")
 
+(defvar my--org-deps-graph-scope nil
+  "Scope plist of the graph shown in this buffer, or nil for the whole file.
+See `my--org-deps-scope-at-point' for the shape; `g' reuses it so a
+regenerated graph keeps the same subtree view.")
+
 (defvar-local my--org-deps-graph-svg nil
   "Path to the SVG file of the graph currently shown in this buffer.")
 
@@ -67,6 +77,12 @@ TARGET is (:id ID) or (:task-id TASK-ID) or (:pos POS).")
   "Window font height in pixels when the graph was rendered.
 The image is scaled by the current height over this one, so it tracks
 font-size changes (`cnfonts-increase-fontsize') and text scaling.")
+
+(defun my--org-deps-key (oid tid title)
+  "Return the graph key for an entry with OID, TID and TITLE.
+TID (:task_id:) wins over OID (:ID:) which wins over TITLE, so an entry
+gets the same key whether it is read from a file or from the live buffer."
+  (or tid oid title))
 
 (defun my--org-deps-collect (file)
   "Parse FILE without triggering find-file hooks.
@@ -102,7 +118,7 @@ Each edge is (FROM-KEY . TO-KEY) meaning FROM blocks TO."
                  ;; org-edna uses ids(UUID ...); TaskJuggler uses bare
                  ;; task_id names separated by commas.
                  (blk (org-entry-get pos "BLOCKER"))
-                 (key (or tid oid title))
+                 (key (my--org-deps-key oid tid title))
                  (done (member todo my-org-deps-graph-done-keywords)))
             (if done
                 ;; Completed task: omit from the graph entirely. Record all of
@@ -143,6 +159,51 @@ Each edge is (FROM-KEY . TO-KEY) meaning FROM blocks TO."
             (let ((from-key (or (gethash blocker-ref ref->key) blocker-ref)))
               (push (cons from-key to-key) edges)))))
       (list :nodes nodes :edges (nreverse edges)))))
+
+(defun my--org-deps-scope-at-point ()
+  "Return the subtree scope for the headline at point, or nil.
+The plist is (:title TITLE :level LEVEL :leaf LEAF :keys KEYS), where
+KEYS are the graph keys (see `my--org-deps-key') of the headline and all
+its descendants, and LEAF is non-nil when it has no child headings.
+Returns nil when point is not inside a headline."
+  (when (derived-mode-p 'org-mode)
+    (save-excursion
+      (org-back-to-heading-or-point-min)
+      (when (org-at-heading-p)
+        (let* ((title (org-get-heading t t t t))
+               (level (org-current-level))
+               (leaf (save-excursion (not (org-goto-first-child))))
+               (keys '()))
+          (org-map-entries
+           (lambda ()
+             (let ((oid (org-entry-get (point) "ID"))
+                   (tid (org-entry-get (point) "task_id"))
+                   (ttl (org-element-property :raw-value (org-element-at-point))))
+               (push (my--org-deps-key oid tid ttl) keys)))
+           nil 'tree)
+          (list :title title :level level :leaf leaf
+                :keys (delete-dups (delq nil keys))))))))
+
+(defun my--org-deps-filter (data scope)
+  "Restrict DATA to edges that touch SCOPE.
+An edge is kept when at least one endpoint is inside the scope; the
+endpoints outside it are collected in the returned :outside hash-set so
+they can be drawn as dashed \"outside\" nodes.  The :nodes table is kept
+intact because labels and jump targets are looked up there."
+  (let ((keyset (make-hash-table :test 'equal))
+        (outside (make-hash-table :test 'equal))
+        (edges '()))
+    (dolist (k (plist-get scope :keys))
+      (puthash k t keyset))
+    (dolist (e (plist-get data :edges))
+      (let ((from (car e)) (to (cdr e)))
+        (when (or (gethash from keyset) (gethash to keyset))
+          (push e edges)
+          (unless (gethash from keyset) (puthash from t outside))
+          (unless (gethash to keyset) (puthash to t outside)))))
+    (list :nodes (plist-get data :nodes)
+          :edges (nreverse edges)
+          :outside outside)))
 
 (defun my--org-deps-involved (edges)
   "Return a hash-set of node keys that participate in EDGES."
@@ -330,6 +391,7 @@ NODESEP and RANKSEP are Graphviz spacing in inches; the canvas is transparent
 and disconnected components are packed independently."
   (let* ((nodes (plist-get data :nodes))
          (edges (plist-get data :edges))
+         (outside (plist-get data :outside))
          (involved (my--org-deps-involved edges))
          (seen (make-hash-table :test 'equal))
          (epts (max 6 (round (* pt 0.8))))
@@ -341,7 +403,12 @@ and disconnected components are packed independently."
                       (format "  ranksep=%s;\n" ranksep)
                       (format "  node [shape=box style=\"rounded\" fontname=\"Helvetica\" color=\"%s\" penwidth=1];\n" fg)
                       (format "  edge [color=\"%s\" fontcolor=\"%s\" fontsize=%d arrowsize=0.7];\n" fg fg epts))))
-    (cl-labels ((nid (k) (format "n%d" (abs (sxhash k)))))
+    (cl-labels ((nid (k) (format "n%d" (abs (sxhash k))))
+                (node-style (k)
+                            ;; nodes outside the C-u subtree are dashed
+                            (if (and outside (gethash k outside))
+                                "rounded,dashed"
+                              "rounded")))
       ;; involved nodes as org-style rows
       (maphash
        (lambda (k v)
@@ -351,23 +418,26 @@ and disconnected components are packed independently."
                   (prio (plist-get v :priority))
                   (label (my--org-deps-node-label
                           (cdr (assoc k hints)) title todo prio fg pt)))
-             (setq out (concat out (format "  %s [label=%s];\n" (nid k) label)))
+             (setq out (concat out (format "  %s [label=%s style=\"%s\"];\n"
+                                           (nid k) label (node-style k))))
              (puthash k t seen))))
        nodes)
       ;; edges; declare any dangling endpoint as a bare row
       (dolist (e edges)
         (let ((f (car e)) (tk (cdr e)))
           (unless (gethash f seen)
-            (setq out (concat out (format "  %s [label=%s];\n"
+            (setq out (concat out (format "  %s [label=%s style=\"%s\"];\n"
                                           (nid f)
                                           (my--org-deps-node-label
-                                           (cdr (assoc f hints)) f nil nil fg pt))))
+                                           (cdr (assoc f hints)) f nil nil fg pt)
+                                          (node-style f))))
             (puthash f t seen))
           (unless (gethash tk seen)
-            (setq out (concat out (format "  %s [label=%s];\n"
+            (setq out (concat out (format "  %s [label=%s style=\"%s\"];\n"
                                           (nid tk)
                                           (my--org-deps-node-label
-                                           (cdr (assoc tk hints)) tk nil nil fg pt))))
+                                           (cdr (assoc tk hints)) tk nil nil fg pt)
+                                          (node-style tk))))
             (puthash tk t seen))
           (setq out (concat out (format "  %s -> %s [label=\"blocks\"];\n"
                                         (nid f) (nid tk))))))
@@ -493,20 +563,28 @@ Falls back to white if the color cannot be resolved."
   (let ((h (face-attribute 'default :height nil t)))
     (if (integerp h) (/ h 10.0) 10.0)))
 
-(defun my--org-deps-render (file)
+(defun my--org-deps-render (file &optional scope)
   "Parse FILE, render SVG via dot, return a plist with :candidates.
-The candidates are the same graph laid out top-to-bottom (\"TB\") and
-left-to-right (\"LR\"); `my--org-deps-show' picks whichever needs the least
-downscaling in the actual window.  The SVG uses the theme foreground color,
-a transparent canvas, and the current default font size (so it matches and
-tracks the buffer text); it is vector so it stays crisp at any scale."
+With SCOPE (a plist from `my--org-deps-scope-at-point') the graph is
+restricted to edges touching that subtree; outside endpoints are drawn
+dashed.  The candidates are the same graph laid out top-to-bottom (\"TB\")
+and left-to-right (\"LR\"); `my--org-deps-show' picks whichever needs the
+least downscaling in the actual window.  The SVG uses the theme foreground
+color, a transparent canvas, and the current default font size (so it
+matches and tracks the buffer text); it is vector so it stays crisp at any
+scale."
   (unless (file-exists-p my-org-deps-graph-dot)
     (user-error "Graphviz dot not found: %s" my-org-deps-graph-dot))
   (let* ((data (my--org-deps-collect file))
+         (data (if scope (my--org-deps-filter data scope) data))
          (edges (plist-get data :edges)))
     (when (null edges)
-      (user-error "No task dependencies (BLOCKER/blocker) found in %s"
-                  (file-name-nondirectory file)))
+      (if scope
+          (user-error "No task dependencies within %s"
+                      (or (plist-get scope :title)
+                          (file-name-nondirectory file)))
+        (user-error "No task dependencies (BLOCKER/blocker) found in %s"
+                    (file-name-nondirectory file))))
     (let* ((keys (my--org-deps-order-keys (plist-get data :nodes) edges))
            (hints (my--org-deps-assign-hints keys))
            (fg (my--org-deps-theme-fg))
@@ -538,7 +616,7 @@ tracks the buffer text); it is vector so it stays crisp at any scale."
                         :width (car size) :height (cdr size))
                   cands))))
       (list :data data :candidates (nreverse cands)
-            :hints hints :keys keys))))
+            :hints hints :keys keys :scope scope))))
 
 (defun my--org-deps-choose-candidate (cands maxw maxh)
   "Return the candidate that best fits MAXW x MAXH pixels.
@@ -653,13 +731,32 @@ in effect when the window's pixel size is measured."
              (dotfile (plist-get choice :dot))
              (inhibit-read-only t))
         (erase-buffer)
-        (insert (propertize (format "Task dependencies — %s\n"
-                                    (file-name-nondirectory
-                                     my--org-deps-graph-source))
-                            'face 'bold))
-        (insert (propertize
-                 "Hint: jump · j/k/n/p: move · RET: jump · O: open externally · g: refresh · q: quit\n\n"
-                 'face 'shadow))
+        (let* ((scope (plist-get result :scope))
+               (in-scope (and scope
+                              (cl-count-if (lambda (k) (gethash k nodes))
+                                           (plist-get scope :keys))))
+               (n-outside (and scope
+                               (let ((n 0))
+                                 (maphash (lambda (_k _v) (setq n (1+ n)))
+                                          (plist-get data :outside))
+                                 n)))
+               (source (file-name-nondirectory my--org-deps-graph-source))
+               (where (if scope
+                          (format "%s › %s" source (plist-get scope :title))
+                        source))
+               (detail (if scope
+                           (format "  (%s: %d task%s, %d outside)"
+                                   (if (plist-get scope :leaf) "task" "subtree")
+                                   in-scope (if (= in-scope 1) "" "s")
+                                   n-outside)
+                         "")))
+          (insert (propertize (format "Task dependencies — %s%s\n" where detail)
+                              'face 'bold))
+          (insert (propertize
+                   (concat "Hint: jump · j/k/n/p: move · RET: jump · O: open externally · g: refresh · q: quit"
+                           (when scope " · dashed = outside the subtree")
+                           "\n\n")
+                   'face 'shadow)))
         ;; Vector graph (transparent canvas blends with buffer bg).  The
         ;; orientation was chosen against this window: TB (vertical chains)
         ;; unless the graph is a wide fan-out, where LR keeps the text at full
@@ -667,6 +764,7 @@ in effect when the window's pixel size is measured."
         ;; which also re-scales it when the font size changes; `:max-width' /
         ;; `:max-height' cap it to the window and never enlarge past it.
         (setq-local my--org-deps-graph-svg svg)
+        (setq-local my--org-deps-graph-scope (plist-get result :scope))
         (setq-local my--org-deps-graph-natural
                     (cons (plist-get choice :width) (plist-get choice :height)))
         (setq-local my--org-deps-graph-font-height (window-font-height win))
@@ -770,24 +868,36 @@ else `browse-url'), so the exported image looks like the in-buffer graph."
     (message "Opened %s" (file-name-nondirectory png))))
 
 ;;;###autoload
-(defun my/org-deps-graph ()
+(defun my/org-deps-graph (&optional arg)
   "Render the task-dependency graph of the current Org buffer.
-Opens *Org Deps Graph*; press a node's hint letter to jump to it."
-  (interactive)
+Opens *Org Deps Graph*; press a node's hint letter to jump to it.
+
+With universal argument ARG (`C-u'), restrict the graph to the subtree at
+point: a leaf task shows the tasks it blocks and is blocked by, while a
+parent headline shows the graph of the tasks inside it.  Dependencies that
+cross the subtree boundary are kept, with the outside endpoint dashed."
+  (interactive "P")
   (unless (derived-mode-p 'org-mode)
     (user-error "Not in an Org buffer"))
   (let ((file (buffer-file-name)))
     (unless file
       (user-error "Buffer is not visiting a file"))
-    (setq my--org-deps-graph-source file)
-    (my--org-deps-show (my--org-deps-render file))))
+    (let ((scope (when arg (my--org-deps-scope-at-point))))
+      (when (and arg (null scope))
+        (message "No headline at point; showing the whole file"))
+      (when (and scope (buffer-modified-p))
+        (message "Buffer has unsaved changes; the graph reflects the file on disk"))
+      (setq my--org-deps-graph-source file)
+      (my--org-deps-show (my--org-deps-render file scope)))))
 
 (defun my/org-deps-graph-refresh ()
-  "Regenerate the graph from `my--org-deps-graph-source'."
+  "Regenerate the graph from `my--org-deps-graph-source'.
+Keeps the subtree scope of the current graph, if it has one."
   (interactive)
   (unless my--org-deps-graph-source
     (user-error "No graph source"))
-  (my--org-deps-show (my--org-deps-render my--org-deps-graph-source)))
+  (my--org-deps-show (my--org-deps-render my--org-deps-graph-source
+                                          my--org-deps-graph-scope)))
 
 (provide 'init-org-deps-graph)
 
