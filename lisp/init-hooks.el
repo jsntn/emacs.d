@@ -12,10 +12,18 @@
   (add-hook hook #'hl-line-mode))
 
 (defun my/hs-hide-all ()
-  (hs-minor-mode 1)
-  (hs-hide-all)
-  (set (make-variable-buffer-local 'my-hs-hide-all) t)
-  (set (make-variable-buffer-local 'my-hs-hide-block) t))
+  "Enable hideshow and hide all, for hideshow-capable major modes only.
+Silently no-op for modes without hideshow support (e.g. tree-sitter modes
+such as `js-ts-mode'), so a startup `js-ts-mode' buffer no longer throws and
+opens a `*Backtrace*' debugger."
+  (condition-case nil
+      (progn
+        (hs-grok-mode-type)   ; throws for unsupported modes: bail before any state
+        (hs-minor-mode 1)
+        (hs-hide-all)
+        (set (make-variable-buffer-local 'my-hs-hide-all) t)
+        (set (make-variable-buffer-local 'my-hs-hide-block) t))
+    (error nil)))
 
 (dolist (hook '(
 		prog-mode-hook
