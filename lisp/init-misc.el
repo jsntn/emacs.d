@@ -88,29 +88,37 @@ Updated: 2024-04-24"
 Example usage:
 (my-monitor-file-and-copy-to-register \"c:/x-clipboard.txt\" ?a 1)
 
-Version: 2023
-Updated: 2024-04-24"
+Updated: 2024-04-24
+Updated: 2026-10-27 stat-gate the file read on mtime change to avoid a full read of the drvfs/9p file on every tick"
   (let ((previous-contents-alist ()))
 
     (defun my-file-monitor-task ()
       (let* ((base-filename
-	     (my-remove-file-suffix (file-name-nondirectory file-path)))
-	    (current-contents (when (file-readable-p file-path)
-				(with-temp-buffer
-				  (let ((coding-system-for-read 'utf-8))
-				    (insert-file-contents file-path))
-				  (buffer-string))))
-	    (previous-contents (assoc base-filename previous-contents-alist)))
-
-	(unless (equal current-contents (cdr previous-contents))
-	  (set-register register-name current-contents)
-	  (setq previous-contents-alist
-		(cons
-		 (cons base-filename current-contents)
-		 (delq
-		  (assoc base-filename previous-contents-alist)
-		  previous-contents-alist)
-		 )))))
+		(my-remove-file-suffix (file-name-nondirectory file-path)))
+	      (attrs (file-attributes file-path))
+	      (current-stat (cons (file-attribute-modification-time attrs)
+				  (file-attribute-size attrs)))
+	      (previous-entry (assoc base-filename previous-contents-alist))
+	      ;; A full read of a drvfs/9p path is slow, a stat is cheap, and
+	      ;; inotify is silent on the 9p mount, so poll. Gate on the
+	      ;; (mtime . size) pair: one stat already yields both, and size
+	      ;; covers same-mtime same-length in-place writes.
+	      (changed-p (or (not previous-entry)
+			     (not (equal current-stat
+					 (cddr previous-entry))))))
+	(when (and changed-p (file-readable-p file-path))
+	  (let ((current-contents
+		 (with-temp-buffer
+		   (let ((coding-system-for-read 'utf-8))
+		     (insert-file-contents file-path))
+		   (buffer-string))))
+	    (unless (equal current-contents (cadr previous-entry))
+	      (set-register register-name current-contents)
+	      (setq previous-contents-alist
+		    (cons (cons base-filename
+				(cons current-contents current-stat))
+			  (delq (assoc base-filename previous-contents-alist)
+				previous-contents-alist))))))))
 
     (let ((task-name (concat "my-file-monitor-task_from-"
 			     (my-remove-file-suffix (file-name-nondirectory file-path))
@@ -133,29 +141,39 @@ Example usage:
 (my-monitor-file-and-copy-to-w32-clipboard \"c:/emacs-clipboard.txt\" 1)
 
 Version: 2023
-Updated: 2024-04-24"
+Updated: 2024-04-24
+Updated: 2026-10-27 stat-gate the file read on mtime change to avoid a full read of the drvfs/9p file on every tick"
   (if *is-win*
       (let ((previous-contents-alist ()))
 
 	(defun my-w32-file-monitor-task ()
 	  (let* ((base-filename
 		  (my-remove-file-suffix (file-name-nondirectory file-path)))
-		 (current-contents (when (file-readable-p file-path)
-				     (with-temp-buffer
-				       (let ((coding-system-for-read 'utf-8))
-					 (insert-file-contents file-path))
-				       (buffer-string))))
-		 (previous-contents (assoc base-filename previous-contents-alist)))
-
-	    (unless (equal current-contents (cdr previous-contents))
-	      (w32-set-clipboard-data current-contents)
-	      (setq previous-contents-alist
-		    (cons
-		     (cons base-filename current-contents)
-		     (delq
-		      (assoc base-filename previous-contents-alist)
-		      previous-contents-alist)
-		     )))))
+		 (attrs (file-attributes file-path))
+		 (current-stat
+		  (cons (file-attribute-modification-time attrs)
+			(file-attribute-size attrs)))
+		 (previous-entry (assoc base-filename previous-contents-alist))
+		 ;; A full read of a drvfs/9p path is slow, a single stat is
+		 ;; cheap, and inotify is silent on the 9p mount, so poll. Gate
+		 ;; on the (mtime . size) pair from one stat; size covers a
+		 ;; same-mtime same-length in-place rewrite.
+		 (changed-p (or (not previous-entry)
+				(not (equal current-stat
+					     (cddr previous-entry))))))
+	    (when (and changed-p (file-readable-p file-path))
+	      (let ((current-contents
+		     (with-temp-buffer
+		       (let ((coding-system-for-read 'utf-8))
+			 (insert-file-contents file-path))
+		       (buffer-string))))
+		(unless (equal current-contents (cadr previous-entry))
+		  (w32-set-clipboard-data current-contents)
+		  (setq previous-contents-alist
+			(cons (cons base-filename
+				    (cons current-contents current-stat))
+			      (delq (assoc base-filename previous-contents-alist)
+				    previous-contents-alist))))))))
 
 	(let ((task-name (concat "my-w32-file-monitor-task_from-"
 				 (my-remove-file-suffix (file-name-nondirectory file-path))
