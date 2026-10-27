@@ -46,7 +46,8 @@
 ;; large live heap (many open buffers + propertized log buffers).
 (require 'gcmh)
 (setq gcmh-idle-delay 1.0
-      gcmh-high-cons-threshold (* 1 1024 1024 1024)) ; 1 GB while active
+      gcmh-high-cons-threshold (* 1 1024 1024 1024) ; 1 GB while active
+      gcmh-low-cons-threshold 16777216)             ; 16 MB when idle (matches early-init baseline; default 800KB made the headless daemon GC-stall)
 (gcmh-mode 1)
 
 ;; swap buffers, keybindings -> [[./init-keybindings.el::bm-k]]
