@@ -24,9 +24,16 @@
 (defun my-load-theme ()
   (load-theme 'doom-monokai-classic t)
   (custom-set-faces
-   `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
    `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6)))))
-   `(default ((t (:background "black"))))))
+   `(default ((t (:background "black")))))
+  ;; doom-monokai-classic has no `dark-violet' in its palette, so the old
+  ;; unconditional `(mode-line ((t (:background ,(doom-color 'dark-violet)))))'
+  ;; applied a nil background, which Custom then persisted into custom.el and
+  ;; which from then on overrode the theme's own mode-line. Only override when
+  ;; the palette really provides the colour.
+  (let ((c (doom-color 'dark-violet)))
+    (when c
+      (custom-set-faces `(mode-line ((t (:background ,c))))))))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
