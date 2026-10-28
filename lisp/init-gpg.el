@@ -30,6 +30,24 @@ Version 2023-08-04"
 
 
 
+;; {{ START: loopback pinentry on Windows
+;; MSYS gpg's pinentry-w32 dialogs can end up behind other windows or get
+;; orphaned, leaving org-decrypt-entry waiting with no visible prompt.  With
+;; pinentry-mode `loopback' gpg sends the request back over the command pipe
+;; and epg answers through its passphrase callback (by default
+;; `epa-passphrase-callback-function', i.e. a minibuffer prompt).
+(when (eq system-type 'windows-nt)
+  (defun my--epg-default-loopback-pinentry (context)
+    "Give CONTEXT loopback pinentry unless a mode is already set."
+    (unless (epg-context-pinentry-mode context)
+      (setf (epg-context-pinentry-mode context) 'loopback))
+    context)
+  (advice-add 'epg-make-context :filter-return
+              #'my--epg-default-loopback-pinentry))
+;; END }}
+
+
+
 (provide 'init-gpg)
 
 ;; Local Variables:
