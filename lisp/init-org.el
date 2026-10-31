@@ -231,7 +231,8 @@ answer so later client frames are not re-prompted."
 ;; https://stackoverflow.com/a/41969519/4274775
 (when (and (file-directory-p org-directory) (not (string= org-directory "")))
   (setq org-agenda-files
-	(directory-files-recursively org-directory "\\.org$")))
+	(seq-filter (lambda (f) (not (string-match-p "/\\.Trash-" f)))
+		    (directory-files-recursively org-directory "\\.org$"))))
 ;; (length org-agenda-files)
 
 ;; fix issue like below,
@@ -247,22 +248,10 @@ answer so later client frames are not re-prompted."
   ;; org-agenda-get-day-entries: Agenda file xxx.org is not in Org mode
   (my/switch-opened-org-files-to-org-mode)
 
-  ;; https://orgmode.org/list/loom.20111014T204701-149@post.gmane.org/
-  (setq org-agenda-files
-	(delete-dups (append org-agenda-files
-			     (when (and org-directory (not (string= org-directory "")))
-			       (directory-files-recursively org-directory "\\.org$")))))
-
-  (when (file-exists-p org-mobile-directory)
-    (setq org-agenda-files
-	  (delete-dups
-	   (append org-agenda-files
-		   (when (and org-mobile-directory (not (string= org-mobile-directory "")))
-		     (directory-files-recursively org-mobile-directory "\\.org$"))))))
-
-  ;; remove the duplicates like below,
-  ;; ("~/abc.org" "/Users/jason/abc.org")
-  (my-normalized-paths-list 'org-agenda-files)
+  ;; `org-agenda-files' is built once when this file loads (see the
+  ;; `directory-files-recursively' above).  Re-globbing the whole Org tree on
+  ;; every agenda open cost 1.03 s here (314 files); refresh on demand with
+  ;; M-x my/rescan-org-agenda-files instead.
   )
 
 (add-hook 'org-agenda-mode-hook

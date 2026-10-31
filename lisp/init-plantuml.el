@@ -5,20 +5,15 @@
 
 ;; check the configuration for plantuml-mode
 ;; https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-plantuml.html
+;; These checks only inform; `yes-or-no-p' blocked init whenever a PlantUML
+;; buffer was restored at startup.  Report instead of waiting for input.
 (defun my/plantuml-checking ()
   (unless (file-exists-p org-plantuml-jar-path)
-    (yes-or-no-p "Please be informed the org-plantuml-jar-path is not found.
-You might need to set it manually. Continue?")
-    )
+    (message "PlantUML: `org-plantuml-jar-path' not found, set it manually."))
   (unless (or (executable-find "dot") (getenv "GRAPHVIZ_DOT"))
-    (yes-or-no-p "Please be informed the Graphviz executable file is not found.
-You need to install it manually. Continue?")
-    )
+    (message "PlantUML: Graphviz executable not found, install it manually."))
   (unless (image-type-available-p 'svg)
-    (yes-or-no-p "This Emacs is not buit with SVG support.
-Continue?")
-    )
-  )
+    (message "PlantUML: this Emacs was built without SVG support.")))
 
 (add-hook 'plantuml-mode-hook 'my/plantuml-checking)
 

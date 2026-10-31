@@ -350,7 +350,13 @@
 
 (require 'pangu-spacing)
 (global-pangu-spacing-mode 1)
-(setq pangu-spacing-real-insert-separtor t)
+;; Keep the visual spacing but stop rewriting the buffer on save.  With t,
+;; `pangu-spacing-modify-buffer' regex-replaced the whole buffer in
+;; `write-file-functions': 54.7 ms per save of a 394 KB Org file here, and it
+;; changes the file contents.  Re-enable per mode/buffer if real spaces in the
+;; file are wanted, e.g.
+;; (add-hook 'org-mode-hook (lambda () (setq-local pangu-spacing-real-insert-separtor t)))
+(setq pangu-spacing-real-insert-separtor nil)
 
 (require 'pinyinlib)
 ;; TL; DR

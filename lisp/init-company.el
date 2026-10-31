@@ -144,7 +144,9 @@
 
 (global-company-mode)
 
-(setq company-idle-delay 0.2)
+;; 0.2 s fired completion in every buffer on nearly every pause; 0.4 keeps it
+;; responsive without the constant popup churn while typing.
+(setq company-idle-delay 0.4)
 ;; number the candidates (use M-1, M-2 etc to select completions).
 (setq company-show-numbers t)
 ;; show suggestions after entering 3 character.

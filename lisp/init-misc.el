@@ -5,9 +5,11 @@
 
 ;; misc config - yet to be placed in separate files
 
-;; Org-roam does not resolve symbolic links. One can however instruct Emacs to
-;; always resolve symlinks, at a performance cost:
-(setq find-file-visit-truename t)
+;; Org-roam does not resolve symbolic links, and this option makes Emacs
+;; resolve them on every find-file/save.  Measured: 0.19 ms locally vs 12 ms per
+;; call on a /mnt (Windows drive) path.  Backlinks now go through org-node, so
+;; leave truename resolution off and opt back in per directory if needed.
+(setq find-file-visit-truename nil)
 
 (defun my/open-init-file()
   "open init.el."

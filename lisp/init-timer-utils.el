@@ -109,14 +109,16 @@ Version: 2023-08-28"
 		     task-function)))
 
 
-(defun my-schedule-task-every-x-mins (minutes task-function)
+(defun my-schedule-task-every-x-mins (minutes task-function &optional delay)
   "Schedule a task to run every x mins.
+DELAY (seconds) postpones the first run, so many tasks do not all fire the
+instant Emacs finishes starting.  Default 0 (run immediately).
 
 Version: 2023-08-19"
   (my-cancel-existing-timer task-function)
 
   (setq task-function-timer
-	(run-at-time 0 ; the task should start immediately
+	(run-at-time (or delay 0)
 		     (* minutes 60)
 		     task-function)))
 
