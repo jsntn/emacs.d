@@ -5,6 +5,22 @@
 
 (setq org-startup-indented t) ; enable org-indent mode
 
+;; `org-indent' puts a `line-prefix' text property on every line; on a 420 KB
+;; Org buffer that roughly doubles per-keystroke cost (measured 19 ms vs
+;; 9.9 ms).  Keep it for normal files, drop it for the big ones.
+(defcustom my-org-indent-max-chars 100000
+  "Org buffers larger than this many characters keep `org-indent-mode' off."
+  :type 'integer
+  :group 'org)
+
+(defun my--org-indent-large-buffer-guard ()
+  "Turn `org-indent-mode' off in buffers above `my-org-indent-max-chars'."
+  (when (and (bound-and-true-p org-indent-mode)
+             (> (buffer-size) my-org-indent-max-chars))
+    (org-indent-mode -1)))
+
+(add-hook 'org-mode-hook #'my--org-indent-large-buffer-guard)
+
 (setq org-log-done 'time) ; keep track of when a certain TODO item was marked as
 			  ; done
 
