@@ -113,7 +113,12 @@ Return a list of .el file names (without extension) from each matched directory.
   (setq emojify-display-style 'unicode) ; make :smile: display correctly
   )
 (require 'emojify)
-(add-hook 'after-init-hook #'global-emojify-mode)
+;; `global-emojify-mode` installs font-lock keywords in every buffer, loaded or
+;; not, so it is a permanent tax on redisplay and fontification.  Disabled:
+;; org files keep their own emoji display via `my/display-emojis' (see init.el,
+;; "display emojis based on the defined mapping").  Re-enable per-buffer with
+;; M-x emojify-mode if you need :smile: style substitution somewhere.
+;; (add-hook 'after-init-hook #'global-emojify-mode)
 ;; END: display the emojis }}
 
 
