@@ -28,9 +28,10 @@
 
 
 ;; { START: 优化 Emacs 的垃圾搜集行为
-;; https://web.archive.org/web/20231109123542/https://raw.githubusercontent.com/lujun9972/lujun9972.github.com/81a7933b05495155a601b9b57991ca32d12c95a5/Emacs%E4%B9%8B%E6%80%92/%E4%BC%98%E5%8C%96Emacs%E7%9A%84%E5%9E%83%E5%9C%BE%E6%90%9C%E9%9B%86%E8%A1%8C%E4%B8%BA.org
-;; original link https://web.archive.org/web/20231109123354/https://akrl.sdf.org/
-
+;; 原来这里挂了一个 `run-with-idle-timer 15 t'，空闲每 15 秒强制跑一次
+;; `garbage-collect' 并打印耗时。gcmh（init-packages.el）接管 GC 策略之后
+;; 这段只剩副作用：每次完整 GC 约 2 秒，空闲时反复触发，还不断往
+;; *Messages* 里写消息（该缓冲区曾涨到 1.4 MB）。保留宏以备手动测量。
 ;; (setq garbage-collection-messages t)
 ;; (setq garbage-collection-messages nil)
 
@@ -40,14 +41,6 @@
   `(let ((start-time (current-time)))
      ,@body
      (float-time (time-since start-time))))
-
-;; This variable sets a timer to run the garbage collector after 15 seconds
-;; of idling.
-(defvar gc-timer
-  (run-with-idle-timer 15 t
-    (lambda ()
-      (message "Garbage collector has run for %.06f seconds"
-               (measure-time (garbage-collect))))))
 
 ;; END: 优化 Emacs 的垃圾搜集行为 }
 
