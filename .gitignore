@@ -8,3 +8,6 @@ recentf
 .emacs.desktop.lock
 places
 elpy/
+
+# Machine-local byte code: Emacs version/platform specific, never shared.
+*.elc
