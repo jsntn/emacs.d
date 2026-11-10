@@ -11,3 +11,4 @@ elpy/
 
 # Machine-local byte code: Emacs version/platform specific, never shared.
 *.elc
+.elc-tmp-*
