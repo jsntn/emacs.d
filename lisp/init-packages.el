@@ -39,13 +39,18 @@
   ;; To disable collection of benchmark data after init is done.
 (add-hook 'after-init-hook 'benchmark-init/deactivate)
 
-;; gcmh (GC Magic Hack): defer garbage collection to idle time so the ~800ms
-;; full-GC pause never lands mid-keystroke. During activity it raises the
-;; threshold very high (no GC fires while typing); after `gcmh-idle-delay'
-;; seconds idle it collects once. Fixes occasional typing freezes caused by a
-;; large live heap (many open buffers + propertized log buffers).
+;; gcmh (GC Magic Hack): defer garbage collection to idle time so the full-GC
+;; pause never lands mid-keystroke. During activity it raises the threshold
+;; very high (no GC fires while typing); after `gcmh-idle-delay' seconds idle
+;; it collects once. Fixes occasional typing freezes caused by a large live
+;; heap (many open buffers + propertized log buffers).
+;;
+;; `auto' instead of 1.0: gcmh runs `garbage-collect' unconditionally on that
+;; timer, and with ~9M live cons one collection costs ~0.7-1.1 s. At 1 s idle
+;; that meant every short pause in typing bought a one-second freeze; `auto'
+;; waits 20x the last collection time (~14 s here), so only real breaks pay.
 (require 'gcmh)
-(setq gcmh-idle-delay 1.0
+(setq gcmh-idle-delay 'auto
       gcmh-high-cons-threshold (* 1 1024 1024 1024) ; 1 GB while active
       gcmh-low-cons-threshold 16777216)             ; 16 MB when idle (matches early-init baseline; default 800KB made the headless daemon GC-stall)
 (gcmh-mode 1)
