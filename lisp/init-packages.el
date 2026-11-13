@@ -52,7 +52,7 @@
 (require 'gcmh)
 (setq gcmh-idle-delay 'auto
       gcmh-high-cons-threshold (* 1 1024 1024 1024) ; 1 GB while active
-      gcmh-low-cons-threshold 16777216)             ; 16 MB when idle (matches early-init baseline; default 800KB made the headless daemon GC-stall)
+      gcmh-low-cons-threshold (* 128 1024 1024)) ; 128 MB when idle: daemon heap ~900MB, 16MB stalled GC every ~16MB alloc on the headless daemon
 (gcmh-mode 1)
 
 ;; swap buffers, keybindings -> [[./init-keybindings.el::bm-k]]

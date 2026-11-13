@@ -14,6 +14,8 @@
       desktop-restore-eager 10 ; the maximum number of 10 buffers to restore
 			       ; immediately, and the remaining buffers are
 			       ; restored lazily, when Emacs is idle.
+      desktop-lazy-verbose nil ; silence "lazily opening (N remaining)" spam
+      desktop-lazy-idle-delay 8 ; restore remaining buffers more gently (default 5)
       )
 (desktop-save-mode 1)
 
